@@ -4,6 +4,17 @@ BASE_URL="nopaystation.com";
 MY_URL_PATH="tsv";
 LIST=("PSV_GAMES" "PSV_DLCS" "PSM_GAMES" "PSV_UPDATES" "PSV_THEMES" "PSX_GAMES" "PSP_GAMES" "PSP_DLCS" "PSP_THEMES" "PS3_GAMES" "PS3_DLCS" "PS3_THEMES" "PS3_AVATARS" "PS4_GAMES" "PS4_DLCS" "PS4_UPDATES" "PS4_THEMES");
 MY_NAME="NoPayStation";
+
+MY_BINARIES=("curl")
+for bins in ${MY_BINARIES[@]}
+do
+    if [ ! -x $(which ${bins}) ]
+    then
+        echo "$bins isn't installed."
+        echo "Please install it and try again"
+    fi
+done
+
 if [ -z ${1} ];
 then
     DEST=$(pwd);
