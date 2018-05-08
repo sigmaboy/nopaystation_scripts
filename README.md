@@ -1,2 +1,2 @@
 # nopaystation_scripts
-do this with nopaystation tsv and links automatically
+do things with nopaystation tsv and links automatically
