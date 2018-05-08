@@ -39,20 +39,13 @@ fi
 LIST=$(grep "^${GAME_ID}" ${TSV_FILE} | cut -f"4,5" | sed 's/\t/,/g')
 MY_PATH=$(pwd)
 
-if [ ! -d ${MY_PATH}/${GAME_ID} ]
-then
-    mkdir ${MY_PATH}/${GAME_ID}
-fi
-
-LINK=$(echo $i | cut -d"," -f1)
-KEY=$(echo $i | cut -d"," -f2)
+LINK=$(echo $LIST | cut -d"," -f1)
+KEY=$(echo $LIST | cut -d"," -f2)
 if [ $KEY = "MISSING" ]
 then
     echo "zrif key missing. Cannot decrypt this package"
 else
-    cd ${MY_PATH}/${GAME_ID}
     wget -O file.pkg -c "$LINK"
     pkg2zip file.pkg "$KEY"
     rm file.pkg
-    cd ${MY_PATH}
 fi
