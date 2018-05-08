@@ -2,7 +2,7 @@
 Download nopaystation PS Vita stuff
 We have three Scripts to download either the \*.tsv files of NoPayStation or to download games, update or all DLC of a PS Vita game.
 ## Requirements
-You need "curl" and ["pkg2zip"](https://github.com/mmozeiko/pkg2zip) installed on your system. If you use openSUSE you can install pkg2zip from the Packman repository.
+You need *curl* and [*pkg2zip*](https://github.com/mmozeiko/pkg2zip) installed on your system. If you use openSUSE you can install pkg2zip from the Packman repository.
 ## script explanation
 ### download_game_or_update.sh
 With this script you can download a PS Vita game or a PS Vita game update
