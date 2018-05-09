@@ -8,7 +8,13 @@ Therea are three Scripts. One to download all \*.tsv files of NoPayStation. The 
 * curl
 * [*pkg2zip*](https://github.com/mmozeiko/pkg2zip)
 If you use openSUSE you can install pkg2zip from the Packman repository.
-    # zypper install curl pkg2zip
+```bash
+# zypper install curl pkg2zip
+```
+Make sure that executable bit is set on the scripts.
+```bash
+$ chmod +x download_*.sh
+```
 
 ## Script examples
 
@@ -25,13 +31,13 @@ I can recommend [this](http://renascene.com/psv/) Site for searching media IDs.
 This script downloads every DLC found for a specific media ID with available zRIF key.
 For example:
 ```bash
-./download_dlc.sh /home/tux/Downloads/DLC.tsv PCSE00986
+$ ./download_dlc.sh /home/tux/Downloads/DLC.tsv PCSE00986
 ```
 Every DLC is placed in a created directory named like the media id relative to the current directory.
 
 ### download_tsv.sh
 It downloads every \*.tsv file from NoPayStation.com and creates a tar archive with the current date for it.
 ```bash
-./download_tsv.sh /path/to/the/output_directory
+$ ./download_tsv.sh /path/to/the/output_directory
 ```
 If you don't add the output directory as the first parameter, it uses the current working directory.
