@@ -16,6 +16,7 @@ do
     then
         echo "$bins isn't installed."
         echo "Please install it and try again"
+        exit 1
     fi
 done
 
