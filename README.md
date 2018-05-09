@@ -1,7 +1,7 @@
 # nopaystation_scripts
 
-A linux bash script which downloads nopaystation PS Vita stuff.
-Therea are three Scripts. One to download all \*.tsv files of NoPayStation. The other two are for downloading games, update or all DLC of a PS Vita game.
+A linux bash script collection which downloads nopaystation PS Vita stuff.
+There are four Scripts. One to download all \*.tsv files of NoPayStation. The other three are for downloading games, updates or all DLC of a PS Vita game.
 
 ## Requirements
 * bash
@@ -18,14 +18,22 @@ $ chmod +x download_*.sh
 
 ## Script examples
 
-### download_game_or_update.sh
-With this script you can download a PS Vita game or a PS Vita game update
+### download_game.sh
+With this script you can download a PS Vita game.
 The first parameter is the path to your \*.tsv file and the second is the game's media ID.
 For example:
 ```bash
-./download_game_or_update.sh /home/tux/Downloads/UPDATE.tsv PCSE00986
+$ ./download_game.sh /home/tux/Downloads/UPDATE.tsv PCSE00986
 ```
 I can recommend [this](http://renascene.com/psv/) Site for searching media IDs.
+
+### download_update.sh
+With this script you can download all available PS Vita game updates.
+The first parameter is the path to your \*.tsv file and the second is the game's media ID.
+For example:
+```bash
+$ ./download_update.sh /home/tux/Downloads/GAME.tsv PCSE00986
+```
 
 ### download_dlc.sh
 This script downloads every DLC found for a specific media ID with available zRIF key.
