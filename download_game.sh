@@ -46,7 +46,7 @@ if [ $KEY = "MISSING" ]
 then
     echo "zrif key missing. Cannot decrypt this package"
 else
-    wget -O file.pkg -c "$LINK"
-    pkg2zip file.pkg "$KEY"
-    rm file.pkg
+    wget -O ${GAME_ID}.pkg -c "$LINK"
+    pkg2zip ${GAME_ID}.pkg "$KEY"
+    rm ${GAME_ID}.pkg
 fi
