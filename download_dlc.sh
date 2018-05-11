@@ -49,9 +49,9 @@ for i in $LIST;
 do
     LINK=$(echo $i | cut -d"," -f1)
     KEY=$(echo $i | cut -d"," -f2)
-    if [ $KEY = "MISSING" ]
+    if [ $KEY = "MISSING" ] || [ $LINK = "MISSING" ]
     then
-        echo "zrif key missing. Cannot decrypt this package"
+        echo "zrif key or download link missing."
     else
         cd ${MY_PATH}/${GAME_ID}
         wget -O file.pkg -c "$LINK"

@@ -42,7 +42,7 @@ MY_PATH=$(pwd)
 
 LINK=$(echo $LIST | cut -d"," -f1)
 KEY=$(echo $LIST | cut -d"," -f2)
-if [ $KEY = "MISSING" ]
+if [ $KEY = "MISSING" ] || [ $TITLE = "MISSING" ]
 then
     echo "zrif key missing. Cannot decrypt this package"
 else
