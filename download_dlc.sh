@@ -54,9 +54,9 @@ do
         echo "zrif key or download link missing."
     else
         cd ${MY_PATH}/${GAME_ID}
-        wget -O file.pkg -c "$LINK"
-        pkg2zip file.pkg "$KEY"
-        rm file.pkg
+        wget -O ${GAME_ID}_dlc.pkg -c "$LINK"
+        pkg2zip ${GAME_ID}_dlc.pkg "$KEY"
+        rm ${GAME_ID}_dlc.pkg
         cd ${MY_PATH}
     fi
 done

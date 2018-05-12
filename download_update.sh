@@ -49,8 +49,8 @@ for i in $LIST;
 do
     LINK=$(echo $i | cut -d"," -f1)
     cd ${MY_PATH}/${GAME_ID}
-    wget -O file.pkg -c "$LINK"
-    pkg2zip file.pkg
-    rm file.pkg
+    wget -O ${GAME_ID}_update.pkg -c "$LINK"
+    pkg2zip ${GAME_ID}_update.pkg
+    rm ${GAME_ID}_update.pkg
     cd ${MY_PATH}
 done
