@@ -40,9 +40,9 @@ fi
 LIST=$(grep "^${GAME_ID}" ${TSV_FILE} | cut -f"4,5" | sed 's/\t/,/g')
 MY_PATH=$(pwd)
 
-if [ ! -d ${MY_PATH}/${GAME_ID} ]
+if [ ! -d ${MY_PATH}/${GAME_ID}_dlc ]
 then
-    mkdir ${MY_PATH}/${GAME_ID}
+    mkdir ${MY_PATH}/${GAME_ID}_dlc
 fi
 
 for i in $LIST;
@@ -53,7 +53,7 @@ do
     then
         echo "zrif key or download link missing."
     else
-        cd ${MY_PATH}/${GAME_ID}
+        cd ${MY_PATH}/${GAME_ID}_dlc
         wget -O ${GAME_ID}_dlc.pkg -c "$LINK"
         pkg2zip ${GAME_ID}_dlc.pkg "$KEY"
         rm ${GAME_ID}_dlc.pkg

@@ -40,15 +40,15 @@ fi
 LIST=$(grep "^${GAME_ID}" ${TSV_FILE} | cut -f"6")
 MY_PATH=$(pwd)
 
-if [ ! -d ${MY_PATH}/${GAME_ID} ]
+if [ ! -d ${MY_PATH}/${GAME_ID}_update ]
 then
-    mkdir ${MY_PATH}/${GAME_ID}
+    mkdir ${MY_PATH}/${GAME_ID}_update
 fi
 
 for i in $LIST;
 do
     LINK=$(echo $i | cut -d"," -f1)
-    cd ${MY_PATH}/${GAME_ID}
+    cd ${MY_PATH}/${GAME_ID}_update
     wget -O ${GAME_ID}_update.pkg -c "$LINK"
     pkg2zip ${GAME_ID}_update.pkg
     rm ${GAME_ID}_update.pkg
