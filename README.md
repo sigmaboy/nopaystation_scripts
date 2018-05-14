@@ -21,6 +21,7 @@ $ chmod +x download_*.sh
 ### download_game.sh
 With this script you can download a PS Vita game.
 The first parameter is the path to your \*.tsv file and the second is the game's media ID.
+It places the \*.zip file in the current directory.
 For example:
 ```bash
 $ ./download_game.sh /home/tux/Downloads/UPDATE.tsv PCSE00986
@@ -30,6 +31,7 @@ I can recommend [this](http://renascene.com/psv/) Site for searching media IDs.
 ### download_update.sh
 With this script you can download all available PS Vita game updates.
 The first parameter is the path to your \*.tsv file and the second is the game's media ID.
+It places the files in a created directory from the current working directory named $MEDIAID\_update.
 For example:
 ```bash
 $ ./download_update.sh /home/tux/Downloads/GAME.tsv PCSE00986
@@ -37,6 +39,7 @@ $ ./download_update.sh /home/tux/Downloads/GAME.tsv PCSE00986
 
 ### download_dlc.sh
 This script downloads every DLC found for a specific media ID with available zRIF key.
+It places the files in a created directory from the current working directory named $MEDIAID\_dlc.
 For example:
 ```bash
 $ ./download_dlc.sh /home/tux/Downloads/DLC.tsv PCSE00986
