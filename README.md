@@ -6,8 +6,8 @@ There are four Scripts. One to download all \*.tsv files of NoPayStation. The ot
 ## Requirements
 * bash
 * curl
-* [*pkg2zip*](https://github.com/mmozeiko/pkg2zip)
-If you use openSUSE you can install pkg2zip from the Packman repository.
+* [*pkg2zip*](https://github.com/mmozeiko/pkg2zip) with the patch from [here](https://github.com/mmozeiko/pkg2zip/pull/16.patch). If you need informations how to apply patches, open an issue.
+If you use openSUSE you can install pkg2zip from the Packman repository (patch included).
 ```bash
 # zypper install curl pkg2zip
 ```
