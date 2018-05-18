@@ -56,8 +56,13 @@ If you don't add the output directory as the first parameter, it uses the curren
 ### download2torrent.sh
 This script downloads the game, every update and dlc found for a specific media ID with available zRIF key.
 It puts the DLC and the Updates in a dedicated folder named like the generated zip and creates a torrent for the game, updates and dlc folders.
-In fact it uses the three scripts from above combine them to share them easily via BitTorrent. You need to have download\_game.sh, download\_update.sh, download\_dlc.sh in your $PATH variable to get it working. Either you can symlink them to /home/$YOURUSER/bin/ or copy them to /usr/local/bin/.
-If you want to do some additional steps after running *download2torrent.sh*, you can add a post script named *download2torrent_post.sh* to the directory where you run *download2torrent.sh* from the command line. It has to be executable to run. *download2torrent.sh* runs the post script with the game name as the first parameter. You can handle the parameter with the variable **$1** in your (bash) script.
+In fact it uses the three scripts from above combine them to share them easily via BitTorrent. You need to have download\_game.sh, download\_update.sh, download\_dlc.sh in your $PATH variable to get it working. 
+Either you can symlink them to /home/$YOURUSER/bin/ or copy them to /usr/local/bin/.
+
+If you want to do some additional steps after running *download2torrent.sh*, you can add a post script named *download2torrent_post.sh* to the directory where you run *download2torrent.sh* from the command line.
+It has to be executable to run. *download2torrent.sh* runs the post script with the game name as the first parameter.
+You can handle the parameter with the variable **$1** in your (bash) script.
+
 For example:
 ```bash
 $ ./download2torrent.sh PCSE00986 http://announce.url /path/to/directory/containing/the/tsv/files
