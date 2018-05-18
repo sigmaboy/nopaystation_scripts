@@ -90,7 +90,7 @@ fi
 rm ${MEDIA_ID}.txt
 
 ### Run post scripts
-if [ -x ./create_torrent_post.sh ]
+if [ -x ./download2torrent_post.sh ]
 then
     ./download2torrent_post.sh ${GAME_NAME}
 fi
