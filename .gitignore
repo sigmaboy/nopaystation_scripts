@@ -1,0 +1,5 @@
+*.torrent
+*.pkg
+*.zip
+*.txt
+create_torrent_post.sh

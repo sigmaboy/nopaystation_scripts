@@ -47,6 +47,7 @@ then
     echo "zrif key missing. Cannot decrypt this package"
 else
     wget -O ${GAME_ID}.pkg -c "$LINK"
+    pkg2zip -l ${GAME_ID}.pkg > ${GAME_ID}.txt
     pkg2zip ${GAME_ID}.pkg "$KEY"
     rm ${GAME_ID}.pkg
 fi

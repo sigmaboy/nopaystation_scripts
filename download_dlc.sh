@@ -40,6 +40,11 @@ fi
 LIST=$(grep "^${GAME_ID}" ${TSV_FILE} | cut -f"4,5" | sed 's/\t/,/g')
 MY_PATH=$(pwd)
 
+# make DESTDIR overridable
+if [ -z "$DESTDIR" ]
+then
+    DESTDIR="${GAME_ID}"
+fi
 
 for i in $LIST;
 do
@@ -49,11 +54,11 @@ do
     then
         echo "zrif key or download link missing."
     else
-        if [ ! -d ${MY_PATH}/${GAME_ID}_dlc ]
+        if [ ! -d ${MY_PATH}/${DESTDIR}_dlc ]
         then
-            mkdir ${MY_PATH}/${GAME_ID}_dlc
+            mkdir ${MY_PATH}/${DESTDIR}_dlc
         fi
-        cd ${MY_PATH}/${GAME_ID}_dlc
+        cd "${MY_PATH}/${DESTDIR}_dlc"
         wget -O ${GAME_ID}_dlc.pkg -c "$LINK"
         pkg2zip ${GAME_ID}_dlc.pkg "$KEY"
         rm ${GAME_ID}_dlc.pkg
