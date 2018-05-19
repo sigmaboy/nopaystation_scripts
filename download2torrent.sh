@@ -63,7 +63,7 @@ fi
 download_game.sh ${NPS_DIR}/PSV_GAMES.tsv ${MEDIA_ID}
 if [ $? -ne 0 ]
 then
-    echo "ERROR: Game cannot be encrypted. Skipping furthe steps."
+    echo "ERROR: Game cannot be encrypted. Skipping further steps."
     exit 1
 fi
 
