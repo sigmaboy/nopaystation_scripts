@@ -61,6 +61,11 @@ fi
 
 ### Download the chosen game
 download_game.sh ${NPS_DIR}/PSV_GAMES.tsv ${MEDIA_ID}
+if [ $? -ne 0 ]
+then
+    echo "ERROR: Game cannot be encrypted. Skipping furthe steps."
+    exit 1
+fi
 
 ### Get name of the zip file from generated txt created via download_game.sh
 ZIP_FILENAME=$(cat ${MEDIA_ID}.txt)
