@@ -45,6 +45,7 @@ KEY=$(echo $LIST | cut -d"," -f2)
 if [ $KEY = "MISSING" ] || [ $LINK = "MISSING" ]
 then
     echo "zrif key missing. Cannot decrypt this package"
+    exit 1
 else
     wget -O ${GAME_ID}.pkg -c "$LINK"
     pkg2zip -l ${GAME_ID}.pkg > ${GAME_ID}.txt
