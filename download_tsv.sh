@@ -36,8 +36,9 @@ fi;
 for i in ${LIST[@]};
 do
     wget -O ${DEST}/${MY_DATE}/${i}.tsv -c "${HEADER}${BASE_URL}/${MY_URL_PATH}/${i}.tsv";
-done
-wget -O ${DEST}/${MY_DATE}/feed.html -c ${HEADER}${BASE_URL}/feed/english.html
+done;
+
+wget -O ${DEST}/${MY_DATE}/feed.html -c ${HEADER}${BASE_URL}/feed/english.html;
 tar -C ${DEST} -czf ${DEST}/${MY_NAME}_${MY_DATE}.tar.gz ${MY_DATE};
 
 rm -r ${DEST}/${MY_DATE};
