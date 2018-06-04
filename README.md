@@ -6,7 +6,7 @@ There are four Scripts. One to download all \*.tsv files of NoPayStation. The ot
 ## Requirements
 * bash
 * curl
-* [*pkg2zip*](https://github.com/mmozeiko/pkg2zip) with the patch from [here](https://github.com/mmozeiko/pkg2zip/pull/16.patch). If you need informations how to apply patches, open an issue.
+* [*pkg2zip*](https://github.com/mmozeiko/pkg2zip) with the patch from [here](https://github.com/mmozeiko/pkg2zip/pull/16.patch). If you need informations how to apply patches, open an issue. Every script except **download2torrent.sh** works without the patch.
 If you use openSUSE you can install pkg2zip from the Packman repository (patch included).
 ```bash
 # zypper install curl pkg2zip
@@ -54,6 +54,9 @@ $ ./download_tsv.sh /path/to/the/output_directory
 If you don't add the output directory as the first parameter, it uses the current working directory.
 
 ### download2torrent.sh
+Requirements:
+* pkg2zip with the patch written above in the requirements
+
 This script downloads the game, every update and dlc found for a specific media ID with available zRIF key.
 It puts the DLC and the Updates in a dedicated folder named like the generated zip and creates a torrent for the game, updates and dlc folders.
 In fact it uses the three scripts from above combine them to share them easily via BitTorrent. You need to have download\_game.sh, download\_update.sh, download\_dlc.sh in your $PATH variable to get it working. 
