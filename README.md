@@ -6,11 +6,15 @@ There are four Scripts. One to download all \*.tsv files of NoPayStation. The ot
 ## Requirements
 * bash
 * curl
-* [*pkg2zip*](https://github.com/mmozeiko/pkg2zip) with the patch from [here](https://github.com/mmozeiko/pkg2zip/pull/16.patch). If you need informations how to apply patches, open an issue. Every script except **download2torrent.sh** works without the patch.
-If you use openSUSE you can install pkg2zip from the Packman repository (patch included).
-```bash
-# zypper install curl pkg2zip
-```
+* [*pkg2zip*](https://github.com/mmozeiko/pkg2zip)
+* latest mktorrent
+
+To compile+install mktorrent
+```git clone https://github.com/Rudde/mktorrent.git
+```cd mktorrent/ && PREFIX=$HOME make
+```PREFIX=$HOME make install
+```rm -rf ~/mktorrent
+
 Make sure that executable bit is set on the scripts.
 ```bash
 $ chmod +x download*.sh
