@@ -10,11 +10,11 @@ There are four Scripts. One to download all \*.tsv files of NoPayStation. The ot
 * latest mktorrent
 
 To compile+install mktorrent
-```
-git clone https://github.com/Rudde/mktorrent.git
-cd mktorrent/ && PREFIX=$HOME make
-PREFIX=$HOME make install
-rm -rf ~/mktorrent
+```bash
+$ git clone https://github.com/Rudde/mktorrent.git
+$ cd mktorrent/ && PREFIX=$HOME make
+$ PREFIX=$HOME make install
+$ rm -rf ~/mktorrent
 ```
 Make sure that executable bit is set on the scripts.
 ```bash
