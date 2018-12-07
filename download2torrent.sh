@@ -79,16 +79,16 @@ DESTDIR="${GAME_NAME}" download_dlc.sh ${NPS_DIR}/PSV_DLCS.tsv ${MEDIA_ID}
 
 ### Creating the torrent files
 echo "Creating torrent file for \"${GAME_NAME}.zip\""
-mktorrent -dpa "${ANNOUNCE_URL}" "${ZIP_FILENAME}"
+mktorrent -dpa "${ANNOUNCE_URL}" -s GGn "${ZIP_FILENAME}"
 if [ -d "${GAME_NAME}_update" ]
 then
     echo "Creating torrent file for directory \"${GAME_NAME}_update\""
-    mktorrent -dpa "${ANNOUNCE_URL}" "${GAME_NAME}_update"
+    mktorrent -dpa "${ANNOUNCE_URL}" -s GGn "${GAME_NAME}_update"
 fi
 if [ -d "${GAME_NAME}_dlc" ]
 then
     echo "Creating torrent file for directory \"${GAME_NAME}_dlc\""
-    mktorrent -dpa "${ANNOUNCE_URL}" "${GAME_NAME}_dlc"
+    mktorrent -dpa "${ANNOUNCE_URL}" -s GGn "${GAME_NAME}_dlc"
 fi
 
 ### remove temporary game name file
