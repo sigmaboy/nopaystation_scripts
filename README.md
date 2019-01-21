@@ -9,7 +9,8 @@ There are four Scripts. One to download all \*.tsv files of NoPayStation. The ot
 * [*pkg2zip*](https://github.com/mmozeiko/pkg2zip)
 * latest mktorrent
 
-To compile+install mktorrent
+(Optional) To compile+install mktorrent v1.1 (needed for source flag).
+Check the version installed on your system.
 ```bash
 $ git clone https://github.com/Rudde/mktorrent.git
 $ cd mktorrent/ && PREFIX=$HOME make
@@ -60,18 +61,32 @@ If you don't add the output directory as the first parameter, it uses the curren
 
 ### download2torrent.sh
 Requirements:
-* pkg2zip with the patch written above in the requirements
+* pkg2zip and the latest mktorrent 1.1
+  (1.0 is not working since it doesn't know the source option)
 
 This script downloads the game, every update and dlc found for a specific media ID with available zRIF key.
 It puts the DLC and the Updates in a dedicated folder named like the generated zip and creates a torrent for the game, updates and dlc folders.
-In fact it uses the three scripts from above combine them to share them easily via BitTorrent. You need to have download\_game.sh, download\_update.sh, download\_dlc.sh in your $PATH variable to get it working. 
+In fact it uses the three scripts from above, combines them to share them easily via BitTorrent. You need to have download\_game.sh, download\_update.sh, download\_dlc.sh in your $PATH variable to get it working.
 Either you can symlink them to /home/$YOURUSER/bin/ or copy them to /usr/local/bin/.
 
 If you want to do some additional steps after running *download2torrent.sh*, you can add a post script named *download2torrent_post.sh* to the directory where you run *download2torrent.sh* from the command line.
 It has to be executable to run. *download2torrent.sh* runs the post script with the game name as the first parameter.
-You can handle the parameter with the variable **$1** in your (bash) script.
+Your script can handle the parameter with the variable **$1** in your (bash) script.
+You can use this to automate your upload process with an script which adds the torrent to your client or move it and
+set the correct permissions to the file.
+All files are named like **$1**.
+For example the update and dlc directories
+* ${1}_update
+* ${1}_dlc
 
+or the torrent files
+* ${1}.torrent
+* ${1}_update.torrent
+* ${1}_dlc.torrent
+
+Additionally you can set the source tag as the end last command line parameter. This is the only optional parameter. All other are required.
+To use this feature you need to have mktorrent instaledd inat least version 1.1.
 For example:
 ```bash
-$ ./download2torrent.sh PCSE00986 http://announce.url /path/to/directory/containing/the/tsv/files
+$ ./download2torrent.sh PCSE00986 http://announce.url /path/to/directory/containing/the/tsv/files SOURCE
 ```

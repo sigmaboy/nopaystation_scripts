@@ -6,8 +6,15 @@
 ### usage function
 my_usage(){
     echo ""
+    echo "Parameters:"
+    echo "$0 \"MEDIA_ID\" \"http://announce.url\" \"/path/to/nps/directory\" \"SOURCE_TAG\""
+    echo ""
+    echo "The SOURCE_TAG parameter is optional. All other parameters are required."
+    echo "So if you don't want to set the source tag, just leave it off."
+    echo "This is required for private torrent trackers only"
+    echo ""
     echo "Usage:"
-    echo "$0 \"PCSE00986\" \"http://announce.url\" \"/path/to/nps/directory\""
+    echo "$0 \"PCSE00986\" \"http://announce.url\" \"/home/Downloads/nps\" \"GGn\""
 }
 
 # check if necessary binaries are available
@@ -22,12 +29,19 @@ do
     fi
 done
 
-MEDIA_ID=${1}
-ANNOUNCE_URL=${2}
-NPS_DIR=${3}
+MEDIA_ID="${1}"
+ANNOUNCE_URL="${2}"
+NPS_DIR="${3}"
+if [ -z "${4}" ]
+then
+    SOURCE_ENABLE=0
+else
+    SOURCE_TAG="${4}"
+    SOURCE_ENABLE=1
+fi
 
 ### check if every parameter is set
-if [ -z ${MEDIA_ID} ] || [ -z ${ANNOUNCE_URL} ] || [ -z ${NPS_DIR} ]
+if [ -z "${MEDIA_ID}" ] || [ -z "${ANNOUNCE_URL}" ] || [ -z "${NPS_DIR}" ]
 then
     echo "ERROR: Not every necessary option specified."
     my_usage
@@ -79,16 +93,31 @@ DESTDIR="${GAME_NAME}" download_dlc.sh ${NPS_DIR}/PSV_DLCS.tsv ${MEDIA_ID}
 
 ### Creating the torrent files
 echo "Creating torrent file for \"${GAME_NAME}.zip\""
-mktorrent -dpa "${ANNOUNCE_URL}" -s GGn "${ZIP_FILENAME}"
+if [ "${SOURCE_ENABLE}" -eq 0 ]
+then
+    mktorrent -dpa "${ANNOUNCE_URL}" "${ZIP_FILENAME}"
+else
+    mktorrent -dpa "${ANNOUNCE_URL}" -s "${SOURCE_TAG}" "${ZIP_FILENAME}"
+fi
 if [ -d "${GAME_NAME}_update" ]
 then
     echo "Creating torrent file for directory \"${GAME_NAME}_update\""
-    mktorrent -dpa "${ANNOUNCE_URL}" -s GGn "${GAME_NAME}_update"
+    if [ "${SOURCE_ENABLE}" -eq 0 ]
+    then
+        mktorrent -dpa "${ANNOUNCE_URL}" "${GAME_NAME}_update"
+    else
+        mktorrent -dpa "${ANNOUNCE_URL}" -s "${SOURCE_TAG}" "${GAME_NAME}_update"
+    fi
 fi
 if [ -d "${GAME_NAME}_dlc" ]
 then
     echo "Creating torrent file for directory \"${GAME_NAME}_dlc\""
-    mktorrent -dpa "${ANNOUNCE_URL}" -s GGn "${GAME_NAME}_dlc"
+    if [ "${SOURCE_ENABLE}" -eq 0 ]
+    then
+        mktorrent -dpa "${ANNOUNCE_URL}" "${GAME_NAME}_update"
+    else
+        mktorrent -dpa "${ANNOUNCE_URL}" -s "${SOURCE_TAG}" "${GAME_NAME}_dlc"
+    fi
 fi
 
 ### remove temporary game name file
