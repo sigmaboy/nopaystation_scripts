@@ -9,7 +9,7 @@ my_usage(){
     echo "$0 \"/path/to/GAME.tsv\" \"PCSE00986\""
 }
 
-MY_BINARIES=("curl" "pkg2zip")
+MY_BINARIES=("curl" "pkg2zip" "sed")
 for bins in ${MY_BINARIES[@]}
 do
     if [ ! -x $(which ${bins}) ]

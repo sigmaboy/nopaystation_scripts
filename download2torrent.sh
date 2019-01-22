@@ -18,7 +18,7 @@ my_usage(){
 }
 
 # check if necessary binaries are available
-MY_BINARIES=("curl" "pkg2zip" "mktorrent")
+MY_BINARIES=("curl" "pkg2zip" "mktorrent" "sed")
 for bins in ${MY_BINARIES[@]}
 do
     if [ ! -x $(which ${bins}) ]
