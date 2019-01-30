@@ -85,7 +85,7 @@ or the torrent files
 * ${1}_dlc.torrent
 
 Additionally you can set the source tag as the end last command line parameter. This is the only optional parameter. All other are required.
-To use this feature you need to have mktorrent instaledd inat least version 1.1.
+To use this feature you need to have mktorrent installed in version 1.1+!
 For example:
 ```bash
 $ ./download2torrent.sh PCSE00986 http://announce.url /path/to/directory/containing/the/tsv/files SOURCE
