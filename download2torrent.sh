@@ -40,6 +40,17 @@ else
     SOURCE_ENABLE=1
 fi
 
+if ! echo "${MEDIA_ID}" | grep -E -i 'PCS[ABCDEFGH][0-9]{5}' > /dev/null
+then
+    echo ""
+    echo "Error"
+    echo "Media ID is not valid."
+    echo "It should be the following format:"
+    echo "PCSA01234"
+    echo "Check your first parameter."
+    exit 1
+fi
+
 ### check if every parameter is set
 if [ -z "${MEDIA_ID}" ] || [ -z "${ANNOUNCE_URL}" ] || [ -z "${NPS_DIR}" ]
 then
@@ -77,7 +88,8 @@ fi
 download_game.sh ${NPS_DIR}/PSV_GAMES.tsv ${MEDIA_ID}
 if [ $? -ne 0 ]
 then
-    echo "ERROR: Game cannot be encrypted. Skipping further steps."
+    echo ""
+    echo "Game cannot be downloaded. Skipping further steps."
     exit 1
 fi
 

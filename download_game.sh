@@ -24,6 +24,7 @@ done
 TSV_FILE=$1
 GAME_ID=$2
 
+
 if [ ! -f $TSV_FILE ]
 then
     echo "No TSV file found."
@@ -37,7 +38,17 @@ then
     exit 1
 fi
 
-LIST=$(grep "^${GAME_ID}" ${TSV_FILE} | cut -f"4,5" | sed 's/\t/,/g')
+# check if MEDIA ID is found in download list
+if ! grep "^${GAME_ID}" ${TSV_FILE}
+then
+    echo "ERROR:"
+    echo "Media ID is not found in your *.tsv file"
+    echo "Check your input for a valid media ID"
+    echo "Search on: \"https://renascene.com/psv/\" for"
+    echo "Media IDs or simple open the *.tsv with your Office Suite."
+    exit 1
+fi
+LIST=$(grep "^${GAME_ID}" ${TSV_FILE}| cut -f"4,5" | sed 's/\t/,/g')
 MY_PATH=$(pwd)
 
 LINK=$(echo $LIST | cut -d"," -f1)
