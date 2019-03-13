@@ -12,7 +12,7 @@ my_usage(){
 MY_BINARIES=("curl" "pkg2zip" "sed")
 for bins in ${MY_BINARIES[@]}
 do
-    if [ ! -x $(which ${bins}) ]
+    if ! which ${bins} > /dev/null 2>&1
     then
         echo "$bins isn't installed."
         echo "Please install it and try again"
@@ -39,7 +39,7 @@ then
 fi
 
 # check if MEDIA ID is found in download list
-if ! grep "^${GAME_ID}" ${TSV_FILE}
+if ! grep "^${GAME_ID}" ${TSV_FILE} > /dev/null
 then
     echo "ERROR:"
     echo "Media ID is not found in your *.tsv file"

@@ -12,7 +12,7 @@ my_usage(){
 MY_BINARIES=("curl" "pkg2zip")
 for bins in ${MY_BINARIES[@]}
 do
-    if [ ! -x $(which ${bins}) ]
+    if ! which ${bins} > /dev/null 2>&1
     then
         echo "$bins isn't installed."
         echo "Please install it and try again"
