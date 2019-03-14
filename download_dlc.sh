@@ -9,7 +9,7 @@ my_usage(){
     echo "$0 \"/path/to/DLC.tsv\" \"PCSE00986\""
 }
 
-MY_BINARIES=("curl" "pkg2zip" "sed")
+MY_BINARIES=("curl" "pkg2zip" "sed" "sha256sum")
 for bins in ${MY_BINARIES[@]}
 do
     if ! which ${bins} > /dev/null 2>&1
@@ -37,7 +37,7 @@ then
     exit 1
 fi
 
-LIST=$(grep "^${GAME_ID}" ${TSV_FILE} | cut -f"4,5" | sed 's/\t/,/g')
+LIST=$(grep "^${GAME_ID}" ${TSV_FILE} | cut -f"4,5,9" | sed 's/\t/,/g' | sed 's/\r//g')
 MY_PATH=$(pwd)
 
 # make DESTDIR overridable
@@ -50,6 +50,7 @@ for i in $LIST;
 do
     LINK=$(echo $i | cut -d"," -f1)
     KEY=$(echo $i | cut -d"," -f2)
+    LIST_SHA256=$(echo $i | xargs | cut -d"," -f3)
     if [ $KEY = "MISSING" ] || [ $LINK = "MISSING" ]
     then
         echo "zrif key or download link missing."
@@ -60,6 +61,28 @@ do
         fi
         cd "${MY_PATH}/${DESTDIR}_dlc"
         wget -O ${GAME_ID}_dlc.pkg -c "$LINK"
+        FILE_SHA256=$(sha256sum ${GAME_ID}_dlc.pkg | xargs | cut -d" " -f"1")
+        if [ ${FILE_SHA256} != ${LIST_SHA256} ]
+        then
+            echo "Checksum of downloaded file does not match checksum in list"
+            LOOP=1
+            while [ $LOOP -eq 1 ]
+            do
+                echo "Do you want to continue? (yes/no)"
+                read INPUT
+                if [ $INPUT == "yes" ]
+                then
+                    LOOP=0
+                elif [ $INPUT == "no" ]
+                then
+                    LOOP=0
+                    echo "User aborted."
+                    echo "Downloaded file removed."
+                    rm ${GAME_ID}_dlc.pkg
+                    exit 1
+                fi
+            done
+        fi
         pkg2zip ${GAME_ID}_dlc.pkg "$KEY"
         rm ${GAME_ID}_dlc.pkg
         cd ${MY_PATH}
