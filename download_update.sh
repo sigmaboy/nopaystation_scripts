@@ -37,7 +37,7 @@ then
     exit 1
 fi
 
-LIST=$(grep "^${GAME_ID}" "${TSV_FILE}" | cut -f"6,10" | sed 's/\t/,/g' | sed 's/\r//g')
+LIST=$(grep "^${GAME_ID}" "${TSV_FILE}" | cut -f"6,9" | sed 's/\t/,/g' | sed 's/\r//g')
 MY_PATH=$(pwd)
 
 # make DESTDIR overridable
