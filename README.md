@@ -30,7 +30,7 @@ The first parameter is the path to your \*.tsv file and the second is the game's
 It places the \*.zip file in the current directory.
 For example:
 ```bash
-$ ./download_game.sh /home/tux/Downloads/UPDATE.tsv PCSE00986
+$ ./download_game.sh /home/tux/Downloads/GAME.tsv PCSE00986
 ```
 I can recommend [this](http://renascene.com/psv/) Site for searching media IDs.
 
@@ -40,7 +40,7 @@ The first parameter is the path to your \*.tsv file and the second is the game's
 It places the files in a created directory from the current working directory named $MEDIAID\_update.
 For example:
 ```bash
-$ ./download_update.sh /home/tux/Downloads/GAME.tsv PCSE00986
+$ ./download_update.sh /home/tux/Downloads/UPDATE.tsv PCSE00986
 ```
 
 ### download_dlc.sh
