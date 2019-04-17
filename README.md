@@ -7,7 +7,7 @@ There are four Scripts. One to download all \*.tsv files of NoPayStation. The ot
 * bash
 * curl
 * [*pkg2zip*](https://github.com/mmozeiko/pkg2zip)
-* latest mktorrent
+* latest [*mktorrent*](https://github.com/Rudde/mktorrent)
 
 (Optional) To compile+install mktorrent v1.1 (needed for source flag).
 Check the version installed on your system.
