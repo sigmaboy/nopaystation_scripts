@@ -4,8 +4,8 @@ A linux bash script collection which downloads nopaystation PS Vita stuff.
 There are four Scripts. One to download all \*.tsv files of NoPayStation. The other three are for downloading games, updates or all DLC of a PS Vita game.
 
 ## Requirements
-* bash
-* curl
+* posix shell (bash, ksh, zsh, sh)
+* curl or wget
 * [*pkg2zip*](https://github.com/mmozeiko/pkg2zip)
 * latest [*mktorrent*](https://github.com/Rudde/mktorrent)
 

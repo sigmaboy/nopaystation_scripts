@@ -18,10 +18,10 @@ my_usage(){
 }
 
 # check if necessary binaries are available
-MY_BINARIES=("curl" "pkg2zip" "mktorrent" "sed")
-for bins in ${MY_BINARIES[@]}
+MY_BINARIES="pkg2zip mktorrent sed"
+for bins in $MY_BINARIES
 do
-    if [ ! -x $(which ${bins}) ]
+    if [ ! -x $(which "${bins}") ]
     then
         echo "$bins isn't installed."
         echo "Please install it and try again"
@@ -60,7 +60,7 @@ then
 fi
 
 ### check if nps tsv file directory exists
-if [ ! -d ${NPS_DIR} ]
+if [ ! -d "${NPS_DIR}" ]
 then
     echo "Directory containing *.tsv files missing (\"${NPS_DIR}\"). Check your path parameter."
     my_usage
@@ -68,16 +68,17 @@ then
 fi
 
 ### check if the tsv files are available to call download scripts
-for tsv_file in PSV_GAMES.tsv PSV_DLCS.tsv PSV_UPDATES.tsv;
+tsv_files="PSV_GAMES.tsv PSV_DLCS.tsv PSV_UPDATES.tsv"
+for tsv_file in $tsv_files
 do
-    if [ ! -f ${NPS_DIR}/${tsv_file} ]
+    if [ ! -f "${NPS_DIR}/${tsv_file}" ]
     then
         echo "*.tsv file \"${tsv_file}\" in path \"${NPS_DIR}\" missing."
         exit 1
     fi
 done
 
-echo ${ANNOUNCE_URL} | grep "^http" &> /dev/null
+echo "${ANNOUNCE_URL}" | grep "^http" &> /dev/null
 if [ $? -ne 0 ]
 then
     echo "No valid announce url provided. Be sure that the url starts with \"http\" and has a correct hostname"
@@ -85,7 +86,7 @@ then
 fi
 
 ### Download the chosen game
-download_game.sh ${NPS_DIR}/PSV_GAMES.tsv ${MEDIA_ID}
+download_game.sh "${NPS_DIR}/PSV_GAMES.tsv" "${MEDIA_ID}"
 if [ $? -ne 0 ]
 then
     echo ""
@@ -94,14 +95,14 @@ then
 fi
 
 ### Get name of the zip file from generated txt created via download_game.sh
-ZIP_FILENAME=$(cat ${MEDIA_ID}.txt)
-GAME_NAME=$(echo ${ZIP_FILENAME} | sed 's/.zip//g')
+ZIP_FILENAME="$(cat ${MEDIA_ID}.txt)"
+GAME_NAME="$(echo "${ZIP_FILENAME}" | sed 's/.zip//g')"
 
 ### Download available updates
-DESTDIR="${GAME_NAME}" download_update.sh ${NPS_DIR}/PSV_UPDATES.tsv ${MEDIA_ID}
+DESTDIR="${GAME_NAME}" download_update.sh "${NPS_DIR}/PSV_UPDATES.tsv" "${MEDIA_ID}"
 
 ### Download available DLC
-DESTDIR="${GAME_NAME}" download_dlc.sh ${NPS_DIR}/PSV_DLCS.tsv ${MEDIA_ID}
+DESTDIR="${GAME_NAME}" download_dlc.sh "${NPS_DIR}/PSV_DLCS.tsv" "${MEDIA_ID}"
 
 ### Creating the torrent files
 echo "Creating torrent file for \"${GAME_NAME}.zip\""
@@ -133,7 +134,7 @@ then
 fi
 
 ### remove temporary game name file
-rm ${MEDIA_ID}.txt
+rm "${MEDIA_ID}.txt"
 
 ### Run post scripts
 if [ -x ./download2torrent_post.sh ]
