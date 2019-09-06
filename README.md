@@ -1,7 +1,7 @@
-# nopaystation_scripts
+# nopaystation\_scripts
 
-A linux bash script collection which downloads nopaystation PS Vita stuff.
-There are four Scripts. One to download all \*.tsv files of NoPayStation. The other three are for downloading games, updates or all DLC of a PS Vita game.
+A linux shell script collection which downloads nopaystation PS Vita stuff.
+There are five scripts. One to download all \*.tsv files of NoPayStation. The other four are for downloading games, updates or all DLC of a PS Vita game.
 
 ## Requirements
 * posix shell (bash, ksh, zsh, sh)
@@ -12,6 +12,7 @@ There are four Scripts. One to download all \*.tsv files of NoPayStation. The ot
 (Optional) To compile+install mktorrent v1.1 (needed for source flag).
 Check the version installed on your system.
 ```bash
+$ mktorrent -v
 $ git clone https://github.com/Rudde/mktorrent.git
 $ cd mktorrent/ && PREFIX=$HOME make
 $ PREFIX=$HOME make install
@@ -24,7 +25,7 @@ $ chmod +x download*.sh
 
 ## Script examples
 
-### download_game.sh
+### download\_game.sh
 With this script you can download a PS Vita game.
 The first parameter is the path to your \*.tsv file and the second is the game's media ID.
 It places the \*.zip file in the current directory.
@@ -34,7 +35,7 @@ $ ./download_game.sh /home/tux/Downloads/GAME.tsv PCSE00986
 ```
 I can recommend [this](http://renascene.com/psv/) Site for searching media IDs.
 
-### download_update.sh
+### download\_update.sh
 With this script you can download all available PS Vita game updates.
 The first parameter is the path to your \*.tsv file and the second is the game's media ID.
 It places the files in a created directory from the current working directory named $MEDIAID\_update.
@@ -43,7 +44,7 @@ For example:
 $ ./download_update.sh /home/tux/Downloads/UPDATE.tsv PCSE00986
 ```
 
-### download_dlc.sh
+### download\_dlc.sh
 This script downloads every DLC found for a specific media ID with available zRIF key.
 It places the files in a created directory from the current working directory named $MEDIAID\_dlc.
 For example:
@@ -52,7 +53,7 @@ $ ./download_dlc.sh /home/tux/Downloads/DLC.tsv PCSE00986
 ```
 Every DLC is placed in a created directory named like the media id relative to the current directory.
 
-### download_tsv.sh
+### download\_tsv.sh
 It downloads every \*.tsv file from NoPayStation.com and creates a tar archive with the current date for it.
 ```bash
 $ ./download_tsv.sh /path/to/the/output_directory
@@ -71,7 +72,7 @@ Either you can symlink them to /home/$YOURUSER/bin/ or copy them to /usr/local/b
 
 If you want to do some additional steps after running *download2torrent.sh*, you can add a post script named *download2torrent_post.sh* to the directory where you run *download2torrent.sh* from the command line.
 It has to be executable to run. *download2torrent.sh* runs the post script with the game name as the first parameter.
-Your script can handle the parameter with the variable **$1** in your (bash) script.
+Your script can handle the parameter with the variable **$1** in your (shell) script.
 You can use this to automate your upload process with an script which adds the torrent to your client or move it and
 set the correct permissions to the file.
 All files are named like **$1**.
