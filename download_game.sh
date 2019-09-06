@@ -1,16 +1,65 @@
-#!/bin/bash
+#!/bin/sh
 
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
 # Version 0.1
 
-my_usage(){
+function my_usage {
     echo ""
     echo "Usage:"
     echo "$0 \"/path/to/GAME.tsv\" \"PCSE00986\""
 }
 
-MY_BINARIES=("curl" "pkg2zip" "sed" "sha256sum")
-for bins in ${MY_BINARIES[@]}
+function my_sha256 {
+    local file="$1"
+
+    case "$SHA256" in
+        "sha256sum")
+	    sha256sum "$file" | awk '{ print $1 }' ;;
+        "sha256")
+	    sha256    "$file" | awk '{ print $4 }' ;;
+    esac
+}
+
+function sha256_choose {
+    if whereis sha256 > /dev/null 2>&1
+    then
+        MY_BINARIES="${MY_BINARIES} sha256"
+	SHA256="sha256"
+    else
+        MY_BINARIES="${MY_BINARIES} sha256sum" 
+	SHA256="sha256sum"
+    fi
+}
+
+function my_download_file {
+    local url="$1"
+    local destination="$2"
+
+    case "$DOWNLOADER" in
+        "wget")
+	    wget -O "$destination" "$url" ;;
+        "curl")
+	    curl -o "$destination" "$url" ;;
+    esac
+}
+
+function downloader_choose {
+    if whereis wget > /dev/null 2>&1
+    then
+        MY_BINARIES="${MY_BINARIES} wget"
+        DOWNLOADER="wget"
+    else
+        MY_BINARIES="${MY_BINARIES} curl"
+	DOWNLOADER="curl"
+    fi
+}
+    
+    
+
+MY_BINARIES="pkg2zip sed"
+sha256_choose; downloader_choose
+
+for bins in $MY_BINARIES
 do
     if ! which ${bins} > /dev/null 2>&1
     then
@@ -48,23 +97,25 @@ then
     echo "Media IDs or simple open the *.tsv with your Office Suite."
     exit 1
 fi
-LIST=$(grep "^${GAME_ID}" ${TSV_FILE}| cut -f"4,5,10" | sed 's/\t/,/g')
-MY_PATH=$(pwd)
+LIST="$(grep "^${GAME_ID}" ${TSV_FILE}| sed 's/.*http/http/')"
+MY_PATH="$(pwd)"
 
-LINK=$(echo $LIST | cut -d"," -f1)
-KEY=$(echo $LIST | cut -d"," -f2)
-LIST_SHA256=$(echo $LIST | cut -d"," -f3)
+LINK="$(echo "$LIST" | awk '{ print $1 }')"
+KEY="$(echo "$LIST"  | awk '{ print $2 }')"
+LIST_SHA256="$(echo "$LIST" | awk '{ print $7 }')"
 
-if [ $KEY = "MISSING" ] || [ $LINK = "MISSING" ]
+if [ "$KEY" = "MISSING" ] || [ "$LINK" = "MISSING" ]
 then
     echo "zrif key missing. Cannot decrypt this package"
     exit 1
 else
-    wget -O ${GAME_ID}.pkg -c "$LINK"
-    FILE_SHA256=$(sha256sum ${GAME_ID}.pkg | xargs | cut -d" " -f"1")
-    if [ ${FILE_SHA256} != ${LIST_SHA256} ]
+    my_download_file "$LINK" "${GAME_ID}.pkg"
+    FILE_SHA256="$(my_sha256 "${GAME_ID}.pkg")"
+
+    if [ "${FILE_SHA256}" != "${LIST_SHA256}" ]
     then
         echo "Checksum of downloaded file does not match checksum in list"
+	echo "${FILE_SHA256} != ${LIST_SHA256}"
         LOOP=1
         while [ $LOOP -eq 1 ]
         do
@@ -83,7 +134,7 @@ else
             fi
         done
     fi
-    pkg2zip -l ${GAME_ID}.pkg > ${GAME_ID}.txt
-    pkg2zip ${GAME_ID}.pkg "$KEY"
-    rm ${GAME_ID}.pkg
+    pkg2zip -l "${GAME_ID}.pkg" > "${GAME_ID}.txt"
+    pkg2zip "${GAME_ID}.pkg" "$KEY"
+    rm "${GAME_ID}.pkg"
 fi
