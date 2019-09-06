@@ -4,6 +4,7 @@ A linux shell script collection which downloads nopaystation PS Vita stuff.
 There are five scripts. One to download all \*.tsv files of NoPayStation. The other four are for downloading games, updates or all DLC of a PS Vita game.
 
 ## Requirements
+* a working internet connection
 * posix shell (bash, ksh, zsh, sh)
 * curl or wget
 * [*pkg2zip*](https://github.com/mmozeiko/pkg2zip)
@@ -33,7 +34,7 @@ For example:
 ```bash
 $ ./download_game.sh /home/tux/Downloads/GAME.tsv PCSE00986
 ```
-I can recommend [this](http://renascene.com/psv/) Site for searching media IDs.
+I can recommend [this](http://renascene.com/psv/) site for searching media IDs.
 
 ### download\_update.sh
 With this script you can download all available PS Vita game updates.
