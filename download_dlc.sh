@@ -21,7 +21,7 @@ function my_sha256 {
 }
 
 function sha256_choose {
-    if whereis sha256 > /dev/null 2>&1
+    if which sha256 > /dev/null 2>&1
     then
         MY_BINARIES="${MY_BINARIES} sha256"
         SHA256="sha256"
@@ -44,7 +44,7 @@ function my_download_file {
 }
 
 function downloader_choose {
-    if whereis wget > /dev/null 2>&1
+    if which wget > /dev/null 2>&1
     then
         MY_BINARIES="${MY_BINARIES} wget"
         DOWNLOADER="wget"

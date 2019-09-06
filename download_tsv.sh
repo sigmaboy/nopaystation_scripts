@@ -20,7 +20,7 @@ function my_download_file {
 }
 
 function downloader_choose {
-    if whereis wget > /dev/null 2>&1
+    if which wget > /dev/null 2>&1
     then
         MY_BINARIES="${MY_BINARIES} wget"
         DOWNLOADER="wget"
