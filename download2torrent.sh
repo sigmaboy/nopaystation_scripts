@@ -1,29 +1,39 @@
 #!/bin/bash
 
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
-# Version 0.1
+# Version 0.3
 
 ### usage function
-my_usage(){
+function my_usage(){
     echo ""
     echo "Parameters:"
-    echo "$0 \"MEDIA_ID\" \"http://announce.url\" \"/path/to/nps/directory\" \"SOURCE_TAG\""
+    echo "${0} \"MEDIA_ID\" \"http://announce.url\" \"/path/to/nps/directory\" \"SOURCE_TAG\""
     echo ""
     echo "The SOURCE_TAG parameter is optional. All other parameters are required."
     echo "So if you don't want to set the source tag, just leave it off."
     echo "This is required for private torrent trackers only"
     echo ""
     echo "Usage:"
-    echo "$0 \"PCSE00986\" \"http://announce.url\" \"/home/Downloads/nps\" \"GGn\""
+    echo "${0} \"PCSE00986\" \"http://announce.url\" \"/home/Downloads/nps\" \"GGn\""
+}
+
+function my_mktorrent(){
+    local TORRENT_SOURCE="${1}"
+    if [ "${SOURCE_ENABLE}" -eq 0 ]
+    then
+        mktorrent -dpa "${ANNOUNCE_URL}" "${TORRENT_SOURCE}"
+    else
+        mktorrent -dpa "${ANNOUNCE_URL}" -s "${SOURCE_TAG}" "${TORRENT_SOURCE}"
+    fi
 }
 
 # check if necessary binaries are available
 MY_BINARIES="pkg2zip mktorrent sed"
-for bins in $MY_BINARIES
+for bins in ${MY_BINARIES}
 do
     if [ ! -x $(which "${bins}") ]
     then
-        echo "$bins isn't installed."
+        echo "${bins} isn't installed."
         echo "Please install it and try again"
         exit 1
     fi
@@ -95,7 +105,7 @@ then
 fi
 
 ### Get name of the zip file from generated txt created via download_game.sh
-ZIP_FILENAME="$(cat ${MEDIA_ID}.txt)"
+ZIP_FILENAME="$(cat "${MEDIA_ID}.txt")"
 GAME_NAME="$(echo "${ZIP_FILENAME}" | sed 's/.zip//g')"
 
 ### Download available updates
@@ -106,31 +116,16 @@ DESTDIR="${GAME_NAME}" download_dlc.sh "${NPS_DIR}/PSV_DLCS.tsv" "${MEDIA_ID}"
 
 ### Creating the torrent files
 echo "Creating torrent file for \"${GAME_NAME}.zip\""
-if [ "${SOURCE_ENABLE}" -eq 0 ]
-then
-    mktorrent -dpa "${ANNOUNCE_URL}" "${ZIP_FILENAME}"
-else
-    mktorrent -dpa "${ANNOUNCE_URL}" -s "${SOURCE_TAG}" "${ZIP_FILENAME}"
-fi
+my_mktorrent "${ZIP_FILENAME}"
 if [ -d "${GAME_NAME}_update" ]
 then
     echo "Creating torrent file for directory \"${GAME_NAME}_update\""
-    if [ "${SOURCE_ENABLE}" -eq 0 ]
-    then
-        mktorrent -dpa "${ANNOUNCE_URL}" "${GAME_NAME}_update"
-    else
-        mktorrent -dpa "${ANNOUNCE_URL}" -s "${SOURCE_TAG}" "${GAME_NAME}_update"
-    fi
+    my_mktorrent "${GAME_NAME}_update"
 fi
 if [ -d "${GAME_NAME}_dlc" ]
 then
     echo "Creating torrent file for directory \"${GAME_NAME}_dlc\""
-    if [ "${SOURCE_ENABLE}" -eq 0 ]
-    then
-        mktorrent -dpa "${ANNOUNCE_URL}" "${GAME_NAME}_update"
-    else
-        mktorrent -dpa "${ANNOUNCE_URL}" -s "${SOURCE_TAG}" "${GAME_NAME}_dlc"
-    fi
+    my_mktorrent "${GAME_NAME}_dlc"
 fi
 
 ### remove temporary game name file
