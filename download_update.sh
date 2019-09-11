@@ -3,69 +3,22 @@
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
 # Version 0.3
 
+# get directory where the scripts are located
+HERE="$(dirname "$(readlink -f "${0}")")"
+
+# source shared functions
+source "${HERE}/functions.sh"
+
 my_usage(){
     echo ""
     echo "Usage:"
     echo "${0} \"/path/to/DLC.tsv\" \"PCSE00986\""
 }
 
-function my_sha256 {
-    local file="${1}"
-
-    case "$SHA256" in
-        "sha256sum")
-            sha256sum "${file}" | awk '{ print $1 }' ;;
-        "sha256")
-            sha256    "${file}" | awk '{ print $4 }' ;;
-    esac
-}
-
-function sha256_choose {
-    if which sha256 > /dev/null 2>&1
-    then
-        MY_BINARIES="${MY_BINARIES} sha256"
-        SHA256="sha256"
-    else
-        MY_BINARIES="${MY_BINARIES} sha256sum"
-        SHA256="sha256sum"
-    fi
-}
-
-function my_download_file {
-    local url="${1}"
-    local destination="${2}"
-
-    case "${DOWNLOADER}" in
-        "wget")
-            wget -O "${destination}" "${url}" ;;
-        "curl")
-            curl -o "${destination}" "${url}" ;;
-    esac
-}
-
-function downloader_choose {
-    if which wget > /dev/null 2>&1
-    then
-        MY_BINARIES="${MY_BINARIES} wget"
-        DOWNLOADER="wget"
-    else
-        MY_BINARIES="${MY_BINARIES} curl"
-        DOWNLOADER="curl"
-    fi
-}
-
-
 MY_BINARIES="pkg2zip sed"
 sha256_choose; downloader_choose
-for bins in ${MY_BINARIES}
-do
-    if ! which "${bins}" > /dev/null 2>&1
-    then
-        echo "${bins} isn't installed."
-        echo "Please install it and try again"
-        exit 1
-    fi
-done
+
+check_binaries "${MY_BINARIES}"
 
 # Get variables from script parameters
 TSV_FILE="${1}"
@@ -128,10 +81,10 @@ do
         do
             echo "Do you want to continue? (yes/no)"
             read INPUT
-            if [ ${INPUT} == "yes" ]
+            if [ "${INPUT}" == "yes" ]
             then
                 LOOP=0
-            elif [ ${INPUT} == "no" ]
+            elif [ "${INPUT}" == "no" ]
             then
                 LOOP=0
                 echo "User aborted."

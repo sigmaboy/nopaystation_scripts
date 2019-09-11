@@ -3,6 +3,12 @@
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
 # Version 0.3
 
+# get directory where the scripts are located
+HERE="$(dirname "$(readlink -f "${0}")")"
+
+# source shared functions
+source "${HERE}/functions.sh"
+
 ### usage function
 function my_usage(){
     echo ""
@@ -29,15 +35,7 @@ function my_mktorrent(){
 
 # check if necessary binaries are available
 MY_BINARIES="pkg2zip mktorrent sed"
-for bins in ${MY_BINARIES}
-do
-    if [ ! -x $(which "${bins}") ]
-    then
-        echo "${bins} isn't installed."
-        echo "Please install it and try again"
-        exit 1
-    fi
-done
+check_binaries "${MY_BINARIES}"
 
 MEDIA_ID="${1}"
 ANNOUNCE_URL="${2}"
