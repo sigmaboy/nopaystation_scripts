@@ -2,5 +2,6 @@
 *.pkg
 *.zip
 *.txt
+*.7z
 create_torrent_post.sh
 app/

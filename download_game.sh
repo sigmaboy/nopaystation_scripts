@@ -85,6 +85,10 @@ else
         done
     fi
     pkg2zip -l "${GAME_ID}.pkg" > "${GAME_ID}.txt"
-    pkg2zip "${GAME_ID}.pkg" "${KEY}"
+    pkg2zip -x "${GAME_ID}.pkg" "${KEY}"
     rm "${GAME_ID}.pkg"
+    MY_GAME_NAME="$(cat "${GAME_ID}.txt" | sed 's/\.zip//g')"
+    MY_GAME_NAME="$(region_rename "${MY_GAME_NAME}")"
+    t7z a "${MY_GAME_NAME}.7z" "app/"
+    rm -rf "app/"
 fi

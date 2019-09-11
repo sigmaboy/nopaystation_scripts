@@ -57,3 +57,25 @@ function check_binaries(){
         fi
     done
 }
+
+function region_rename() {
+    local NAME="${1}"
+
+    if echo "${NAME}" | grep -q "[USA]"
+    then
+        local NEW_NAME="$(echo "${NAME}" | sed 's/USA/NTSC/g')"
+    elif echo "${NAME}" | grep -q "[JPN]"
+    then
+        NEW_NAME="$(echo "${NAME}" | sed 's/JPN/NTSC-J/g')"
+    elif echo "${NAME}" | grep -q "[EUR]"
+    then
+        NEW_NAME="$(echo "${NAME}" | sed 's/EUR/PAL/g')"
+    elif echo "${NAME}" | grep -q "[ASA]"
+    then
+        NEW_NAME="$(echo "${NAME}" | sed 's/ASA/NSTC-U/g')"
+    else
+        echo "Region not found."
+        exit 1
+    fi
+    echo ${NEW_NAME}
+}
