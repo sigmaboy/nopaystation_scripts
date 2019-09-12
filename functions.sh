@@ -47,7 +47,7 @@ function my_download_file {
 
 function check_binaries(){
     local BINARIES="${1}"
-    for bins in "${BINARIES}"
+    for bins in ${BINARIES}
     do
         if ! which ${bins} > /dev/null 2>&1
         then
