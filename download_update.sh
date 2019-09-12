@@ -7,7 +7,7 @@
 SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 
 # source shared functions
-source "${SCRIPT_DIR}/functions.sh"
+. "${SCRIPT_DIR}/functions.sh"
 
 my_usage(){
     echo ""
@@ -76,23 +76,7 @@ do
     then
         echo "Checksum of downloaded file does not match checksum in list"
         echo "${FILE_SHA256} != ${LIST_SHA256}"
-        LOOP=1
-        while [ ${LOOP} -eq 1 ]
-        do
-            echo "Do you want to continue? (yes/no)"
-            read INPUT
-            if [ "${INPUT}" == "yes" ]
-            then
-                LOOP=0
-            elif [ "${INPUT}" == "no" ]
-            then
-                LOOP=0
-                echo "User aborted."
-                echo "Downloaded file removed."
-                rm "${GAME_ID}_update.pkg"
-                exit 1
-            fi
-        done
+        yesno_checksum
     fi
     pkg2zip "${GAME_ID}_update.pkg"
     rm "${GAME_ID}_update.pkg"

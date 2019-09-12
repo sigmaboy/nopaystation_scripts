@@ -57,3 +57,28 @@ check_binaries(){
         fi
     done
 }
+
+yesno_checksum() {
+    local GAME_ID="${1}"
+    while true
+    do
+        echo "Do you want to continue? (yes/no)"
+        read INPUT
+        case "${INPUT}" in
+            Yes|YES|yes|Y|y)
+                break
+                ;;
+            No|NO|no|n)
+                echo "User aborted."
+                test -e "${GAME_ID}.pkg" && rm "${GAME_ID}.pkg"
+                if [ ${?} -eq 0 ]
+                then
+                    echo "Downloaded file removed."
+                else
+                    echo "Something went wrong while removing pkg file."
+                fi
+                exit 1
+                ;;
+        esac
+    done
+}
