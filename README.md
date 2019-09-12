@@ -33,7 +33,7 @@ chmod +x ${HOME}/bin/t7z
 
 ## Installation
 ```bash
-$ git clone https://github.com/sigmaboy/nopaystation_scripts.git && cd nopaystation_scripts
+$ git clone -b t7z https://github.com/sigmaboy/nopaystation_scripts.git && cd nopaystation_scripts
 $ chmod +x download*.sh
 $ test -d "${HOME}/bin" && ln -s "$(pwd)"/download*.sh "${HOME}/bin"
 ```
