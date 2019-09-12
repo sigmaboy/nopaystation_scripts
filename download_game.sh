@@ -9,7 +9,7 @@ SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 # source shared functions
 source "${SCRIPT_DIR}/functions.sh"
 
-function my_usage {
+my_usage() {
     echo ""
     echo "Usage:"
     echo "${0} \"/path/to/GAME.tsv\" \"PCSE00986\""

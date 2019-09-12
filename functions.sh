@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function sha256_choose {
+sha256_choose() {
     if which > /dev/null 2>&1
     then
         MY_BINARIES="${MY_BINARIES} sha256"
@@ -11,7 +11,7 @@ function sha256_choose {
     fi
 }
 
-function my_sha256 {
+my_sha256() {
     local file="${1}"
 
     case "$SHA256" in
@@ -22,7 +22,7 @@ function my_sha256 {
     esac
 }
 
-function downloader_choose {
+downloader_choose() {
     if which wget > /dev/null 2>&1
     then
         MY_BINARIES="${MY_BINARIES} wget"
@@ -33,7 +33,7 @@ function downloader_choose {
     fi
 }
 
-function my_download_file {
+my_download_file() {
     local url="${1}"
     local destination="${2}"
 
@@ -45,7 +45,7 @@ function my_download_file {
     esac
 }
 
-function check_binaries(){
+check_binaries(){
     local BINARIES="${1}"
     for bins in ${BINARIES}
     do
