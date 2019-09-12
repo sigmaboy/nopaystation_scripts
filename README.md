@@ -9,6 +9,8 @@ There are five scripts. One to download all \*.tsv files of NoPayStation. The ot
 * curl or wget
 * [*pkg2zip*](https://github.com/mmozeiko/pkg2zip)
 * latest [*mktorrent*](https://github.com/Rudde/mktorrent)
+* wine
+* Windows torrent7z (unfortunately there is no native port [yet])
 
 (Optional) To compile+install mktorrent v1.1 (needed for source flag).
 Check the version installed on your system.
@@ -19,7 +21,12 @@ $ cd mktorrent/ && PREFIX=$HOME make
 $ PREFIX=$HOME make install
 $ rm -rf ~/mktorrent
 ```
-Make sure that executable bit is set on the scripts.
+
+torrent7z wrapper
+```bash
+#!/bin/sh
+wine ${HOME}/bin/t7z.exe "${@}"
+```
 
 ## Installation
 ```bash
@@ -28,13 +35,13 @@ $ chmod +x download*.sh
 $ test -d "${HOME}/bin" && ln -s "$(pwd)"/download*.sh "${HOME}/bin"
 ```
 
-
 ## Script examples
 
 ### download\_game.sh
 With this script you can download a PS Vita game.
 The first parameter is the path to your \*.tsv file and the second is the game's media ID.
-It places the \*.zip file in the current directory.
+It places the \*.7z (torrent7z) file in the current directory.
+It also changes the region name into TV format (NTSC, PAL, ...)
 For example:
 ```bash
 $ ./download_game.sh /home/tux/Downloads/GAME.tsv PCSE00986
@@ -98,3 +105,18 @@ For example:
 ```bash
 $ ./download2torrent.sh PCSE00986 http://announce.url /path/to/directory/containing/the/tsv/files SOURCE
 ```
+
+## download\_region.sh
+This works pretty much the same as **download2torrent.sh** but downloads all base games of a specific region.
+It creates a subdirectory in your current working directory for the region you mentioned. Valid regions are *US* *JP* *EU* *ASIA*.
+There is also a post hook implemented with the file name *./download2torrent_post.sh*
+
+Example:
+```bash
+$ ./download_region.sh ASIA http://announce.url /path/to/directory/containing/the/tsv/files SOURCE
+```
+
+# ToDos
+* create a script to download PSM games
+* implement download scripts to download all updates and DLC
+* modify download\_update.sh and download\_dlc.sh to use t7z

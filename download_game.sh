@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
-# Version 0.3
+# Version 0.4
 
 # get directory where the scripts are located
 HERE="$(dirname "$(readlink -f "${0}")")"
@@ -15,7 +15,7 @@ function my_usage {
     echo "${0} \"/path/to/GAME.tsv\" \"PCSE00986\""
 }
 
-MY_BINARIES="pkg2zip sed"
+MY_BINARIES="pkg2zip sed t7z wine"
 sha256_choose; downloader_choose
 
 check_binaries "${MY_BINARIES}"
@@ -85,10 +85,20 @@ else
         done
     fi
     pkg2zip -l "${GAME_ID}.pkg" > "${GAME_ID}.txt"
-    pkg2zip -x "${GAME_ID}.pkg" "${KEY}"
-    rm "${GAME_ID}.pkg"
     MY_GAME_NAME="$(cat "${GAME_ID}.txt" | sed 's/\.zip//g')"
     MY_GAME_NAME="$(region_rename "${MY_GAME_NAME}")"
+    if [ -f "${MY_GAME_NAME}.7z" ]
+    then
+        if [ "$(file -b --mime-type "${MY_GAME_NAME}.7z")" = "application/x-7z-compressed" ]
+        then
+            # print this to stderr
+            >&2 echo "File \"${MY_GAME_NAME}.7z\" already exists."
+            >&2 echo "Skip compression and remove ${GAME_ID}.pkg file"
+            exit 5
+        fi
+    fi
+    pkg2zip -x "${GAME_ID}.pkg" "${KEY}"
+    rm "${GAME_ID}.pkg"
     t7z a "${MY_GAME_NAME}.7z" "app/"
     rm -rf "app/"
 fi
