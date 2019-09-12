@@ -31,6 +31,14 @@ $ test -d "${HOME}/bin" && ln -s "$(pwd)"/download*.sh "${HOME}/bin"
 
 ## Script examples
 
+### download\_tsv.sh
+It downloads every \*.tsv file from NoPayStation.com and creates a tar archive with the current date for it.
+```bash
+$ ./download_tsv.sh /path/to/the/output_directory
+```
+If you don't add the output directory as the first parameter, it uses the current working directory.
+You need the \*.tsv file(s) for every other script in this toolset.
+
 ### download\_game.sh
 With this script you can download a PS Vita game.
 The first parameter is the path to your \*.tsv file and the second is the game's media ID.
@@ -58,13 +66,6 @@ For example:
 $ ./download_dlc.sh /home/tux/Downloads/DLC.tsv PCSE00986
 ```
 Every DLC is placed in a created directory named like the media id relative to the current directory.
-
-### download\_tsv.sh
-It downloads every \*.tsv file from NoPayStation.com and creates a tar archive with the current date for it.
-```bash
-$ ./download_tsv.sh /path/to/the/output_directory
-```
-If you don't add the output directory as the first parameter, it uses the current working directory.
 
 ### download2torrent.sh
 Requirements:
