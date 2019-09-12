@@ -1,4 +1,11 @@
 #!/bin/sh
+
+# get directory where the scripts are located
+SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
+
+# source shared functions
+source "${SCRIPT_DIR}/functions.sh"
+
 HEADER="https://"
 BASE_URL="nopaystation.com"
 MY_URL_PATH="tsv"
@@ -7,41 +14,10 @@ LIST="${LIST} PSP_DLCS PSP_THEMES PS3_GAMES PS3_DLCS PS3_THEMES PS3_AVATARS"
 LIST="${LIST} PS4_GAMES PS4_DLCS PS4_UPDATES PS4_THEMES"
 MY_NAME="NoPayStation"
 
-function my_download_file {
-    local url="$1"
-    local destination="$2"
-
-    case "$DOWNLOADER" in
-        "wget")
-            wget -O "$destination" "$url" ;;
-        "curl")
-            curl -o "$destination" "$url" ;;
-    esac
-}
-
-function downloader_choose {
-    if which wget > /dev/null 2>&1
-    then
-        MY_BINARIES="${MY_BINARIES} wget"
-        DOWNLOADER="wget"
-    else
-        MY_BINARIES="${MY_BINARIES} curl"
-        DOWNLOADER="curl"
-    fi
-}
-
 MY_BINARIES=""
 downloader_choose
 
-for bins in $MY_BINARIES
-do
-    if ! which ${bins} > /dev/null 2>&1
-    then
-        echo "$bins isn't installed."
-        echo "Please install it and try again"
-        exit 1
-    fi
-done
+check_binaries "${MY_BINARIES}"
 
 if [ -z "${1}" ]
 then
