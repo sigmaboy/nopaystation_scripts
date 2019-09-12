@@ -22,10 +22,13 @@ $ PREFIX=$HOME make install
 $ rm -rf ~/mktorrent
 ```
 
-torrent7z wrapper
+Download t7z from [here](https://sourceforge.net/projects/t7z/files/t7z/0.9.2/)
+Extract the file with 7za.
+Copy the t7z.exe ${HOME}/bin.
+After that create the torrent7z wrapper
 ```bash
-#!/bin/sh
-wine ${HOME}/bin/t7z.exe "${@}"
+echo -e '#!/bin/sh\nwine ${HOME}/bin/t7z.exe "${@}"' > ${HOME}/bin/t7z
+chmod +x ${HOME}/bin/t7z
 ```
 
 ## Installation
