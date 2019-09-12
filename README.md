@@ -120,3 +120,5 @@ $ ./download_region.sh ASIA http://announce.url /path/to/directory/containing/th
 * create a script to download PSM games
 * implement download scripts to download all updates and DLC
 * modify download\_update.sh and download\_dlc.sh to use t7z
+* implement kind of a parallelism into the download and compress process
+* add command line parameters to control the behaviour of the download scripts (downloading/compressing only)
