@@ -3,6 +3,11 @@
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
 # Version 0.4
 
+# return codes:
+# 1 user errors
+# 2 link or key missing
+# 5 game archive already exists
+
 # get directory where the scripts are located
 SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 
@@ -15,7 +20,7 @@ function my_usage {
     echo "${0} \"/path/to/GAME.tsv\" \"PCSE00986\""
 }
 
-MY_BINARIES="pkg2zip sed t7z wine"
+MY_BINARIES="pkg2zip sed t7z wine file"
 sha256_choose; downloader_choose
 
 check_binaries "${MY_BINARIES}"
@@ -57,7 +62,7 @@ LIST_SHA256="$(echo "$LIST" | awk '{ print $7 }')"
 if [ "${KEY}" = "MISSING" ] || [ "${LINK}" = "MISSING" ]
 then
     echo "zrif key or link missing. Cannot proceed."
-    exit 1
+    exit 2
 else
     my_download_file "$LINK" "${GAME_ID}.pkg"
     FILE_SHA256="$(my_sha256 "${GAME_ID}.pkg")"
