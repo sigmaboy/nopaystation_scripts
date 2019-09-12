@@ -124,7 +124,7 @@ cd "${MY_PATH}/${COLLECTION_NAME}"
 ### Download every game of a specific region
 for MEDIA_ID in $(grep --color -P "\t${REGION}\t" "${NPS_DIR}/${tsv_file}" | awk '{ print $1 }')
 do
-    echo "${MEDIA_ID}"
+    echo "Downloading and packing \"${MEDIA_ID}\"..."
     download_game.sh "${NPS_DIR}/PSV_GAMES.tsv" "${MEDIA_ID}"
     if [ ${?} -ne 0 ]
     then
