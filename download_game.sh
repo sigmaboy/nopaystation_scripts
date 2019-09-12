@@ -1,7 +1,12 @@
 #!/bin/sh
 
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
-# Version 0.3
+# Version 0.4
+
+# return codes:
+# 1 user errors
+# 2 link or key missing
+# 5 game archive already exists
 
 # get directory where the scripts are located
 SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
@@ -60,7 +65,7 @@ LIST_SHA256=$(echo "${LIST}" | cut -f3)
 if [ "${KEY}" = "MISSING" ] || [ "${LINK}" = "MISSING" ]
 then
     echo "zrif key or link missing. Cannot proceed."
-    exit 1
+    exit 2
 else
     my_download_file "$LINK" "${GAME_ID}.pkg"
     FILE_SHA256="$(my_sha256 "${GAME_ID}.pkg")"
