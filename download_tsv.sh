@@ -4,7 +4,7 @@
 SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 
 # source shared functions
-source "${SCRIPT_DIR}/functions.sh"
+. "${SCRIPT_DIR}/functions.sh"
 
 HEADER="https://"
 BASE_URL="nopaystation.com"
@@ -25,7 +25,7 @@ then
 else
     DEST="${1}"
 fi
-MY_DATE="$(date "+%d_%m_%Y")"
+MY_DATE="$(date "+%Y_%m_%d")"
 if [ -f "${DEST}/${MY_NAME}_${MY_DATE}.tar.gz" ]
 then
     echo "Backup of the current day already exists. Skipping"
