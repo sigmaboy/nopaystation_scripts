@@ -4,10 +4,10 @@
 # Version 0.3
 
 # get directory where the scripts are located
-HERE="$(dirname "$(readlink -f "${0}")")"
+SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 
 # source shared functions
-source "${HERE}/functions.sh"
+source "${SCRIPT_DIR}/functions.sh"
 
 my_usage(){
     echo ""
