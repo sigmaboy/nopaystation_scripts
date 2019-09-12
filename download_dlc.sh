@@ -38,7 +38,7 @@ then
 fi
 
 LIST="$(grep "^${GAME_ID}" "${TSV_FILE}"  | sed 's%.*http%http%' | tr '\n' "|" \
-        | tr '\r' "%" | sed 's^%^^g')"
+        | tr -d '\r')"
 # both '\n' and '\r' are removed, since the TSV file is usually DOS-style
 # '\r' bytes interfere with string comparison later on, so we remove them
 # '\n' is replaced with a "|" character, since that's what awk will use as
