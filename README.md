@@ -37,6 +37,10 @@ $ git clone -b t7z https://github.com/sigmaboy/nopaystation_scripts.git && cd no
 $ chmod +x download*.sh
 $ test -d "${HOME}/bin" && ln -s "$(pwd)"/download*.sh "${HOME}/bin"
 ```
+If you don't have *${HOME}/bin* in your *${PATH}*, try the following.
+```bash
+$ test -d "/usr/local/bin" && sudo ln -s "$(pwd)"/download*.sh "/usr/local/bin/"
+```
 
 ## Script examples
 
