@@ -7,10 +7,10 @@
 SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 
 # source shared functions
-source "${SCRIPT_DIR}/functions.sh"
+. "${SCRIPT_DIR}/functions.sh"
 
 ### usage function
-function my_usage(){
+my_usage(){
     echo ""
     echo "Parameters:"
     echo "${0} \"REGION\" \"http://announce.url\" \"/path/to/nps/directory\" \"SOURCE_TAG\""
@@ -26,7 +26,7 @@ function my_usage(){
     echo "${0} \"US\" \"http://announce.url\" \"/home/Downloads/nps\" \"GGn\""
 }
 
-function my_mktorrent(){
+my_mktorrent(){
     local TORRENT_SOURCE="${1}"
     if [ "${SOURCE_ENABLE}" -eq 0 ]
     then
