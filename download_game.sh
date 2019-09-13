@@ -83,11 +83,14 @@ else
             # print this to stderr
             >&2 echo "File \"${MY_GAME_NAME}.7z\" already exists."
             >&2 echo "Skip compression and remove ${GAME_ID}.pkg file"
+            rm "${GAME_ID}.pkg"
             exit 5
         fi
+    else
+        pkg2zip -x "${GAME_ID}.pkg" "${KEY}"
+        t7z a "${MY_GAME_NAME}.7z" "app/"
+        rm -rf "app/"
+        rm "${GAME_ID}.pkg"
     fi
-    pkg2zip -x "${GAME_ID}.pkg" "${KEY}"
-    rm "${GAME_ID}.pkg"
-    t7z a "${MY_GAME_NAME}.7z" "app/"
-    rm -rf "app/"
 fi
+exit 0

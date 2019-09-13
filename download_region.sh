@@ -77,12 +77,14 @@ then
     exit 1
 fi
 
+NPS_ABSOLUTE_PATH="$(readlink -f "${NPS_DIR}")"
+
 ### check if the tsv files are available to call download scripts
 #tsv_files="PSV_GAMES.tsv PSV_DLCS.tsv PSV_UPDATES.tsv"
 tsv_files="PSV_GAMES.tsv"
 for tsv_file in $tsv_files
 do
-    if [ ! -f "${NPS_DIR}/${tsv_file}" ]
+    if [ ! -e "${NPS_ABSOLUTE_PATH}/${tsv_file}" ]
     then
         echo "*.tsv file \"${tsv_file}\" in path \"${NPS_DIR}\" missing."
         exit 1
@@ -118,14 +120,14 @@ esac
 COLLECTION_NAME="Sony - PlayStation Vita (${REGION_COLLECTION})"
 
 MY_PATH=$(pwd)
-mkdir "${MY_PATH}/${COLLECTION_NAME}"
+test ! -d "${MY_PATH}/${COLLECTION_NAME}" && mkdir "${MY_PATH}/${COLLECTION_NAME}"
 cd "${MY_PATH}/${COLLECTION_NAME}"
 
 ### Download every game of a specific region
-for MEDIA_ID in $(grep -P "\t${REGION}\t" "${NPS_DIR}/${tsv_file}" | awk '{ print $1 }')
+for MEDIA_ID in $(grep -P "\t${REGION}\t" "${NPS_ABSOLUTE_PATH}/${tsv_file}" | awk '{ print $1 }')
 do
     echo "Downloading and packing \"${MEDIA_ID}\"..."
-    download_game.sh "${NPS_DIR}/PSV_GAMES.tsv" "${MEDIA_ID}"
+    download_game.sh "${NPS_ABSOLUTE_PATH}/PSV_GAMES.tsv" "${MEDIA_ID}"
     if [ ${?} -ne 0 ]
     then
         echo ""
@@ -138,10 +140,10 @@ do
 done
 
 #### Download available updates
-#DESTDIR="${GAME_NAME}" download_update.sh "${NPS_DIR}/PSV_UPDATES.tsv" "${MEDIA_ID}"
+#DESTDIR="${GAME_NAME}" download_update.sh "${NPS_ABSOLUTE_PATH}/PSV_UPDATES.tsv" "${MEDIA_ID}"
 #
 #### Download available DLC
-#DESTDIR="${GAME_NAME}" download_dlc.sh "${NPS_DIR}/PSV_DLCS.tsv" "${MEDIA_ID}"
+#DESTDIR="${GAME_NAME}" download_dlc.sh "${NPS_ABSOLUTE_PATH}/PSV_DLCS.tsv" "${MEDIA_ID}"
 
 cd "${MY_PATH}"
 

@@ -27,7 +27,7 @@ Extract the file with 7za.
 Copy the t7z.exe *${HOME}/bin*.
 After that create the torrent7z wrapper
 ```bash
-echo -e '#!/bin/sh\nwine ${HOME}/bin/t7z.exe "${@}"' > ${HOME}/bin/t7z
+echo -e '#!/bin/sh\nexec wine ${HOME}/bin/t7z.exe "${@}"' > ${HOME}/bin/t7z
 chmod +x ${HOME}/bin/t7z
 ```
 
