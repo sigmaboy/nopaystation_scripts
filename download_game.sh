@@ -53,11 +53,14 @@ then
     echo "Media IDs or simple open the *.tsv with your Office Suite."
     exit 1
 fi
-LIST="$(grep "^${GAME_ID}" "${TSV_FILE}" | sed 's/.*http/http/')"
 
-LINK="$(echo "$LIST" | awk '{ print $1 }')"
-KEY="$(echo "$LIST"  | awk '{ print $2 }')"
-LIST_SHA256="$(echo "$LIST" | awk '{ print $7 }')"
+# get link, encryption key and sha256sum
+LIST=$(grep "^${GAME_ID}" "${TSV_FILE}" | cut -f"4,5,10")
+
+# save those in separete variables
+LINK=$(echo "${LIST}" | cut -f1)
+KEY=$(echo "${LIST}" | cut -f2)
+LIST_SHA256=$(echo "${LIST}" | cut -f3)
 
 if [ "${KEY}" = "MISSING" ] || [ "${LINK}" = "MISSING" ]
 then
