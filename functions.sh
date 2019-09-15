@@ -80,6 +80,20 @@ region_rename() {
     echo ${NEW_NAME}
 }
 
+check_valid_psv_id() {
+    local MEDIA_ID="${1}"
+    if ! echo "${MEDIA_ID}" | grep -E -i 'PCS[ABCDEFGH][0-9]{5}' > /dev/null
+    then
+        echo ""
+        echo "Error"
+        echo "Media ID is not valid."
+        echo "It should be the following format:"
+        echo "PCSA01234"
+        echo "Check your first parameter."
+        exit 1
+    fi
+}
+
 yesno_checksum() {
     local GAME_ID="${1}"
     while true
