@@ -82,13 +82,27 @@ region_rename() {
 
 check_valid_psv_id() {
     local MEDIA_ID="${1}"
-    if ! echo "${MEDIA_ID}" | grep -E -i 'PCS[ABCDEFGH][0-9]{5}' > /dev/null
+    if ! echo "${MEDIA_ID}" | grep -q -E -i 'PCS[ABCDEFGH][0-9]{5}'
     then
         echo ""
         echo "Error"
         echo "Media ID is not valid."
         echo "It should be the following format:"
         echo "PCSA01234"
+        echo "Check your first parameter."
+        exit 1
+    fi
+}
+
+check_valid_psp_id() {
+    local MEDIA_ID="${1}"
+    if ! echo "${MEDIA_ID}" | grep -q -E -i '[NU][PCL][UJEHA][DFGHJQSXZ][0-9]{5}'
+    then
+        echo ""
+        echo "Error"
+        echo "Media ID is not valid."
+        echo "It should be the following format:"
+        echo "NPUF00001"
         echo "Check your first parameter."
         exit 1
     fi

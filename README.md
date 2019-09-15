@@ -81,6 +81,16 @@ $ ./download_dlc.sh /home/tux/Downloads/DLC.tsv PCSE00986
 ```
 Every DLC is placed in a created directory named like the media id relative to the current directory.
 
+### download\_psp.sh
+With this script you can download a PSP game.
+The first parameter is the path to your \*.tsv file and the second is the game's media ID.
+It places the \*.iso file in the current directory.
+For example:
+```bash
+$ ./download_psp.sh /home/tux/Downloads/PSP_GAMES.tsv NPUZ00001
+```
+I can recommend [this](http://renascene.com/psp/) site for searching media IDs.
+
 ### download2torrent.sh
 Requirements:
 * pkg2zip and the latest mktorrent 1.1
