@@ -57,7 +57,7 @@ then
 fi
 
 # get link, encryption key and sha256sum
-LIST=$(grep "^${GAME_ID}" "${TSV_FILE}" | cut -f"5,8,11")
+LIST=$(grep "^${GAME_ID}" "${TSV_FILE}" | cut -f"5,8,11" | tr -d '\r')
 
 # save those in separete variables
 LINK=$(echo "${LIST}" | cut -f1)
