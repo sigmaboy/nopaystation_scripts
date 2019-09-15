@@ -5,7 +5,8 @@
 
 # return codes:
 # 1 user errors
-# 2 link or key missing
+# 2 link or key missing.
+# 3 game is only available physically
 # 5 game archive already exists
 
 # get directory where the scripts are located
@@ -64,8 +65,12 @@ LIST_SHA256=$(echo "${LIST}" | cut -f3)
 
 if [ "${KEY}" = "MISSING" ] || [ "${LINK}" = "MISSING" ]
 then
-    echo "zrif key or link missing. Cannot proceed."
+    echo "zrif key or link of \"${GAME_ID}\" missing. Cannot proceed."
     exit 2
+elif [ "${LINK}" = "CART ONLY" ]
+then
+    echo "\"${GANE_ID}\" is only available via cartridge"
+    exit 3
 else
     my_download_file "$LINK" "${GAME_ID}.pkg"
     FILE_SHA256="$(my_sha256 "${GAME_ID}.pkg")"
