@@ -44,6 +44,8 @@ then
     exit 1
 fi
 
+check_valid_psv_id "${GAME_ID}"
+
 # check if MEDIA ID is found in download list
 if ! grep "^${GAME_ID}" "${TSV_FILE}" > /dev/null
 then

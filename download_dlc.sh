@@ -37,6 +37,8 @@ then
     exit 1
 fi
 
+check_valid_psv_id "${GAME_ID}"
+
 LIST="$(grep "^${GAME_ID}" "${TSV_FILE}"  | sed 's%.*http%http%' | tr '\n' "|" \
         | tr -d '\r')"
 # both '\n' and '\r' are removed, since the TSV file is usually DOS-style
