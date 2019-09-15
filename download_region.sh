@@ -128,13 +128,36 @@ for MEDIA_ID in $(grep -P "\t${REGION}\t" "${NPS_ABSOLUTE_PATH}/${tsv_file}" | a
 do
     echo "Downloading and packing \"${MEDIA_ID}\"..."
     download_game.sh "${NPS_ABSOLUTE_PATH}/PSV_GAMES.tsv" "${MEDIA_ID}"
-    if [ ${?} -ne 0 ]
-    then
+    case ${?} in
+        2)
+        echo ""
+        echo "Key or link not available for \"${MEDIA_ID}\"."
+        echo "Proceed to next game."
+        ;;
+        3)
+        echo ""
+        echo "Game \"${MEDIA_ID}\" is physical only."
+        echo "Proceed to next game."
+        ;;
+        5)
+        echo ""
+        echo "A t7z archive for the game \"${MEDIA_ID}\""
+        echo "is already present."
+        echo "Proceed to next game."
+        ;;
+        0)
+        echo ""
+        echo "Game \"${MEDIA_ID}\" successfully downloaded"
+        echo "and compressed."
+        echo "Proceed to next game."
+        ;;
+        *)
         echo ""
         echo "Game with the following media ID"
-        echo "Cannot be downloaded."
+        echo "cannot be downloaded."
         echo "Proceed to next game."
-    fi
+        ;;
+    esac
     ### remove temporary game name file
     rm "${MEDIA_ID}.txt"
 done
