@@ -132,3 +132,11 @@ yesno_checksum() {
         esac
     done
 }
+exit_if_fail() {
+    local _msg="${1}"
+    if [ "${?}" -ne 0 ]
+    then
+        echo "${_msg}"
+        exit 1
+    fi
+}
