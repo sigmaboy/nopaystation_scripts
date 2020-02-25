@@ -34,7 +34,7 @@ fi
 
 if [ ! -d "${DEST}/${MY_DATE}" ]
 then
-    mkdir "${DEST}/${MY_DATE}"
+    mkdir -p "${DEST}/${MY_DATE}"
 fi
 
 for i in $LIST
