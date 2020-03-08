@@ -76,12 +76,19 @@ then
 else
     my_download_file "$LINK" "${GAME_ID}.pkg"
     FILE_SHA256="$(my_sha256 "${GAME_ID}.pkg")"
-
-    if [ "${FILE_SHA256}" != "${LIST_SHA256}" ]
+    if [ -n "${LIST_SHA256}" ]
     then
-        echo "Checksum of downloaded file does not match checksum in list"
-        echo "${FILE_SHA256} != ${LIST_SHA256}"
-        yesno_checksum
+        if [ "${FILE_SHA256}" != "${LIST_SHA256}" ]
+        then
+            echo "Checksum of downloaded file does not match checksum in list"
+            echo "${FILE_SHA256} != ${LIST_SHA256}"
+            yesno_checksum
+        fi
+    else
+        echo "No checksum available in *.tsv list."
+        echo "Maybe you could report it:"
+        echo "\"${FILE_SHA256}\""
+        echo ""
     fi
     pkg2zip -l "${GAME_ID}.pkg" > "${GAME_ID}.txt"
     MY_GAME_NAME="$(cat "${GAME_ID}.txt" | sed 's/\.zip//g')"
