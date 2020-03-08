@@ -16,7 +16,7 @@ SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 my_usage(){
     echo ""
     echo "Usage:"
-    echo "${0} \"/path/to/DLC.tsv\" \"PCSE00986\""
+    echo "${0} \"/path/to/UPDATE.tsv\" \"PCSE00986\""
 }
 
 MY_BINARIES="pkg2zip sed"
@@ -74,12 +74,7 @@ do
     cd "${MY_PATH}/${DESTDIR}_update"
     my_download_file "$LINK" "${GAME_ID}_update.pkg"
     FILE_SHA256="$(my_sha256 "${GAME_ID}_update.pkg")"
-    if [ "${FILE_SHA256}" != "${LIST_SHA256}" ]
-    then
-        echo "Checksum of downloaded file does not match checksum in list"
-        echo "${FILE_SHA256} != ${LIST_SHA256}"
-        yesno_checksum
-    fi
+    compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
     pkg2zip "${GAME_ID}_update.pkg"
     rm "${GAME_ID}_update.pkg"
     cd "${MY_PATH}"
