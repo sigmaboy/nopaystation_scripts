@@ -110,3 +110,22 @@ yesno_checksum() {
         esac
     done
 }
+
+exit_if_fail() {
+    local _msg="${1}"
+    if [ "${?}" -ne 0 ]
+    then
+        echo "${_msg}"
+        exit 1
+    fi
+}
+
+check_announce_url() {
+    local URL="${1}"
+    echo "${URL}" | grep "^http" &> /dev/null
+    if [ ${?} -ne 0 ]
+    then
+        echo "No valid announce url provided. Be sure that the url starts with \"http\" and has a correct hostname"
+        exit 1
+    fi
+}

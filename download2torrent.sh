@@ -86,12 +86,7 @@ do
     fi
 done
 
-echo "${ANNOUNCE_URL}" | grep "^http" &> /dev/null
-if [ $? -ne 0 ]
-then
-    echo "No valid announce url provided. Be sure that the url starts with \"http\" and has a correct hostname"
-    exit 1
-fi
+check_announce_url "${ANNOUNCE_URL}"
 
 ### Download the chosen game
 download_game.sh "${NPS_DIR}/PSV_GAMES.tsv" "${MEDIA_ID}"
