@@ -77,6 +77,8 @@ else
     my_download_file "$LINK" "${GAME_ID}.pkg"
     FILE_SHA256="$(my_sha256 "${GAME_ID}.pkg")"
     compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
+
+    # get file name and modify it
     pkg2zip -l "${GAME_ID}.pkg" > "${GAME_ID}.txt"
     MY_FILE_NAME="$(cat "${GAME_ID}.txt" | sed 's/\.zip//g')"
     MY_FILE_NAME="$(region_rename "${MY_FILE_NAME}")"
