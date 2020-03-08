@@ -168,7 +168,22 @@ then
     exit 1
 fi
 
-COLLECTION_NAME="Sony - PlayStation Vita (${REGION_COLLECTION})"
+case "${REGION}" in
+    "US")
+        REGION_COLLECTION="NTSC"
+        ;;
+    "EU")
+        REGION_COLLECTION="PAL"
+        ;;
+    "JP")
+        REGION_COLLECTION="NTSC-J"
+        ;;
+    "ASIA")
+        REGION_COLLECTION="NTSC-C"
+        ;;
+esac
+
+COLLECTION_NAME="Sony - PlayStation Vita (${REGION_COLLECTION}) - (${TYPE})"
 
 MY_PATH=$(pwd)
 test ! -d "${MY_PATH}/${COLLECTION_NAME}" && mkdir "${MY_PATH}/${COLLECTION_NAME}"
