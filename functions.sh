@@ -72,7 +72,7 @@ region_rename() {
         NEW_NAME="$(echo "${NAME}" | sed 's/EUR/PAL/g')"
     elif echo "${NAME}" | grep -q "[ASA]"
     then
-        NEW_NAME="$(echo "${NAME}" | sed 's/ASA/NSTC-U/g')"
+        NEW_NAME="$(echo "${NAME}" | sed 's/ASA/NTSC-C/g')"
     else
         echo "Region not found."
         exit 1
