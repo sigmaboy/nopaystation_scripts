@@ -128,7 +128,7 @@ $ ./download2torrent.sh PCSE00986 http://announce.url /path/to/directory/contain
 This works pretty much the same as **download2torrent.sh** but downloads all base games of a specific region.
 It creates a subdirectory in your current working directory for the region you mentioned. Valid regions are *US* *JP* *EU* *ASIA*.
 There is also a post hook implemented with the file name *./download_region_post.sh*
-There is one optional parameter at the beginning. It's **-t** for creating a torrent file. Without it, it wouldn't create it automatically for you.
+For more informations and help about the script just call it with the *--help* parameter.
 
 Example:
 ```bash
