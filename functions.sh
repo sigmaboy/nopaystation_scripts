@@ -150,3 +150,22 @@ check_announce_url() {
         exit 1
     fi
 }
+
+compare_checksum(){
+    local LIST="${1}"
+    local FILE="${2}"
+    if [ -n "${LIST}" ]
+    then
+        if [ "${FILE}" != "${LIST}" ]
+        then
+            echo "Checksum of downloaded file does not match checksum in list"
+            echo "${FILE} != ${LIST}"
+            yesno_checksum
+        fi
+    else
+        echo "No checksum available in *.tsv list."
+        echo "Maybe you could report it:"
+        echo "\"${FILE}\""
+        echo ""
+    fi
+}

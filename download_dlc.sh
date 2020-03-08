@@ -78,12 +78,7 @@ do
         my_download_file "$LINK" "${GAME_ID}_dlc.pkg"
         FILE_SHA256="$(my_sha256 "${GAME_ID}_dlc.pkg")"
 
-        if [ "${FILE_SHA256}" != "${LIST_SHA256}" ]
-        then
-            echo "Checksum of downloaded file does not match checksum in list"
-            echo "${FILE_SHA256} != ${LIST_SHA256}"
-            yesno_checksum
-        fi
+        compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
         pkg2zip "${GAME_ID}_dlc.pkg" "${KEY}"
         rm "${GAME_ID}_dlc.pkg"
         cd "${MY_PATH}"
