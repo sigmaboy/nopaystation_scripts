@@ -78,21 +78,21 @@ else
     FILE_SHA256="$(my_sha256 "${GAME_ID}.pkg")"
     compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
     pkg2zip -l "${GAME_ID}.pkg" > "${GAME_ID}.txt"
-    MY_GAME_NAME="$(cat "${GAME_ID}.txt" | sed 's/\.zip//g')"
-    MY_GAME_NAME="$(region_rename "${MY_GAME_NAME}")"
-    if [ -f "${MY_GAME_NAME}.7z" ]
+    MY_FILE_NAME="$(cat "${GAME_ID}.txt" | sed 's/\.zip//g')"
+    MY_FILE_NAME="$(region_rename "${MY_FILE_NAME}")"
+    if [ -f "${MY_FILE_NAME}.7z" ]
     then
-        if [ "$(file -b --mime-type "${MY_GAME_NAME}.7z")" = "application/x-7z-compressed" ]
+        if [ "$(file -b --mime-type "${MY_FILE_NAME}.7z")" = "application/x-7z-compressed" ]
         then
             # print this to stderr
-            >&2 echo "File \"${MY_GAME_NAME}.7z\" already exists."
+            >&2 echo "File \"${MY_FILE_NAME}.7z\" already exists."
             >&2 echo "Skip compression and remove ${GAME_ID}.pkg file"
             rm "${GAME_ID}.pkg"
             exit 5
         fi
     else
         pkg2zip -x "${GAME_ID}.pkg" "${KEY}"
-        t7z a "${MY_GAME_NAME}.7z" "app/"
+        t7z a "${MY_FILE_NAME}.7z" "app/"
         rm -rf "app/"
         rm "${GAME_ID}.pkg"
     fi

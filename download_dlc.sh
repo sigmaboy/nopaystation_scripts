@@ -77,9 +77,12 @@ do
         cd "${MY_PATH}/${DESTDIR}_dlc"
         my_download_file "$LINK" "${GAME_ID}_dlc.pkg"
         FILE_SHA256="$(my_sha256 "${GAME_ID}_dlc.pkg")"
-
         compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
-        pkg2zip "${GAME_ID}_dlc.pkg" "${KEY}"
+
+        # extract files and compress them with t7z
+        pkg2zip -x "${GAME_ID}_dlc.pkg" "${KEY}"
+        t7z a "${MY_GAME_NAME}.7z" "addcont/"
+        rm -rf "addcont/"
         rm "${GAME_ID}_dlc.pkg"
         cd "${MY_PATH}"
     fi

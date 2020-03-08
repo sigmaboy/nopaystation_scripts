@@ -146,17 +146,17 @@ NPS_ABSOLUTE_PATH="$(readlink -f "${NPS_DIR}")"
 case "${TYPE}" in
     "game")
         tsv_file="PSV_GAMES.tsv"
+        download_script="download_game.sh"
         ;;
     "update")
         tsv_file="PSV_UPDATES.tsv"
-        echo 'At the moment only the "game" type is supported'
-        echo 'Sorry'
-        exit 1
+        download_script="download_update.sh"
         ;;
     "dlc")
         tsv_file="PSV_DLCS.tsv"
-        echo 'At the moment only the "game" type is supported'
-        echo 'Sorry'
+        download_script="download_dlc.sh"
+        echo "DLC is not not support at the moment."
+        echo "Sorry!"
         exit 1
         ;;
 esac
@@ -194,7 +194,7 @@ cd "${MY_PATH}/${COLLECTION_NAME}"
 for MEDIA_ID in $(grep $'\t'"${REGION}"$'\t' "${NPS_ABSOLUTE_PATH}/${tsv_file}" | awk '{ print $1 }')
 do
     echo "Downloading and packing \"${MEDIA_ID}\"..."
-    download_game.sh "${NPS_ABSOLUTE_PATH}/PSV_GAMES.tsv" "${MEDIA_ID}"
+    "${download_script}" "${NPS_ABSOLUTE_PATH}/${tsv_file}" "${MEDIA_ID}"
     case ${?} in
         2)
         echo ""
@@ -226,7 +226,7 @@ do
         ;;
     esac
     ### remove temporary game name file
-    rm "${MEDIA_ID}.txt"
+    test -f ${MEDIA_ID}.txt && rm "${MEDIA_ID}.txt"
 done
 
 #### Download available updates
