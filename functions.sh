@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sha256_choose() {
-    if which > /dev/null 2>&1
+    if which sha256 > /dev/null 2>&1
     then
         MY_BINARIES="${MY_BINARIES} sha256"
         SHA256="sha256"
