@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
-# Version 0.4
+# Version 0.5
 
 # get directory where the scripts are located
 SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
@@ -9,22 +9,114 @@ SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 # source shared functions
 . "${SCRIPT_DIR}/functions.sh"
 
+check_region() {
+    local REGION="${1}"
+    if ! echo "${REGION}" | grep -E -i 'US|ASIA|EU|JP' > /dev/null
+    then
+        echo ""
+        echo "Error"
+        echo "Region is not valid."
+        echo "Choose from US, JP, ASIA, EU"
+        echo "Check your region parameter."
+        exit 1
+    fi
+}
+
+check_type() {
+    local TYPE="${1}"
+    if ! echo "${TYPE}" | grep -E -i 'game|update|dlc' > /dev/null
+    then
+        echo ""
+        echo "Error:"
+        echo "Type is not valid."
+        echo "Choose from game, update, dlc"
+        echo "Check your type parameter."
+        exit 1
+    fi
+}
+
+### check if nps tsv file directory exists
+test_nps_dir() {
+    local NPS_DIR="${1}"
+    if [ ! -d "${NPS_DIR}" ]
+    then
+        echo "Directory containing *.tsv files missing (\"${NPS_DIR}\"). Check your path parameter."
+        my_usage
+        exit 1
+    fi
+}
+
 ### usage function
 my_usage(){
     echo ""
     echo "Parameters:"
-    echo "${0} \"REGION\" \"http://announce.url\" \"/path/to/nps/directory\" \"SOURCE_TAG\""
+    echo "--region|-r <REGION>             valid regions: US JP ASIA EU"
+    echo "--nps-dir|-d <DIR>               path to the directory containing the tsv files"
+    echo "--type|-t <TYPE>                 valid types: game update dlc"
+    echo "--torrent|-c <ANNOUNCE URL>      Enables torrent creation. Needs announce url"
+    echo "--source|-s <SOURCE TAG>         Enables source flag. Needs source tag as argument"
     echo ""
-    echo "The SOURCE_TAG parameter is optional. All other parameters are required."
-    echo "So if you don't want to set the source tag, just leave it off."
-    echo "This is required for private torrent trackers only"
-    echo ""
-    echo "Valid regions:"
-    echo "US JP ASIA EU"
+    echo "The \"--source\" and \"--torrent\" parameter are optional. All other"
+    echo "parameters are required. The source parameter"
+    echo "is required for private torrent trackers only"
     echo ""
     echo "Usage:"
-    echo "${0} \"US\" \"http://announce.url\" \"/home/Downloads/nps\" \"GGn\""
+    echo "${0} --region <REGION> --type Game --nps-dir </path/to/nps/directory> [--torrent \"http://announce.url\"] [--source <SOURCE_TAG>]"
 }
+
+# setting variable defaults
+SOURCE_ENABLE=0
+CREATE_TORRENT=0
+
+while [ ${#} -ge 1 ]
+do
+    opt=${1}
+    shift
+    case ${opt} in
+        -c|--torrent)
+            test -n "${1}"
+            exit_if_fail "\"-c\" used without torrent announce URL"
+            check_announce_url "${1}"
+            ANNOUNCE_URL="${1}"
+            CREATE_TORRENT=1
+            shift
+            ;;
+        -s|--source)
+            test -n "${1}"
+            exit_if_fail "\"-s\" used without source flag argument used"
+            SOURCE_TAG="${1}"
+            SOURCE_ENABLE=1
+            shift
+            ;;
+        -d|--nps-dir)
+            test -n "${1}"
+            exit_if_fail "\"-d\" used without directory path argument used"
+            test_nps_dir "${1}"
+            NPS_DIR="${1}"
+            shift
+            ;;
+        -r|--region)
+            test -n "${1}"
+            exit_if_fail "\"-r\" used without region argument used"
+            check_region "${1}"
+            REGION="${1}"
+            shift
+            ;;
+        -t|--type)
+            test -n "${1}"
+            exit_if_fail "\"-t\" used without type argument used"
+            check_type "${1}"
+            TYPE="${1}"
+            shift
+            ;;
+        *)
+            echo "Invalid parameter used."
+            my_usage
+            echo ""
+            exit 1
+            ;;
+    esac
+done
 
 my_mktorrent(){
     local TORRENT_SOURCE="${1}"
@@ -40,82 +132,41 @@ my_mktorrent(){
 MY_BINARIES="pkg2zip mktorrent sed"
 check_binaries "${MY_BINARIES}"
 
-REGION="${1}"
-ANNOUNCE_URL="${2}"
-NPS_DIR="${3}"
-if [ -z "${4}" ]
-then
-    SOURCE_ENABLE=0
-else
-    SOURCE_TAG="${4}"
-    SOURCE_ENABLE=1
-fi
-
-if ! echo "${REGION}" | grep -E -i 'US|ASIA|EU|JP' > /dev/null
-then
-    echo ""
-    echo "Error"
-    echo "Region is not valid."
-    echo "Choose from US, JP, ASIA, EU"
-    echo "Check your first parameter."
-    exit 1
-fi
-
 ### check if every parameter is set
-if [ -z "${REGION}" ] || [ -z "${ANNOUNCE_URL}" ] || [ -z "${NPS_DIR}" ]
+if [ -z "${REGION}" ] || [ -z "${NPS_DIR}" ] || [ -z "${TYPE}" ]
 then
     echo "ERROR: Not every necessary option specified."
     my_usage
     exit 1
 fi
 
-### check if nps tsv file directory exists
-if [ ! -d "${NPS_DIR}" ]
-then
-    echo "Directory containing *.tsv files missing (\"${NPS_DIR}\"). Check your path parameter."
-    my_usage
-    exit 1
-fi
-
 NPS_ABSOLUTE_PATH="$(readlink -f "${NPS_DIR}")"
 
-### check if the tsv files are available to call download scripts
-#tsv_files="PSV_GAMES.tsv PSV_DLCS.tsv PSV_UPDATES.tsv"
-tsv_files="PSV_GAMES.tsv"
-for tsv_file in $tsv_files
-do
-    if [ ! -e "${NPS_ABSOLUTE_PATH}/${tsv_file}" ]
-    then
-        echo "*.tsv file \"${tsv_file}\" in path \"${NPS_DIR}\" missing."
+# choose fitting TSV file
+case "${TYPE}" in
+    "game")
+        tsv_file="PSV_GAMES.tsv"
+        ;;
+    "update")
+        tsv_file="PSV_UPDATES.tsv"
+        echo 'At the moment only the "game" type is supported'
+        echo 'Sorry'
         exit 1
-    fi
-done
-
-echo "${ANNOUNCE_URL}" | grep "^http" &> /dev/null
-if [ ${?} -ne 0 ]
-then
-    echo "No valid announce url provided. Be sure that the url starts with \"http\" and has a correct hostname"
-    exit 1
-fi
-
-case "${REGION}" in
-    "US")
-        REGION_COLLECTION="NTSC"
         ;;
-    "EU")
-        REGION_COLLECTION="PAL"
-        ;;
-    "JP")
-        REGION_COLLECTION="NTSC-J"
-        ;;
-    "ASIA")
-        REGION_COLLECTION="NTSC-C"
-        ;;
-    *)
-        echo "No valid region"
+    "dlc")
+        tsv_file="PSV_DLCS.tsv"
+        echo 'At the moment only the "game" type is supported'
+        echo 'Sorry'
         exit 1
         ;;
 esac
+
+### check if the tsv file is available to call download scripts
+if [ ! -e "${NPS_ABSOLUTE_PATH}/${tsv_file}" ]
+then
+    echo "*.tsv file \"${tsv_file}\" in path \"${NPS_DIR}\" missing."
+    exit 1
+fi
 
 COLLECTION_NAME="Sony - PlayStation Vita (${REGION_COLLECTION})"
 
@@ -124,7 +175,8 @@ test ! -d "${MY_PATH}/${COLLECTION_NAME}" && mkdir "${MY_PATH}/${COLLECTION_NAME
 cd "${MY_PATH}/${COLLECTION_NAME}"
 
 ### Download every game of a specific region
-for MEDIA_ID in $(grep -P "\t${REGION}\t" "${NPS_ABSOLUTE_PATH}/${tsv_file}" | awk '{ print $1 }')
+# yeah this grep pattern is really ugly but only gnu grep allows "grep -P" to search for tabs without modifications
+for MEDIA_ID in $(grep $'\t'"${REGION}"$'\t' "${NPS_ABSOLUTE_PATH}/${tsv_file}" | awk '{ print $1 }')
 do
     echo "Downloading and packing \"${MEDIA_ID}\"..."
     download_game.sh "${NPS_ABSOLUTE_PATH}/PSV_GAMES.tsv" "${MEDIA_ID}"
@@ -170,13 +222,16 @@ done
 
 cd "${MY_PATH}"
 
-### Creating the torrent files
-echo "Creating torrent file for \"${COLLECTION_NAME}\""
-my_mktorrent "${COLLECTION_NAME}"
+### Creating the torrent files if set
+if [ ${CREATE_TORRENT} -eq 1 ]
+then
+    echo "Creating torrent file for \"${COLLECTION_NAME}\""
+    my_mktorrent "${COLLECTION_NAME}"
+fi
 
 
 ### Run post scripts
 if [ -x ./download_region_post.sh ]
 then
-    ./download2torrent_post.sh
+    ./download_region_post.sh
 fi
