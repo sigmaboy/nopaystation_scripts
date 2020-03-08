@@ -77,7 +77,7 @@ do
     compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
     pkg2zip -l "${GAME_ID}_update.pkg" > "${GAME_ID}_update.txt"
     MY_FILE_NAME="$(cat "${GAME_ID}_update.txt" | sed 's/\.zip//g')"
-    MY_FILE_NAME="$(region_rename "${MY_GAME_NAME}")"
+    MY_FILE_NAME="$(region_rename "${MY_FILE_NAME}")"
 
     # extract files and compress them with t7z
     pkg2zip -x "${GAME_ID}_update.pkg"
