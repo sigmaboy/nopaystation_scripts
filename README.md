@@ -1,7 +1,7 @@
 # nopaystation\_scripts
 
-A linux shell script collection which downloads nopaystation PS Vita stuff.
-There are five scripts. One to download all \*.tsv files of NoPayStation. The other four are for downloading games, updates or all DLC of a PS Vita game.
+A shell script collection which downloads nopaystation PS Vita stuff.
+There are several scripts. One to download all \*.tsv files of NoPayStation. The other are for downloading games, updates or all DLC of a PS Vita game.
 
 ## Requirements
 * a working internet connection
@@ -12,19 +12,19 @@ There are five scripts. One to download all \*.tsv files of NoPayStation. The ot
 * wine
 * Windows torrent7z (unfortunately there is no native port [yet])
 
-(Optional) To compile+install mktorrent v1.1 (needed for source flag).
-Check the version installed on your system.
+(Optional) compile+install mktorrent v1.1 (needed for source flag).
+Check the version installed on your system. Some sort of compile (e.g. gcc) needed
 ```bash
 $ mktorrent -v
 $ git clone https://github.com/Rudde/mktorrent.git
 $ cd mktorrent/ && PREFIX=$HOME make
-$ PREFIX=$HOME make install
+$ PREFIX="${HOME}" make install
 $ rm -rf ~/mktorrent
 ```
 
 Download t7z from [here](https://sourceforge.net/projects/t7z/files/t7z/0.9.2/).
 Extract the file with 7za.
-Copy the t7z.exe *${HOME}/bin*.
+Copy the t7z.exe to *${HOME}/bin*.
 After that create the torrent7z wrapper
 ```bash
 echo -e '#!/bin/sh\nexec wine ${HOME}/bin/t7z.exe "${@}"' > ${HOME}/bin/t7z
@@ -127,11 +127,12 @@ $ ./download2torrent.sh PCSE00986 http://announce.url /path/to/directory/contain
 ## download\_region.sh
 This works pretty much the same as **download2torrent.sh** but downloads all base games of a specific region.
 It creates a subdirectory in your current working directory for the region you mentioned. Valid regions are *US* *JP* *EU* *ASIA*.
-There is also a post hook implemented with the file name *./download2torrent_post.sh*
+There is also a post hook implemented with the file name *./download_region_post.sh*
+There is one optional parameter at the beginning. It's **-t** for creating a torrent file. Without it, it wouldn't create it automatically for you.
 
 Example:
 ```bash
-$ ./download_region.sh ASIA http://announce.url /path/to/directory/containing/the/tsv/files SOURCE
+$ ./download_region.sh -r ASIA -t game -t http://announce.url -d /path/to/directory/containing/the/tsv/files -s <SOURCE>
 ```
 
 # ToDos
@@ -139,4 +140,6 @@ $ ./download_region.sh ASIA http://announce.url /path/to/directory/containing/th
 * implement download scripts to download all updates and DLC
 * modify download\_update.sh and download\_dlc.sh to use t7z
 * implement kind of a parallelism into the download and compress process
+** use nosighub and put it into the background when using t7z
+** add a counter for this to don't extend over 3 parallel t7z processes (check process list, etc)
 * add command line parameters to control the behaviour of the download scripts (downloading/compressing only)
