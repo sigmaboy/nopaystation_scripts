@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Version 0.5
+
 # get directory where the scripts are located
 SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 
