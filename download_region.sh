@@ -155,6 +155,9 @@ case "${TYPE}" in
     "dlc")
         tsv_file="PSV_DLCS.tsv"
         download_script="download_dlc.sh"
+        echo "DLC is not supported at the moment."
+        echo "Sorry!"
+        exit 1
         ;;
 esac
 
