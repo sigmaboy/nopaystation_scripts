@@ -39,14 +39,12 @@ then
     mkdir -p "${DEST}/${MY_DATE}"
 fi
 
-for i in $LIST
+for i in ${LIST}
 do
     my_download_file "${HEADER}${BASE_URL}/${MY_URL_PATH}/${i}.tsv" \
                      "${DEST}/${MY_DATE}/${i}.tsv"
 done
 
-my_download_file "${HEADER}${BASE_URL}/feed/english.html" \
-                 "${DEST}/${MY_DATE}/feed.html"
 tar -C "${DEST}" -czf "${DEST}/${MY_NAME}_${MY_DATE}.tar.gz" "${MY_DATE}"
 
 rm -r "${DEST}/${MY_DATE}"
