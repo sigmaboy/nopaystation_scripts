@@ -2,5 +2,11 @@
 *.pkg
 *.zip
 *.txt
-create_torrent_post.sh
+*.7z
+download2torrent_post.sh
+download_region_post.sh
 app/
+addcont/
+patch/
+PCS*
+Sony*
