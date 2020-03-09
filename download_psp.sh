@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
-# Version 0.4
+# Version 0.5
 
 # return codes:
 # 1 user errors
@@ -73,15 +73,10 @@ then
     echo "\"${GANE_ID}\" is only available via cartridge"
     exit 3
 else
-    my_download_file "$LINK" "${GAME_ID}.pkg"
+    my_download_file "${LINK}" "${GAME_ID}.pkg"
     FILE_SHA256="$(my_sha256 "${GAME_ID}.pkg")"
+    compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
 
-    if [ "${FILE_SHA256}" != "${LIST_SHA256}" ]
-    then
-        echo "Checksum of downloaded file does not match checksum in list"
-        echo "${FILE_SHA256} != ${LIST_SHA256}"
-        yesno_checksum
-    fi
     pkg2zip -l "${GAME_ID}.pkg" > "${GAME_ID}.txt"
     pkg2zip "${GAME_ID}.pkg"
     rm "${GAME_ID}.pkg"
