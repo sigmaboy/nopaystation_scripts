@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
-# Version 0.4
+# Version 0.5
 
 # return codes:
 # 1 user errors
