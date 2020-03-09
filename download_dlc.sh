@@ -89,7 +89,7 @@ do
 
         # extract files and compress them with t7z
         pkg2zip -x "${GAME_ID}_dlc.pkg" "${KEY}"
-        t7z a "${MY_GAME_NAME}.7z" "addcont/"
+        t7z a "${MY_FILE_NAME}.7z" "addcont/"
         rm -rf "addcont/"
         rm "${GAME_ID}_dlc.pkg"
         rm "${GAME_ID}_dlc.txt"

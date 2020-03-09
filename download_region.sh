@@ -155,9 +155,6 @@ case "${TYPE}" in
     "dlc")
         tsv_file="PSV_DLCS.tsv"
         download_script="download_dlc.sh"
-        echo "DLC is not supported at the moment."
-        echo "Sorry!"
-        exit 1
         ;;
 esac
 
@@ -198,7 +195,10 @@ do
     case ${?} in
         2)
         echo ""
+        echo "Game/DLC:"
         echo "Key or link not available for \"${MEDIA_ID}\"."
+        echo ""
+        echo "Update: no update available for \"${MEDIA_ID}\"."
         echo "Proceed to next game."
         ;;
         3)
@@ -228,12 +228,6 @@ do
     ### remove temporary game name file
     test -f ${MEDIA_ID}.txt && rm "${MEDIA_ID}.txt"
 done
-
-#### Download available updates
-#DESTDIR="${GAME_NAME}" download_update.sh "${NPS_ABSOLUTE_PATH}/PSV_UPDATES.tsv" "${MEDIA_ID}"
-#
-#### Download available DLC
-#DESTDIR="${GAME_NAME}" download_dlc.sh "${NPS_ABSOLUTE_PATH}/PSV_DLCS.tsv" "${MEDIA_ID}"
 
 cd "${MY_PATH}"
 
