@@ -43,9 +43,6 @@ fi
 
 check_valid_psv_id "${GAME_ID}"
 
-LIST="$(grep "^${GAME_ID}" "${TSV_FILE}" | sed 's/.*http/http/' | tr '\n' "|" \
-        | tr '\r' "%" | sed 's^%^^g')"
-
 LIST=$(grep "^${GAME_ID}" "${TSV_FILE}" | cut -f"6,9" | tr '\t' '%' | tr -d '\r')
 # '\r' bytes interfere with string comparison later on, so we remove them
 
