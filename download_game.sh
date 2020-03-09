@@ -65,9 +65,20 @@ LINK=$(echo "${LIST}" | cut -f1)
 KEY=$(echo "${LIST}" | cut -f2)
 LIST_SHA256=$(echo "${LIST}" | cut -f3)
 
-if [ "${KEY}" = "MISSING" ] || [ "${LINK}" = "MISSING" ]
+if [ ${LINK} = "MISSING" ] && [ ${KEY} = "MISSING" ]
 then
-    echo "zrif key or link of \"${GAME_ID}\" missing. Cannot proceed."
+    echo "Download link and zRIF key of \"${GAME_ID}\" are missing."
+    echo "Cannot proceed."
+    exit 2
+elif [ ${LINK} = "MISSING" ]
+then
+    echo "Download link of \"${GAME_ID}\" is missing."
+    echo "Cannot proceed."
+    exit 2
+elif [ ${KEY} = "MISSING" ]
+then
+    echo "zrif key of \"${GAME_ID}\" is missing."
+    echo "Cannot proceed."
     exit 2
 elif [ "${LINK}" = "CART ONLY" ]
 then
