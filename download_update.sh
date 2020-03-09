@@ -72,7 +72,7 @@ do
         mkdir "${MY_PATH}/${DESTDIR}_update"
     fi
     cd "${MY_PATH}/${DESTDIR}_update"
-    my_download_file "$LINK" "${GAME_ID}_update.pkg"
+    my_download_file "${LINK}" "${GAME_ID}_update.pkg"
     FILE_SHA256="$(my_sha256 "${GAME_ID}_update.pkg")"
     compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
     pkg2zip "${GAME_ID}_update.pkg"

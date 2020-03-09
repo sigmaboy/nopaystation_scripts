@@ -54,21 +54,21 @@ fi
 LIST=$(grep "^${GAME_ID}" "${TSV_FILE}" | cut -f"4,5,9" | tr '\t' '%' | tr -d '\r')
 # '\r' bytes interfere with string comparison later on, so we remove them
 
-for i in $LIST
+for i in ${LIST}
 do
     LINK=$(echo "${i}" | cut -d"%" -f1)
     KEY=$(echo "${i}" | cut -d"%" -f2)
     LIST_SHA256=$(echo "${i}" | xargs | cut -d"%" -f3)
 
-    if [ ${LINK} = "MISSING" ] && [ ${KEY} = "MISSING" ]
+    if [ "${LINK}" = "MISSING" ] && [ "${KEY}" = "MISSING" ]
     then
         echo "Download link and zRIF key are missing."
         exit 2
-    elif [ ${LINK} = "MISSING" ]
+    elif [ "${LINK}" = "MISSING" ]
     then
         echo "Download link is missing."
         exit 2
-    elif [ ${KEY} = "MISSING" ]
+    elif [ "${KEY}" = "MISSING" ]
     then
         echo "zRIF key is missing."
         exit 2
@@ -78,7 +78,7 @@ do
             mkdir "${MY_PATH}/${DESTDIR}_dlc"
         fi
         cd "${MY_PATH}/${DESTDIR}_dlc"
-        my_download_file "$LINK" "${GAME_ID}_dlc.pkg"
+        my_download_file "${LINK}" "${GAME_ID}_dlc.pkg"
         FILE_SHA256="$(my_sha256 "${GAME_ID}_dlc.pkg")"
 
         compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
