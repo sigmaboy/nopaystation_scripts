@@ -3,6 +3,11 @@
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
 # Version 0.3
 
+# return codes:
+# 1 user errors
+# 2 link or key missing.
+# 5 game archive already exists
+
 # get directory where the scripts are located
 SCRIPT_DIR="$(dirname "$(readlink -f "${0}")")"
 
@@ -38,14 +43,6 @@ then
 fi
 
 check_valid_psv_id "${GAME_ID}"
-
-LIST="$(grep "^${GAME_ID}" "${TSV_FILE}"  | sed 's%.*http%http%' | tr '\n' "|" \
-        | tr -d '\r')"
-# both '\n' and '\r' are removed, since the TSV file is usually DOS-style
-# '\r' bytes interfere with string comparison later on, so we remove them
-# '\n' is replaced with a "|" character, since that's what awk will use as
-# delimeter
-
 MY_PATH="$(pwd)"
 
 # make DESTDIR overridable
@@ -54,21 +51,27 @@ then
     DESTDIR="${GAME_ID}"
 fi
 
-i=1
-max="$(echo "$(echo "${LIST}" | grep -o "|" | wc -l) + 1" | bc)"
+LIST=$(grep "^${GAME_ID}" "${TSV_FILE}" | cut -f"4,5,9" | tr '\t' '%' | tr -d '\r')
+# '\r' bytes interfere with string comparison later on, so we remove them
 
-while [ "${i}" -ne "${max}" ]
+for i in $LIST
 do
-    item="$(echo "${LIST}" | awk -F "|" "{ print \$$i }")"
-    i="$(echo "${i} + 1" | bc)"
+    LINK=$(echo "${i}" | cut -d"%" -f1)
+    KEY=$(echo "${i}" | cut -d"%" -f2)
+    LIST_SHA256=$(echo "${i}" | xargs | cut -d"%" -f3)
 
-    LINK="$(echo "$item" | awk '{ print $1 }')"
-    KEY="$(echo "$item"  | awk '{ print $2 }')"
-    LIST_SHA256="$(echo "$item" | awk '{ print $7 }')"
-
-    if [ $KEY = "MISSING" ] || [ $LINK = "MISSING" ]
+    if [ ${LINK} = "MISSING" ] && [ ${KEY} = "MISSING" ]
     then
-        echo "zrif key or download link missing."
+        echo "Download link and zRIF key are missing."
+        exit 2
+    elif [ ${LINK} = "MISSING" ]
+    then
+        echo "Download link is missing."
+        exit 2
+    elif [ ${KEY} = "MISSING" ]
+    then
+        echo "zRIF key is missing."
+        exit 2
     else
         if [ ! -d "${MY_PATH}/${DESTDIR}_dlc" ]
         then

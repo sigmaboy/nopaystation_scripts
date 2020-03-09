@@ -3,6 +3,10 @@
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
 # Version 0.3
 
+# return codes:
+# 1 user errors
+# 2 no updates available
+
 # get directory where the scripts are located
 SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 
@@ -42,6 +46,9 @@ check_valid_psv_id "${GAME_ID}"
 LIST="$(grep "^${GAME_ID}" "${TSV_FILE}" | sed 's/.*http/http/' | tr '\n' "|" \
         | tr '\r' "%" | sed 's^%^^g')"
 
+LIST=$(grep "^${GAME_ID}" "${TSV_FILE}" | cut -f"6,9" | tr '\t' '%' | tr -d '\r')
+# '\r' bytes interfere with string comparison later on, so we remove them
+
 if [ -z "${LIST}" ]
 then
     echo "No updates for this game!"
@@ -56,17 +63,10 @@ then
     DESTDIR="${GAME_ID}"
 fi
 
-i=1
-max="$(echo "$(echo "${LIST}" | grep -o "|" | wc -l) + 1" | bc)"
-
-while [ "${i}" -ne "${max}" ]
+for i in ${LIST}
 do
-    item="$(echo "${LIST}" | awk -F "|" "{ print \$$i }")"
-    i="$(echo "$i + 1" | bc)"
-    echo "${item}"
-
-    LINK="$(echo "${item}" | awk '{ print $1 }')"
-    LIST_SHA256="$(echo "${item}" | awk '{ print $3 }')"
+    LINK="$(echo "${i}" | cut -d"%" -f1)"
+    LIST_SHA256="$(echo "${i}" | cut -d"%" -f2)"
     if [ ! -d "${MY_PATH}/${DESTDIR}_update" ]
     then
         mkdir "${MY_PATH}/${DESTDIR}_update"
