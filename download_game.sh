@@ -65,17 +65,17 @@ LINK=$(echo "${LIST}" | cut -f1)
 KEY=$(echo "${LIST}" | cut -f2)
 LIST_SHA256=$(echo "${LIST}" | cut -f3)
 
-if [ ${LINK} = "MISSING" ] && [ ${KEY} = "MISSING" ]
+if [ "${LINK}" = "MISSING" ] && [ "${KEY}" = "MISSING" ]
 then
     echo "Download link and zRIF key of \"${GAME_ID}\" are missing."
     echo "Cannot proceed."
     exit 2
-elif [ ${LINK} = "MISSING" ]
+elif [ "${LINK}" = "MISSING" ]
 then
     echo "Download link of \"${GAME_ID}\" is missing."
     echo "Cannot proceed."
     exit 2
-elif [ ${KEY} = "MISSING" ]
+elif [ "${KEY}" = "MISSING" ]
 then
     echo "zrif key of \"${GAME_ID}\" is missing."
     echo "Cannot proceed."
@@ -85,7 +85,7 @@ then
     echo "\"${GANE_ID}\" is only available via cartridge"
     exit 3
 else
-    my_download_file "$LINK" "${GAME_ID}.pkg"
+    my_download_file "${LINK}" "${GAME_ID}.pkg"
     FILE_SHA256="$(my_sha256 "${GAME_ID}.pkg")"
     compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
 
