@@ -188,7 +188,7 @@ cd "${MY_PATH}/${COLLECTION_NAME}"
 
 ### Download every game of a specific region
 # yeah this grep pattern is really ugly but only gnu grep allows "grep -P" to search for tabs without modifications
-for MEDIA_ID in $(grep $'\t'"${REGION}"$'\t' "${NPS_ABSOLUTE_PATH}/${tsv_file}" | awk '{ print $1 }')
+for MEDIA_ID in $(grep $'\t'"${REGION}"$'\t' "${NPS_ABSOLUTE_PATH}/PSV_GAMES.tsv" | awk '{ print $1 }')
 do
     echo "Downloading and packing \"${MEDIA_ID}\"..."
     "${download_script}" "${NPS_ABSOLUTE_PATH}/${tsv_file}" "${MEDIA_ID}"
