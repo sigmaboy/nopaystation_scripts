@@ -63,15 +63,12 @@ do
     if [ "${LINK}" = "MISSING" ] && [ "${KEY}" = "MISSING" ]
     then
         echo "Download link and zRIF key are missing."
-        exit 2
     elif [ "${LINK}" = "MISSING" ]
     then
         echo "Download link is missing."
-        exit 2
     elif [ "${KEY}" = "MISSING" ]
     then
         echo "zRIF key is missing."
-        exit 2
     else
         if [ ! -d "${MY_PATH}/${DESTDIR}_dlc" ]
         then

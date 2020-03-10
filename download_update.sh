@@ -68,11 +68,17 @@ do
     then
         mkdir "${MY_PATH}/${DESTDIR}_update"
     fi
-    cd "${MY_PATH}/${DESTDIR}_update"
-    my_download_file "${LINK}" "${GAME_ID}_update.pkg"
-    FILE_SHA256="$(my_sha256 "${GAME_ID}_update.pkg")"
-    compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
-    pkg2zip "${GAME_ID}_update.pkg"
-    rm "${GAME_ID}_update.pkg"
-    cd "${MY_PATH}"
+    if [ "${LINK}" = "MISSING" ]
+    then
+        echo "Download link of \"${GAME_ID}\" update is missing."
+        echo "Cannot proceed."
+    else
+        cd "${MY_PATH}/${DESTDIR}_update"
+        my_download_file "${LINK}" "${GAME_ID}_update.pkg"
+        FILE_SHA256="$(my_sha256 "${GAME_ID}_update.pkg")"
+        compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
+        pkg2zip "${GAME_ID}_update.pkg"
+        rm "${GAME_ID}_update.pkg"
+        cd "${MY_PATH}"
+    fi
 done
