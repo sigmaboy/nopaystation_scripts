@@ -158,6 +158,14 @@ case "${TYPE}" in
         ;;
 esac
 
+### check if the game file is available to call download scripts
+if [ ! -e "${NPS_ABSOLUTE_PATH}/PSV_GAMES.tsv" ]
+then
+    echo "*.tsv file \"PSV_GAMES.tsv\" in path \"${NPS_DIR}\" missing."
+    echo "This is needed to identify every game of a region."
+    exit 1
+fi
+
 ### check if the tsv file is available to call download scripts
 if [ ! -e "${NPS_ABSOLUTE_PATH}/${tsv_file}" ]
 then
