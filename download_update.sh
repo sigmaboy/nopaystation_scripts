@@ -68,21 +68,27 @@ do
     then
         mkdir "${MY_PATH}/${DESTDIR}_update"
     fi
-    cd "${MY_PATH}/${DESTDIR}_update"
-    my_download_file "${LINK}" "${GAME_ID}_update.pkg"
-    FILE_SHA256="$(my_sha256 "${GAME_ID}_update.pkg")"
-    compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
+    if [ "${LINK}" = "MISSING" ]
+    then
+        echo "Download link of \"${GAME_ID}\" update is missing."
+        echo "Cannot proceed."
+    else
+        cd "${MY_PATH}/${DESTDIR}_update"
+        my_download_file "${LINK}" "${GAME_ID}_update.pkg"
+        FILE_SHA256="$(my_sha256 "${GAME_ID}_update.pkg")"
+        compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
 
-    # get file name and modify it
-    pkg2zip -l "${GAME_ID}_update.pkg" > "${GAME_ID}_update.txt"
-    MY_FILE_NAME="$(cat "${GAME_ID}_update.txt" | sed 's/\.zip//g')"
-    MY_FILE_NAME="$(region_rename "${MY_FILE_NAME}")"
+        # get file name and modify it
+        pkg2zip -l "${GAME_ID}_update.pkg" > "${GAME_ID}_update.txt"
+        MY_FILE_NAME="$(cat "${GAME_ID}_update.txt" | sed 's/\.zip//g')"
+        MY_FILE_NAME="$(region_rename "${MY_FILE_NAME}")"
 
-    # extract files and compress them with t7z
-    pkg2zip -x "${GAME_ID}_update.pkg"
-    t7z a "${MY_FILE_NAME}.7z" "patch/"
-    rm -rf "patch/"
-    rm "${GAME_ID}_update.pkg"
-    rm "${GAME_ID}_update.txt"
-    cd "${MY_PATH}"
+        # extract files and compress them with t7z
+        pkg2zip -x "${GAME_ID}_update.pkg"
+        t7z a "${MY_FILE_NAME}.7z" "patch/"
+        rm -rf "patch/"
+        rm "${GAME_ID}_update.pkg"
+        rm "${GAME_ID}_update.txt"
+        cd "${MY_PATH}"
+    fi
 done
