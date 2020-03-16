@@ -137,9 +137,4 @@ $ ./download_region.sh -r ASIA -t game -t http://announce.url -d /path/to/direct
 
 # ToDos
 * create a script to download PSM games
-* implement download scripts to download all updates and DLC
-* modify download\_update.sh and download\_dlc.sh to use t7z
-* implement kind of a parallelism into the download and compress process
-** use nosighub and put it into the background when using t7z
-** add a counter for this to don't extend over 3 parallel t7z processes (check process list, etc)
 * add command line parameters to control the behaviour of the download scripts (downloading/compressing only)
