@@ -132,7 +132,7 @@ For more informations and help about the script just call it with the *--help* p
 
 Example:
 ```bash
-$ ./download_region.sh -r ASIA -t game -t http://announce.url -d /path/to/directory/containing/the/tsv/files -s <SOURCE>
+$ ./download_region.sh -r ASIA -t game -d /path/to/directory/containing/the/tsv/files [-c http://announce.url] [-s <SOURCE>]
 ```
 
 # ToDos
