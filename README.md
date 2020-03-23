@@ -117,11 +117,11 @@ or the torrent files
 * ${1}_update.torrent
 * ${1}_dlc.torrent
 
-Additionally you can set the source tag as the end last command line parameter. This is the only optional parameter. All other are required.
+If you call the script with "-a" as the first parameter, it will download all updates instead of the latest only. Additionally you can set the source tag as the end last command line parameter. The <SOURCE> parameter is also optional.
 To use this feature you need to have mktorrent installed in version 1.1+!
 For example:
 ```bash
-$ ./download2torrent.sh PCSE00986 http://announce.url /path/to/directory/containing/the/tsv/files SOURCE
+$ ./download2torrent.sh [-a] PCSE00986 http://announce.url /path/to/directory/containing/the/tsv/files <SOURCE>
 ```
 
 ## download\_region.sh
