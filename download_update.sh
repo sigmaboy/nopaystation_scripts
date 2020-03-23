@@ -45,27 +45,32 @@ fi
 
 check_valid_psv_id "${TITLE_ID}"
 
-#LIST=$(grep "^${TITLE_ID}" "${TSV_FILE}" | cut -f"6,9" | tr '\t' '%' | tr -d '\r')
-## '\r' bytes interfere with string comparison later on, so we remove them
+# get current working directory
 MY_PATH="$(pwd)"
 
-# get the download links from the pyton script
+
+# test if any update is available
 pyNPU.py --link --title-id ${TITLE_ID} > /dev/null
 if [ "${?}" -eq 2 ]
 then
     echo "No updates available for this game."
     exit 2
 fi
+
 # make DESTDIR overridable
 if [ -z "${DESTDIR}" ]
 then
     DESTDIR="${TITLE_ID}"
 fi
+
+# create download dir if updates for this game are available
 if [ ! -d "${MY_PATH}/${DESTDIR}_update" ]
 then
     mkdir "${MY_PATH}/${DESTDIR}_update"
 fi
 
+# get the download links from the pyton script
+# check if the script should just output the latest update or all
 if [ "${ALL}" -eq 0 ]
 then
     LIST="$(pyNPU.py --link --title-id "${TITLE_ID}")"
@@ -73,8 +78,8 @@ else
     LIST="$(pyNPU.py --link --all --title-id "${TITLE_ID}")"
 fi
 
+# download changelog in *.txt format
 pyNPU.py --changelog --title-id "${TITLE_ID}" > "${MY_PATH}/${DESTDIR}_update/changelog.txt"
-
 
 for i in ${LIST}
 do
