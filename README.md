@@ -54,49 +54,49 @@ You need the \*.tsv file(s) for every other script in this toolset.
 
 ### download\_game.sh
 With this script you can download a PS Vita game.
-The first parameter is the path to your \*.tsv file and the second is the game's media ID.
+The first parameter is the path to your \*.tsv file and the second is the game's title ID.
 It places the \*.7z (torrent7z) file in the current directory.
 It also changes the region name into TV format (NTSC, PAL, ...)
 For example:
 ```bash
 $ ./download_game.sh /home/tux/Downloads/GAME.tsv PCSE00986
 ```
-I can recommend [this](http://renascene.com/psv/) site for searching media IDs.
+I can recommend [this](http://renascene.com/psv/) site for searching title IDs.
 
 ### download\_update.sh
-With this script you can download all available PS Vita game updates.
-The first parameter is the path to your \*.tsv file and the second is the game's media ID.
-It places the files in a created directory from the current working directory named $MEDIAID\_update.
+With this script you can download the latest or all available PS Vita game updates.
+There is a  first parameter optional parameter "-a" and the second is the game's title ID.
+It places the files in a created directory from the current working directory named $TITLE\_ID\_update.
 For example:
 ```bash
-$ ./download_update.sh /home/tux/Downloads/UPDATE.tsv PCSE00986
+$ ./download_update.sh [-a] PCSE00986
 ```
 
 ### download\_dlc.sh
-This script downloads every DLC found for a specific media ID with available zRIF key.
-It places the files in a created directory from the current working directory named $MEDIAID\_dlc.
+This script downloads every DLC found for a specific title ID with available zRIF key.
+It places the files in a created directory from the current working directory named $TITLE\ID\_dlc.
 For example:
 ```bash
 $ ./download_dlc.sh /home/tux/Downloads/DLC.tsv PCSE00986
 ```
-Every DLC is placed in a created directory named like the media id relative to the current directory.
+Every DLC is placed in a created directory named like the title id relative to the current directory.
 
 ### download\_psp.sh
 With this script you can download a PSP game.
-The first parameter is the path to your \*.tsv file and the second is the game's media ID.
+The first parameter is the path to your \*.tsv file and the second is the game's title ID.
 It places the \*.iso file in the current directory.
 For example:
 ```bash
 $ ./download_psp.sh /home/tux/Downloads/PSP_GAMES.tsv NPUZ00001
 ```
-I can recommend [this](http://renascene.com/psp/) site for searching media IDs.
+I can recommend [this](http://renascene.com/psp/) site for searching title IDs.
 
 ### download2torrent.sh
 Requirements:
 * pkg2zip and the latest mktorrent 1.1
   (1.0 is not working since it doesn't know the source option)
 
-This script downloads the game, every update and dlc found for a specific media ID with available zRIF key.
+This script downloads the game, every update and dlc found for a specific title ID with available zRIF key.
 It puts the DLC and the Updates in a dedicated folder named like the generated zip and creates a torrent for the game, updates and dlc folders.
 In fact it uses the three scripts from above, combines them to share them easily via BitTorrent. You need to have download\_game.sh, download\_update.sh, download\_dlc.sh in your $PATH variable to get it working.
 You must symlink them to **${HOME}/bin/**, **/usr/local/bin** or **/usr/bin/**.
