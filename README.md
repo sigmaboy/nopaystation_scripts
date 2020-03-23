@@ -36,6 +36,7 @@ chmod +x ${HOME}/bin/t7z
 $ git clone -b t7z https://github.com/sigmaboy/nopaystation_scripts.git && cd nopaystation_scripts
 $ chmod +x download*.sh
 $ test -d "${HOME}/bin" && ln -s "$(pwd)"/download*.sh "${HOME}/bin"
+$ test -d "${HOME}/bin" && ln -s "$(pwd)"/pyNPU.py "${HOME}/bin"
 ```
 If you don't have *${HOME}/bin* in your *${PATH}*, try the following.
 ```bash
