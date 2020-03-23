@@ -89,15 +89,15 @@ do
 #    FILE_SHA256="$(my_sha256 "${TITLE_ID}_update.pkg")"
 #    compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
 
-    pkg2zip -l "${GAME_ID}_update.pkg" > "${GAME_ID}_update.txt"
-    MY_FILE_NAME="$(cat "${GAME_ID}_update.txt" | sed 's/\.zip//g')"
+    pkg2zip -l "${TITLE_ID}_update.pkg" > "${TITLE_ID}_update.txt"
+    MY_FILE_NAME="$(cat "${TITLE_ID}_update.txt" | sed 's/\.zip//g')"
     MY_FILE_NAME="$(region_rename "${MY_FILE_NAME}")"
 
     # extract files and compress them with t7z
-    pkg2zip -x "${GAME_ID}_update.pkg"
+    pkg2zip -x "${TITLE_ID}_update.pkg"
     t7z a "${MY_FILE_NAME}.7z" "patch/"
     rm -rf "patch/"
-    rm "${GAME_ID}_update.pkg"
-    rm "${GAME_ID}_update.txt"
+    rm "${TITLE_ID}_update.pkg"
+    rm "${TITLE_ID}_update.txt"
     cd "${MY_PATH}"
 done
