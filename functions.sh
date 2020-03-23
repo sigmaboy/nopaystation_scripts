@@ -59,8 +59,8 @@ check_binaries(){
 }
 
 check_valid_psv_id() {
-    local MEDIA_ID="${1}"
-    if ! echo "${MEDIA_ID}" | grep -q -E -i 'PCS[ABCDEFGH][0-9]{5}'
+    local TITLE_ID="${1}"
+    if ! echo "${TITLE_ID}" | grep -q -E -i 'PCS[ABCDEFGH][0-9]{5}'
     then
         echo ""
         echo "Error"
@@ -73,8 +73,8 @@ check_valid_psv_id() {
 }
 
 check_valid_psp_id() {
-    local MEDIA_ID="${1}"
-    if ! echo "${MEDIA_ID}" | grep -q -E -i '[NU][PCL][UJEHA][DFGHJQSXZ][0-9]{5}'
+    local TITLE_ID="${1}"
+    if ! echo "${TITLE_ID}" | grep -q -E -i '[NU][PCL][UJEHA][DFGHJQSXZ][0-9]{5}'
     then
         echo ""
         echo "Error"
