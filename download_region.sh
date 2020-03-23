@@ -55,6 +55,7 @@ my_usage(){
     echo "--type|-t <TYPE>                 valid types: game update dlc"
     echo "--torrent|-c <ANNOUNCE URL>      Enables torrent creation. Needs announce url"
     echo "--source|-s <SOURCE TAG>         Enables source flag. Needs source tag as argument"
+    echo "--all|-a                         Download all update instead of only latest"
     echo ""
     echo "The \"--source\" and \"--torrent\" parameter are optional. All other"
     echo "parameters are required. The source parameter"
@@ -67,6 +68,7 @@ my_usage(){
 # setting variable defaults
 SOURCE_ENABLE=0
 CREATE_TORRENT=0
+UPDATE_ALL=0
 
 while [ ${#} -ge 1 ]
 do
@@ -109,6 +111,10 @@ do
             TYPE="${1}"
             shift
             ;;
+        -a|--all)
+            UPDATE_ALL=1
+            shift
+            ;;
         *)
             echo "Invalid parameter used."
             my_usage
@@ -146,14 +152,19 @@ NPS_ABSOLUTE_PATH="$(readlink -f "${NPS_DIR}")"
 case "${TYPE}" in
     "game")
         tsv_file="PSV_GAMES.tsv"
+        PARAMS="${NPS_ABSOLUTE_PATH}/${tsv_file}"
         download_script="download_game.sh"
         ;;
     "update")
-        tsv_file="PSV_UPDATES.tsv"
+        if [ ${UPDATE_ALL} -eq 1 ]
+        then
+            PARAMS="-a"
+        fi
         download_script="download_update.sh"
         ;;
     "dlc")
         tsv_file="PSV_DLCS.tsv"
+        PARAMS="${NPS_ABSOLUTE_PATH}/${tsv_file}"
         download_script="download_dlc.sh"
         ;;
 esac
@@ -167,10 +178,13 @@ then
 fi
 
 ### check if the tsv file is available to call download scripts
-if [ ! -e "${NPS_ABSOLUTE_PATH}/${tsv_file}" ]
+if [ -n "${tsv_file}" ]
 then
-    echo "*.tsv file \"${tsv_file}\" in path \"${NPS_DIR}\" missing."
-    exit 1
+    if [ ! -e "${NPS_ABSOLUTE_PATH}/${tsv_file}" ]
+    then
+        echo "*.tsv file \"${tsv_file}\" in path \"${NPS_DIR}\" missing."
+        exit 1
+    fi
 fi
 
 case "${REGION}" in
@@ -199,7 +213,7 @@ cd "${MY_PATH}/${COLLECTION_NAME}"
 for MEDIA_ID in $(grep $'\t'"${REGION}"$'\t' "${NPS_ABSOLUTE_PATH}/PSV_GAMES.tsv" | awk '{ print $1 }')
 do
     echo "Downloading and packing \"${MEDIA_ID}\"..."
-    "${download_script}" "${NPS_ABSOLUTE_PATH}/${tsv_file}" "${MEDIA_ID}"
+    "${download_script}" ${PARAMS} "${MEDIA_ID}"
     case ${?} in
         2)
         echo ""
