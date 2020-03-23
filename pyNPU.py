@@ -31,11 +31,11 @@ parser.add_argument('--title-id', '-t', nargs=1, help="specify the Title ID of g
 parser.add_argument('--version', '-v', action='version', version='%(prog)s v0.0.1')
 args = parser.parse_args()
 
-if not args.title:
+if not args.title_id:
     print("Error: No Title ID given.")
     sys.exit(1)
 else:
-    title = args.title[0]
+    title = args.title_id[0]
 
 # create the checksum for the url
 hmac_sha256 = hmac.new(key, msg=("np_" + title).encode('utf-8'), digestmod=hashlib.sha256).hexdigest()
