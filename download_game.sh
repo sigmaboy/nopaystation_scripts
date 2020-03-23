@@ -28,7 +28,7 @@ check_binaries "${MY_BINARIES}"
 
 # Get variables from script parameters
 TSV_FILE="${1}"
-GAME_ID="${2}"
+TITLE_ID="${2}"
 
 
 if [ ! -f "${TSV_FILE}" ]
@@ -37,17 +37,17 @@ then
     my_usage
     exit 1
 fi
-if [ -z "${GAME_ID}" ]
+if [ -z "${TITLE_ID}" ]
 then
     echo "No game ID found."
     my_usage
     exit 1
 fi
 
-check_valid_psv_id "${GAME_ID}"
+check_valid_psv_id "${TITLE_ID}"
 
 # check if MEDIA ID is found in download list
-if ! grep "^${GAME_ID}" "${TSV_FILE}" > /dev/null
+if ! grep "^${TITLE_ID}" "${TSV_FILE}" > /dev/null
 then
     echo "ERROR:"
     echo "Media ID is not found in your *.tsv file"
@@ -58,7 +58,7 @@ then
 fi
 
 # get link, encryption key and sha256sum
-LIST=$(grep "^${GAME_ID}" "${TSV_FILE}" | cut -f"4,5,10")
+LIST=$(grep "^${TITLE_ID}" "${TSV_FILE}" | cut -f"4,5,10")
 
 # save those in separete variables
 LINK=$(echo "${LIST}" | cut -f1)
@@ -67,17 +67,17 @@ LIST_SHA256=$(echo "${LIST}" | cut -f3)
 
 if [ "${LINK}" = "MISSING" ] && [ "${KEY}" = "MISSING" ]
 then
-    echo "Download link and zRIF key of \"${GAME_ID}\" are missing."
+    echo "Download link and zRIF key of \"${TITLE_ID}\" are missing."
     echo "Cannot proceed."
     exit 2
 elif [ "${LINK}" = "MISSING" ]
 then
-    echo "Download link of \"${GAME_ID}\" is missing."
+    echo "Download link of \"${TITLE_ID}\" is missing."
     echo "Cannot proceed."
     exit 2
 elif [ "${KEY}" = "MISSING" ]
 then
-    echo "zrif key of \"${GAME_ID}\" is missing."
+    echo "zrif key of \"${TITLE_ID}\" is missing."
     echo "Cannot proceed."
     exit 2
 elif [ "${LINK}" = "CART ONLY" ]
@@ -85,10 +85,10 @@ then
     echo "\"${GANE_ID}\" is only available via cartridge"
     exit 3
 else
-    my_download_file "${LINK}" "${GAME_ID}.pkg"
-    FILE_SHA256="$(my_sha256 "${GAME_ID}.pkg")"
+    my_download_file "${LINK}" "${TITLE_ID}.pkg"
+    FILE_SHA256="$(my_sha256 "${TITLE_ID}.pkg")"
     compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
-    pkg2zip -l "${GAME_ID}.pkg" > "${GAME_ID}.txt"
-    pkg2zip "${GAME_ID}.pkg" "${KEY}"
-    rm "${GAME_ID}.pkg"
+    pkg2zip -l "${TITLE_ID}.pkg" > "${TITLE_ID}.txt"
+    pkg2zip "${TITLE_ID}.pkg" "${KEY}"
+    rm "${TITLE_ID}.pkg"
 fi
