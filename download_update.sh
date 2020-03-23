@@ -13,72 +13,77 @@ SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 # source shared functions
 . "${SCRIPT_DIR}/functions.sh"
 
+# check for "-a" parameter
+if [ "${1}" == "-a" ]
+then
+    ALL=1
+    shift
+else
+    ALL=0
+fi
+
 my_usage(){
     echo ""
     echo "Usage:"
-    echo "${0} \"/path/to/UPDATE.tsv\" \"PCSE00986\""
+    echo "${0} \"PCSE00986\""
 }
 
-MY_BINARIES="pkg2zip sed"
+MY_BINARIES="pkg2zip sed pyNPU.py"
 sha256_choose; downloader_choose
 
 check_binaries "${MY_BINARIES}"
 
 # Get variables from script parameters
-TSV_FILE="${1}"
-GAME_ID="${2}"
+TITLE_ID="${1}"
 
-if [ ! -f "${TSV_FILE}" ]
-then
-    echo "No TSV file found."
-    my_usage
-    exit 1
-fi
-if [ -z "${GAME_ID}" ]
+if [ -z "${TITLE_ID}" ]
 then
     echo "No game ID found."
     my_usage
     exit 1
 fi
 
-check_valid_psv_id "${GAME_ID}"
+check_valid_psv_id "${TITLE_ID}"
 
-LIST=$(grep "^${GAME_ID}" "${TSV_FILE}" | cut -f"6,9" | tr '\t' '%' | tr -d '\r')
-# '\r' bytes interfere with string comparison later on, so we remove them
-
-if [ -z "${LIST}" ]
-then
-    echo "No updates for this game!"
-    exit 2
-fi
-
+#LIST=$(grep "^${TITLE_ID}" "${TSV_FILE}" | cut -f"6,9" | tr '\t' '%' | tr -d '\r')
+## '\r' bytes interfere with string comparison later on, so we remove them
 MY_PATH="$(pwd)"
 
+# get the download links from the pyton script
+pyNPU.py --link --title-id ${TITLE_ID} > /dev/null
+if [ "${?}" -eq 2 ]
+then
+    echo "No updates available for this game."
+    exit 2
+fi
 # make DESTDIR overridable
 if [ -z "${DESTDIR}" ]
 then
-    DESTDIR="${GAME_ID}"
+    DESTDIR="${TITLE_ID}"
 fi
+if [ ! -d "${MY_PATH}/${DESTDIR}_update" ]
+then
+    mkdir "${MY_PATH}/${DESTDIR}_update"
+fi
+
+if [ "${ALL}" -eq 0 ]
+then
+    LIST="$(pyNPU.py --link --title-id "${TITLE_ID}")"
+else
+    LIST="$(pyNPU.py --link --all --title-id "${TITLE_ID}")"
+fi
+
+pyNPU.py --changelog --title-id "${TITLE_ID}" > "${MY_PATH}/${DESTDIR}_update/changelog.txt"
+
 
 for i in ${LIST}
 do
-    LINK="$(echo "${i}" | cut -d"%" -f1)"
-    LIST_SHA256="$(echo "${i}" | cut -d"%" -f2)"
-    if [ ! -d "${MY_PATH}/${DESTDIR}_update" ]
-    then
-        mkdir "${MY_PATH}/${DESTDIR}_update"
-    fi
-    if [ "${LINK}" = "MISSING" ]
-    then
-        echo "Download link of \"${GAME_ID}\" update is missing."
-        echo "Cannot proceed."
-    else
-        cd "${MY_PATH}/${DESTDIR}_update"
-        my_download_file "${LINK}" "${GAME_ID}_update.pkg"
-        FILE_SHA256="$(my_sha256 "${GAME_ID}_update.pkg")"
-        compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
-        pkg2zip "${GAME_ID}_update.pkg"
-        rm "${GAME_ID}_update.pkg"
-        cd "${MY_PATH}"
-    fi
+    cd "${MY_PATH}/${DESTDIR}_update"
+    my_download_file "${i}" "${TITLE_ID}_update.pkg"
+#    FIXME add support for checksums again.
+#    FILE_SHA256="$(my_sha256 "${TITLE_ID}_update.pkg")"
+#    compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
+    pkg2zip "${TITLE_ID}_update.pkg"
+    rm "${TITLE_ID}_update.pkg"
+    cd "${MY_PATH}"
 done

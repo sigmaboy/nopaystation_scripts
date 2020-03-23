@@ -25,6 +25,7 @@ program_version = "0.0.1"
 ## script parameter handling
 parser = argparse.ArgumentParser(prog='pyNPU', usage='%(prog)s [options]')
 parser.add_argument('--changelog', '-c', action='store_true', help="Print changelog to stdout")
+#parser.add_argument('--checksum', '-s', action='store_true', help="Print all available checksums to stdout")
 parser.add_argument('--link', '-l', action='store_true', help="Print download link of the latest update")
 parser.add_argument('--all', '-a', action='store_true', help="Download all updates")
 parser.add_argument('--title-id', '-t', nargs=1, help="specify the Title ID of game")
