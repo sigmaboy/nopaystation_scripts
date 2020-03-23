@@ -3,6 +3,14 @@
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
 # Version 0.5
 
+if [ "${1}" == "-a" ]
+then
+    ALL=1
+    shift
+else
+    ALL=0
+fi
+
 # get directory where the scripts are located
 SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 
@@ -13,7 +21,7 @@ SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 my_usage(){
     echo ""
     echo "Parameters:"
-    echo "${0} \"MEDIA_ID\" \"http://announce.url\" \"/path/to/nps/directory\" \"SOURCE_TAG\""
+    echo "${0} \"TITLE_ID\" \"http://announce.url\" \"/path/to/nps/directory\" \"SOURCE_TAG\""
     echo ""
     echo "The SOURCE_TAG parameter is optional. All other parameters are required."
     echo "So if you don't want to set the source tag, just leave it off."
@@ -37,7 +45,7 @@ my_mktorrent(){
 MY_BINARIES="pkg2zip mktorrent sed"
 check_binaries "${MY_BINARIES}"
 
-MEDIA_ID="${1}"
+TITLE_ID="${1}"
 ANNOUNCE_URL="${2}"
 NPS_DIR="${3}"
 if [ -z "${4}" ]
@@ -48,7 +56,7 @@ else
     SOURCE_ENABLE=1
 fi
 
-if ! echo "${MEDIA_ID}" | grep -E -i 'PCS[ABCDEFGH][0-9]{5}' > /dev/null
+if ! echo "${TITLE_ID}" | grep -E -i 'PCS[ABCDEFGH][0-9]{5}' > /dev/null
 then
     echo ""
     echo "Error"
@@ -60,7 +68,7 @@ then
 fi
 
 ### check if every parameter is set
-if [ -z "${MEDIA_ID}" ] || [ -z "${ANNOUNCE_URL}" ] || [ -z "${NPS_DIR}" ]
+if [ -z "${TITLE_ID}" ] || [ -z "${ANNOUNCE_URL}" ] || [ -z "${NPS_DIR}" ]
 then
     echo "ERROR: Not every necessary option specified."
     my_usage
@@ -89,7 +97,7 @@ done
 check_announce_url "${ANNOUNCE_URL}"
 
 ### Download the chosen game
-download_game.sh "${NPS_DIR}/PSV_GAMES.tsv" "${MEDIA_ID}"
+download_game.sh "${NPS_DIR}/PSV_GAMES.tsv" "${TITLE_ID}"
 if [ $? -ne 0 ]
 then
     echo ""
@@ -98,31 +106,39 @@ then
 fi
 
 ### Get name of the zip file from generated txt created via download_game.sh
-ZIP_FILENAME="$(cat "${MEDIA_ID}.txt")"
+ZIP_FILENAME="$(cat "${TITLE_ID}.txt")"
 GAME_NAME="$(echo "${ZIP_FILENAME}" | sed 's/.zip//g')"
 
-### Download available updates
-DESTDIR="${GAME_NAME}" download_update.sh "${NPS_DIR}/PSV_UPDATES.tsv" "${MEDIA_ID}"
+### Download available updates. With parameter -a all updates
+if [ "${ALL}" -eq 1 ]
+then
+    DESTDIR="${GAME_NAME}" download_update.sh -a "${TITLE_ID}"
+else
+    DESTDIR="${GAME_NAME}" download_update.sh "${TITLE_ID}"
+fi
 
 ### Download available DLC
-DESTDIR="${GAME_NAME}" download_dlc.sh "${NPS_DIR}/PSV_DLCS.tsv" "${MEDIA_ID}"
+DESTDIR="${GAME_NAME}" download_dlc.sh "${NPS_DIR}/PSV_DLCS.tsv" "${TITLE_ID}"
 
 ### Creating the torrent files
+rm -f "${ZIP_FILENAME}.torrent"
 echo "Creating torrent file for \"${GAME_NAME}.zip\""
 my_mktorrent "${ZIP_FILENAME}"
 if [ -d "${GAME_NAME}_update" ]
 then
+    test -e "${GAME_NAME}_update.torrent" && rm -f "${GAME_NAME}_update.torrent"
     echo "Creating torrent file for directory \"${GAME_NAME}_update\""
     my_mktorrent "${GAME_NAME}_update"
 fi
 if [ -d "${GAME_NAME}_dlc" ]
 then
+    test -e "${GAME_NAME}_dlc.torrent" && rm -f "${GAME_NAME}_dlc.torrent"
     echo "Creating torrent file for directory \"${GAME_NAME}_dlc\""
     my_mktorrent "${GAME_NAME}_dlc"
 fi
 
 ### remove temporary game name file
-rm "${MEDIA_ID}.txt"
+rm "${TITLE_ID}.txt"
 
 ### Run post scripts
 if [ -x ./download2torrent_post.sh ]
