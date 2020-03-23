@@ -28,6 +28,7 @@ Make sure that executable bit is set on the scripts.
 $ git clone https://github.com/sigmaboy/nopaystation_scripts.git && cd nopaystation_scripts
 $ chmod +x download*.sh
 $ test -d "${HOME}/bin" && ln -s "$(pwd)"/download*.sh "${HOME}/bin"
+$ test -d "${HOME}/bin" && ln -s "$(pwd)"/pyNPU.py "${HOME}/bin"
 ```
 
 
