@@ -25,7 +25,6 @@ program_version = "0.0.1"
 ## script parameter handling
 parser = argparse.ArgumentParser(prog='pyNPU', usage='%(prog)s [options]')
 parser.add_argument('--changelog', '-c', action='store_true', help="Print changelog to stdout")
-#parser.add_argument('--checksum', '-s', action='store_true', help="Print all available checksums to stdout")
 parser.add_argument('--link', '-l', action='store_true', help="Print download link of the latest update")
 parser.add_argument('--all', '-a', action='store_true', help="Download all updates")
 parser.add_argument('--title-id', '-t', nargs=1, help="specify the Title ID of game")
@@ -55,21 +54,22 @@ r.close()
 update_xml = xml.fromstring(r.content)
 
 # make sure several arguments cannot be combined
-### FIXME better error message ###
 if args.changelog and args.link:
-    print("Cannot combine changelog and link")
+    print('Cannot combine "changelog" and "link" parameter')
     sys.exit(1)
 elif args.changelog and args.all:
-    print("Cannot combine changelog and all")
+    print('Cannot combine "changelog" and "all"')
     sys.exit(1)
 
 # not sure if the if the check is really needed
 if update_xml.get('status') == "alive":
+    # get changelog
     if args.changelog:
+        # get the url for the changelog and download it into change_url
         for changeinfo in update_xml.iter('changeinfo'):
             change_url = changeinfo.get('url')
-
         r = requests.get(change_url)
+
         ### create xml parser and make sure CDATA won't be stripped
         xmlparser = xml.XMLParser(strip_cdata=False)
         changelog_xml = xml.XML(r.content, xmlparser)
@@ -77,11 +77,19 @@ if update_xml.get('status') == "alive":
 
         for version in changelog_xml:
             print(version.get('app_ver'))
+            # add support to parse html lists
             print(version.text.strip())
     elif args.link:
         if args.all:
             for package in update_xml.iter('package'):
-                print(package.get('url'))
+                # check if element has children
+                if len(package) != 0:
+                    for subpackage in package:
+                # print hybrid_package link when available
+                        if subpackage.tag == 'hybrid_package':
+                            print(subpackage.get('url'))
+                else:
+                    print(package.get('url'))
         else:
             for package in update_xml.iter('package'):
                 if 'version' not in locals():
@@ -90,6 +98,13 @@ if update_xml.get('status') == "alive":
                     if version < float(package.get('version')):
                         version = float(package.get('version'))
 
-            for package in update_xml.iter('package'):
+            for idx, package in enumerate(update_xml.iter('package')):
                 if float(package.get('version')) == version:
-                    print(package.get('url'))
+                # check if element has children
+                    if len(package) != 0:
+                        for subpackage in package:
+                # print hybrid_package link when available
+                            if subpackage.tag == 'hybrid_package':
+                                print(subpackage.get('url'))
+                    else:
+                        print(package.get('url'))
