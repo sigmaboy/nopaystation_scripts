@@ -11,6 +11,7 @@ Be sure to checkout out the [t7z branch](https://github.com/sigmaboy/nopaystatio
 * curl or wget
 * [*pkg2zip*](https://github.com/mmozeiko/pkg2zip)
 * latest [*mktorrent*](https://github.com/Rudde/mktorrent)
+* python3 + python3-lxml (install it via package manager or pip)
 
 (Optional) To compile+install mktorrent v1.1 (needed for source flag).
 Check the version installed on your system.
