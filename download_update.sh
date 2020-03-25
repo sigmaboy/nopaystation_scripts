@@ -94,6 +94,7 @@ do
     MY_FILE_NAME="$(region_rename "${MY_FILE_NAME}")"
 
     # extract files and compress them with t7z
+    test -d "patch/" && rm -rf "patch/"
     pkg2zip -x "${TITLE_ID}_update.pkg"
     t7z a "${MY_FILE_NAME}.7z" "patch/"
     rm -rf "patch/"

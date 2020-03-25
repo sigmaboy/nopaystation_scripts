@@ -104,6 +104,7 @@ else
             exit 5
         fi
     else
+        test -d "app/" && rm -rf "app/"
         pkg2zip -x "${TITLE_ID}.pkg" "${KEY}"
         t7z a "${MY_FILE_NAME}.7z" "app/"
         rm -rf "app/"

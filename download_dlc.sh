@@ -85,6 +85,7 @@ do
         MY_FILE_NAME="$(region_rename "${MY_FILE_NAME}")"
 
         # extract files and compress them with t7z
+        test -d "addcont/" && rm -rf "addcont/"
         pkg2zip -x "${GAME_ID}_dlc.pkg" "${KEY}"
         t7z a "${MY_FILE_NAME}.7z" "addcont/"
         rm -rf "addcont/"
