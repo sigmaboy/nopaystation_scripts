@@ -11,7 +11,7 @@ SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 
 check_region() {
     local REGION="${1}"
-    if ! echo "${REGION}" | grep -E -i 'US|ASIA|EU|JP' > /dev/null
+    if ! echo "${REGION}" | grep -E -i '^US$|^ASIA$|^EU$|^JP$' > /dev/null
     then
         echo ""
         echo "Error"
@@ -24,12 +24,12 @@ check_region() {
 
 check_type() {
     local TYPE="${1}"
-    if ! echo "${TYPE}" | grep -E -i 'game|update|dlc' > /dev/null
+    if ! echo "${TYPE}" | grep -E -i 'game|update|dlc|changelog' > /dev/null
     then
         echo ""
         echo "Error:"
         echo "Type is not valid."
-        echo "Choose from game, update, dlc"
+        echo "Choose from game, update, dlc or changelog"
         echo "Check your type parameter."
         exit 1
     fi
@@ -166,6 +166,11 @@ case "${TYPE}" in
         tsv_file="PSV_DLCS.tsv"
         PARAMS="${NPS_ABSOLUTE_PATH}/${tsv_file}"
         download_script="download_dlc.sh"
+        ;;
+    "changelog")
+        tsv_file="PSV_GAMES.tsv"
+        PARAMS=""
+        download_script="download_changelog.sh"
         ;;
 esac
 
