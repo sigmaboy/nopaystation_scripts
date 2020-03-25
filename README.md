@@ -11,6 +11,7 @@ There are several scripts. One to download all \*.tsv files of NoPayStation. The
 * latest [*mktorrent*](https://github.com/Rudde/mktorrent)
 * wine
 * Windows torrent7z (unfortunately there is no native port [yet])
+* python3 + python3-lxml (install it via package manager or pip)
 
 (Optional) compile+install mktorrent v1.1 (needed for source flag).
 Check the version installed on your system. Some sort of compile (e.g. gcc) needed
