@@ -11,7 +11,7 @@ SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 
 check_region() {
     local REGION="${1}"
-    if ! echo "${REGION}" | grep -E -i '^US$|^ASIA$|^EU$|^JP$' > /dev/null
+    if ! echo "${REGION}" | grep -s -E -i '^US$|^ASIA$|^EU$|^JP$'
     then
         echo ""
         echo "Error"
@@ -24,7 +24,7 @@ check_region() {
 
 check_type() {
     local TYPE="${1}"
-    if ! echo "${TYPE}" | grep -E -i 'game|update|dlc|changelog' > /dev/null
+    if ! echo "${TYPE}" | grep -s -E -i '^game$|^update$|^dlc$|^changelog$'
     then
         echo ""
         echo "Error:"
@@ -215,45 +215,45 @@ cd "${MY_PATH}/${COLLECTION_NAME}"
 
 ### Download every game of a specific region
 # yeah this grep pattern is really ugly but only gnu grep allows "grep -P" to search for tabs without modifications
-for MEDIA_ID in $(grep $'\t'"${REGION}"$'\t' "${NPS_ABSOLUTE_PATH}/PSV_GAMES.tsv" | awk '{ print $1 }')
+for TITLE_ID in $(grep $'\t'"${REGION}"$'\t' "${NPS_ABSOLUTE_PATH}/PSV_GAMES.tsv" | awk '{ print $1 }')
 do
-    echo "Downloading and packing \"${MEDIA_ID}\"..."
-    "${download_script}" ${PARAMS} "${MEDIA_ID}"
+    echo "Downloading and packing \"${TITLE_ID}\"..."
+    "${download_script}" ${PARAMS} "${TITLE_ID}"
     case ${?} in
         2)
         echo ""
         echo "Game/DLC:"
-        echo "Key or link not available for \"${MEDIA_ID}\"."
+        echo "Key or link not available for \"${TITLE_ID}\"."
         echo ""
-        echo "Update: no update available for \"${MEDIA_ID}\"."
+        echo "Update: no update available for \"${TITLE_ID}\"."
         echo "Proceed to next game."
         ;;
         3)
         echo ""
-        echo "Game \"${MEDIA_ID}\" is physical only."
+        echo "Game \"${TITLE_ID}\" is physical only."
         echo "Proceed to next game."
         ;;
         5)
         echo ""
-        echo "A t7z archive for the game \"${MEDIA_ID}\""
+        echo "A t7z archive for the game \"${TITLE_ID}\""
         echo "is already present."
         echo "Proceed to next game."
         ;;
         0)
         echo ""
-        echo "Game \"${MEDIA_ID}\" successfully downloaded"
+        echo "Game \"${TITLE_ID}\" successfully downloaded"
         echo "and compressed."
         echo "Proceed to next game."
         ;;
         *)
         echo ""
-        echo "Game with the following media ID"
+        echo "Game with the following media ID: \"${TITLE_ID}\""
         echo "cannot be downloaded."
         echo "Proceed to next game."
         ;;
     esac
     ### remove temporary game name file
-    test -f ${MEDIA_ID}.txt && rm "${MEDIA_ID}.txt"
+    test -f ${TITLE_ID}.txt && rm "${TITLE_ID}.txt"
 done
 
 cd "${MY_PATH}"
