@@ -48,6 +48,9 @@ r = requests.get(update_url, verify=False)
 if r.status_code == 404:
     print("No update for this game available")
     sys.exit(2)
+elif not r.content:
+    print("No update for this game available")
+    sys.exit(2)
 r.close()
 
 # get python object from XML
