@@ -82,12 +82,16 @@ if update_xml.get('status') == "alive":
     elif args.link:
         if args.all:
             for package in update_xml.iter('package'):
+                hybrid_package = 0
                 # check if element has children
                 if len(package) != 0:
                     for subpackage in package:
                 # print hybrid_package link when available
                         if subpackage.tag == 'hybrid_package':
                             print(subpackage.get('url'))
+                            hybrid_package = 1
+                    if hybrid_package == 0:
+                        print(package.get('url'))
                 else:
                     print(package.get('url'))
         else:
@@ -98,7 +102,8 @@ if update_xml.get('status') == "alive":
                     if version < float(package.get('version')):
                         version = float(package.get('version'))
 
-            for idx, package in enumerate(update_xml.iter('package')):
+            for package in update_xml.iter('package'):
+                hybrid_package = 0
                 if float(package.get('version')) == version:
                 # check if element has children
                     if len(package) != 0:
@@ -106,5 +111,8 @@ if update_xml.get('status') == "alive":
                 # print hybrid_package link when available
                             if subpackage.tag == 'hybrid_package':
                                 print(subpackage.get('url'))
+                                hybrid_package = 1
+                        if hybrid_package == 0:
+                            print(package.get('url'))
                     else:
                         print(package.get('url'))
