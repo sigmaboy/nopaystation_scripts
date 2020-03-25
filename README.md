@@ -100,7 +100,8 @@ Requirements:
 This script downloads the game, every update and dlc found for a specific title ID with available zRIF key.
 It puts the DLC and the Updates in a dedicated folder named like the generated zip and creates a torrent for the game, updates and dlc folders.
 In fact it uses the three scripts from above, combines them to share them easily via BitTorrent. You need to have download\_game.sh, download\_update.sh, download\_dlc.sh in your $PATH variable to get it working.
-You must symlink them to **${HOME}/bin/**, **/usr/local/bin** or **/usr/bin/**.
+
+You need to symlink them to **${HOME}/bin/**, **/usr/local/bin** or **/usr/bin/**.
 This is explained in the *Installation* Section above
 
 If you want to do some additional steps after running *download2torrent.sh*, you can add a post script named *download2torrent_post.sh* to the directory where you run *download2torrent.sh* from the command line.
@@ -135,6 +136,10 @@ Example:
 ```bash
 $ ./download_region.sh -r ASIA -t game -d /path/to/directory/containing/the/tsv/files [-c http://announce.url] [-s <SOURCE>] [-a]
 ```
+
+### pyNPU.py
+This little python program helps you downloading updates and generating changelogs for your games.
+Just use the "-h" parameter to get all parameters and examples.
 
 # ToDos
 * create a script to download PSM games
