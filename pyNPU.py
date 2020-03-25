@@ -48,10 +48,16 @@ r = requests.get(update_url, verify=False)
 if r.status_code == 404:
     print("No update for this game available")
     sys.exit(2)
-elif not r.content:
+#elif not r.content:
+#    print("No update for this game available")
+#    sys.exit(2)
+r.close()
+
+try:
+    xml.fromstring(r.content)
+except:
     print("No update for this game available")
     sys.exit(2)
-r.close()
 
 # get python object from XML
 update_xml = xml.fromstring(r.content)
@@ -85,16 +91,14 @@ if update_xml.get('status') == "alive":
     elif args.link:
         if args.all:
             for package in update_xml.iter('package'):
-                hybrid_package = 0
                 # check if element has children
                 if len(package) != 0:
                     for subpackage in package:
                 # print hybrid_package link when available
                         if subpackage.tag == 'hybrid_package':
                             print(subpackage.get('url'))
-                            hybrid_package = 1
-                    if hybrid_package == 0:
-                        print(package.get('url'))
+                        else:
+                            print(package.get('url'))
                 else:
                     print(package.get('url'))
         else:
@@ -106,7 +110,6 @@ if update_xml.get('status') == "alive":
                         version = float(package.get('version'))
 
             for package in update_xml.iter('package'):
-                hybrid_package = 0
                 if float(package.get('version')) == version:
                 # check if element has children
                     if len(package) != 0:
@@ -114,8 +117,7 @@ if update_xml.get('status') == "alive":
                 # print hybrid_package link when available
                             if subpackage.tag == 'hybrid_package':
                                 print(subpackage.get('url'))
-                                hybrid_package = 1
-                        if hybrid_package == 0:
-                            print(package.get('url'))
+                            else:
+                                print(package.get('url'))
                     else:
                         print(package.get('url'))
