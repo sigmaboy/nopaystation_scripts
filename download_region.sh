@@ -11,7 +11,7 @@ SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 
 check_region() {
     local REGION="${1}"
-    if ! echo "${REGION}" | grep -s -E -i '^US$|^ASIA$|^EU$|^JP$'
+    if ! echo "${REGION}" | grep -q -E -i '^US$|^ASIA$|^EU$|^JP$'
     then
         echo ""
         echo "Error"
@@ -24,7 +24,7 @@ check_region() {
 
 check_type() {
     local TYPE="${1}"
-    if ! echo "${TYPE}" | grep -s -E -i '^game$|^update$|^dlc$|^changelog$|^all$'
+    if ! echo "${TYPE}" | grep -q -E -i '^game$|^update$|^dlc$|^changelog$|^all$'
     then
         echo ""
         echo "Error:"
@@ -36,34 +36,61 @@ check_type() {
 }
 check_return_code() {
     local NUMBER="${1}"
+    local TYPE="${2}"
+
+    # make color codes human readable
+    local GREEN="\033[0;32m"
+    local CYAN="\033[0;36m"
+    local RED="\033[0;31m"
+    local PURPLE="\033[0;35m"
+    local BROWN="\033[0;33m"
+    local LIGHT_GRAY="\033[0;37m"
+    local LIGHT_BLUE="\033[1;34m"
+    local LIGHT_GREEN="\033[1;32m"
+    local LIGHT_CYAN="\033[1;36m"
+    local LIGHT_RED="\033[1;31m"
+    local LIGHT_PURPLE="\033[1;35m"
+    local YELLOW="\033[1;33m"
+    local WHITE="\033[1;37m"
+    local BOLD="\033[1m"
+    local RESET="\033[0m" #0m restores to the terminal's default colour
+
     case ${NUMBER} in
         2)
         echo ""
-        echo "Game/DLC:"
-        echo "Key or link not available for \"${TITLE_ID}\"."
-        echo ""
-        echo "Update: no update available for \"${TITLE_ID}\"."
+        echo -e "${LIGHT_GREEN}INFO${RESET}:"
+        if [ "${TYPE}" == "update" ]
+        then
+            echo "No Update available for \"${TITLE_ID}\"."
+        else
+            echo "Key or link not available for \"${TITLE_ID}\"' ${TYPE}."
+        fi
         echo "Proceed to next download."
+        echo ""
         ;;
         3)
         echo ""
+        echo -e "${LIGHT_GREEN}INFO${RESET}:"
         echo "Game \"${TITLE_ID}\" is physical only."
         echo "Proceed to next download."
         ;;
         5)
         echo ""
-        echo "A t7z archive for the game \"${TITLE_ID}\""
-        echo "is already present."
+        echo -e "${YELLOW}WARNING${RESET}:"
+        echo "A t7z archive for the \"${TITLE_ID}\" of"
+        echo "type ${TYPE} is already present."
         echo "Proceed to next download."
         ;;
         0)
         echo ""
-        echo "Game \"${TITLE_ID}\" successfully downloaded"
+        echo -e "${LIGHT_GREEN}SUCCESS${RESET}:"
+        echo "${TYPE} from \"${TITLE_ID}\" successfully downloaded"
         echo "and compressed."
         echo "Proceed to next download."
         ;;
         *)
         echo ""
+        echo -e "${RED}ERROR${RESET}:"
         echo "Game with the following media ID: \"${TITLE_ID}\""
         echo "cannot be downloaded."
         echo "Proceed to next download."
@@ -260,24 +287,26 @@ cd "${MY_PATH}/${COLLECTION_NAME}"
 # yeah this grep pattern is really ugly but only gnu grep allows "grep -P" to search for tabs without modifications
 for TITLE_ID in $(grep $'\t'"${REGION}"$'\t' "${NPS_ABSOLUTE_PATH}/PSV_GAMES.tsv" | awk '{ print $1 }')
 do
+    echo "--------------------------------------------"
     echo "Downloading and packing \"${TITLE_ID}\"..."
     if [ ${DOWNLOAD_ALL} -eq 1 ]
     then
         download_game.sh "${NPS_ABSOLUTE_PATH}/PSV_GAMES.tsv" "${TITLE_ID}"
-        check_return_code ${?}
-        GAME_NAME="$(cat "${TITLE_ID}.txt")"
+        check_return_code ${?} "game"
+        GAME_NAME="$(cat "${TITLE_ID}.txt" | sed 's/.zip//g')"
+        GAME_NAME="$(region_rename "${GAME_NAME}")"
         if [ ${UPDATE_ALL} -eq 1 ]
         then
             DESTDIR="${GAME_NAME}" download_update.sh -a "${TITLE_ID}"
         else
             DESTDIR="${GAME_NAME}" download_update.sh "${TITLE_ID}"
         fi
-        check_return_code ${?}
+        check_return_code ${?} "update"
         DESTDIR="${GAME_NAME}" download_dlc.sh "${NPS_ABSOLUTE_PATH}/PSV_DLCS.tsv" "${TITLE_ID}"
-        check_return_code ${?}
+        check_return_code ${?} "dlc"
     else
         "${download_script}" ${PARAMS} "${TITLE_ID}"
-        check_return_code ${?}
+        check_return_code ${?} "${TYPE}"
     fi
     ### remove temporary game name file
     test -f ${TITLE_ID}.txt && rm "${TITLE_ID}.txt"
