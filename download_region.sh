@@ -24,7 +24,7 @@ check_region() {
 
 check_type() {
     local TYPE="${1}"
-    if ! echo "${TYPE}" | grep -s -E -i '^game$|^update$|^dlc$|^changelog$'
+    if ! echo "${TYPE}" | grep -s -E -i '^game$|^update$|^dlc$|^changelog$|^all$'
     then
         echo ""
         echo "Error:"
@@ -33,6 +33,42 @@ check_type() {
         echo "Check your type parameter."
         exit 1
     fi
+}
+check_return_code() {
+    local NUMBER="${1}"
+    case ${NUMBER} in
+        2)
+        echo ""
+        echo "Game/DLC:"
+        echo "Key or link not available for \"${TITLE_ID}\"."
+        echo ""
+        echo "Update: no update available for \"${TITLE_ID}\"."
+        echo "Proceed to next download."
+        ;;
+        3)
+        echo ""
+        echo "Game \"${TITLE_ID}\" is physical only."
+        echo "Proceed to next download."
+        ;;
+        5)
+        echo ""
+        echo "A t7z archive for the game \"${TITLE_ID}\""
+        echo "is already present."
+        echo "Proceed to next download."
+        ;;
+        0)
+        echo ""
+        echo "Game \"${TITLE_ID}\" successfully downloaded"
+        echo "and compressed."
+        echo "Proceed to next download."
+        ;;
+        *)
+        echo ""
+        echo "Game with the following media ID: \"${TITLE_ID}\""
+        echo "cannot be downloaded."
+        echo "Proceed to next download."
+        ;;
+    esac
 }
 
 ### check if nps tsv file directory exists
@@ -69,6 +105,7 @@ my_usage(){
 SOURCE_ENABLE=0
 CREATE_TORRENT=0
 UPDATE_ALL=0
+DOWNLOAD_ALL=0
 
 while [ ${#} -ge 1 ]
 do
@@ -172,6 +209,12 @@ case "${TYPE}" in
         PARAMS=""
         download_script="download_changelog.sh"
         ;;
+    "all")
+        DOWNLOAD_ALL=1
+#        tsv_file="PSV_GAMES.tsv"
+#        PARAMS=""
+#        download_script="download_changelog.sh"
+        ;;
 esac
 
 ### check if the game file is available to call download scripts
@@ -213,45 +256,29 @@ MY_PATH=$(pwd)
 test ! -d "${MY_PATH}/${COLLECTION_NAME}" && mkdir "${MY_PATH}/${COLLECTION_NAME}"
 cd "${MY_PATH}/${COLLECTION_NAME}"
 
-### Download every game of a specific region
+### Download every available title id of a specific region
 # yeah this grep pattern is really ugly but only gnu grep allows "grep -P" to search for tabs without modifications
 for TITLE_ID in $(grep $'\t'"${REGION}"$'\t' "${NPS_ABSOLUTE_PATH}/PSV_GAMES.tsv" | awk '{ print $1 }')
 do
     echo "Downloading and packing \"${TITLE_ID}\"..."
-    "${download_script}" ${PARAMS} "${TITLE_ID}"
-    case ${?} in
-        2)
-        echo ""
-        echo "Game/DLC:"
-        echo "Key or link not available for \"${TITLE_ID}\"."
-        echo ""
-        echo "Update: no update available for \"${TITLE_ID}\"."
-        echo "Proceed to next game."
-        ;;
-        3)
-        echo ""
-        echo "Game \"${TITLE_ID}\" is physical only."
-        echo "Proceed to next game."
-        ;;
-        5)
-        echo ""
-        echo "A t7z archive for the game \"${TITLE_ID}\""
-        echo "is already present."
-        echo "Proceed to next game."
-        ;;
-        0)
-        echo ""
-        echo "Game \"${TITLE_ID}\" successfully downloaded"
-        echo "and compressed."
-        echo "Proceed to next game."
-        ;;
-        *)
-        echo ""
-        echo "Game with the following media ID: \"${TITLE_ID}\""
-        echo "cannot be downloaded."
-        echo "Proceed to next game."
-        ;;
-    esac
+    if [ ${DOWNLOAD_ALL} -eq 1 ]
+    then
+        download_game.sh "${NPS_ABSOLUTE_PATH}/PSV_GAMES.tsv" "${TITLE_ID}"
+        check_return_code ${?}
+        GAME_NAME="$(cat "${TITLE_ID}.txt")"
+        if [ ${UPDATE_ALL} -eq 1 ]
+        then
+            DESTDIR="${GAME_NAME}" download_update.sh -a "${TITLE_ID}"
+        else
+            DESTDIR="${GAME_NAME}" download_update.sh "${TITLE_ID}"
+        fi
+        check_return_code ${?}
+        DESTDIR="${GAME_NAME}" download_dlc.sh "${NPS_ABSOLUTE_PATH}/PSV_DLCS.tsv" "${TITLE_ID}"
+        check_return_code ${?}
+    else
+        "${download_script}" ${PARAMS} "${TITLE_ID}"
+        check_return_code ${?}
+    fi
     ### remove temporary game name file
     test -f ${TITLE_ID}.txt && rm "${TITLE_ID}.txt"
 done
