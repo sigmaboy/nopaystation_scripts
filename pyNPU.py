@@ -11,6 +11,7 @@ import hmac
 import requests
 # use lxml for CDATA parsing
 from lxml import etree as xml
+from lxml import html
 
 # return codes
 # 0 - success
@@ -25,6 +26,7 @@ program_version = "0.0.1"
 ## script parameter handling
 parser = argparse.ArgumentParser(prog='pyNPU', usage='%(prog)s [options]')
 parser.add_argument('--changelog', '-c', action='store_true', help="Print changelog to stdout")
+parser.add_argument('--bbcode', '-b', action='store_true', help="Change changelog to format to BB Code")
 parser.add_argument('--link', '-l', action='store_true', help="Print download link of the latest update")
 parser.add_argument('--all', '-a', action='store_true', help="Print all updates available")
 parser.add_argument('--title-id', '-t', nargs=1, help="specify the Title ID of game")
@@ -64,10 +66,16 @@ update_xml = xml.fromstring(r.content)
 
 # make sure several arguments cannot be combined
 if args.changelog and args.link:
-    print('Cannot combine "changelog" and "link" parameter')
+    print('Cannot combine parameter "changelog" and "link"')
     sys.exit(1)
 elif args.changelog and args.all:
-    print('Cannot combine "changelog" and "all"')
+    print('Cannot combine parameter "changelog" and "all"')
+    sys.exit(1)
+elif args.bbcode and args.link:
+    print('Cannot combine parameter "bbcode" and "link"')
+    sys.exit(1)
+elif args.bbcode and not args.changelog:
+    print('Cannot use parameter "bbcode" without "changelog"')
     sys.exit(1)
 
 # not sure if the if the check is really needed
@@ -85,9 +93,29 @@ if update_xml.get('status') == "alive":
         r.close()
 
         for version in changelog_xml:
-            print(version.get('app_ver'))
-            # add support to parse html lists
-            print(version.text.strip())
+            # output simple bbcodes
+            if args.bbcode:
+                print('== ' + version.get('app_ver') + ' ==')
+                # parse content into a html object and iterate of all elements in html body
+                for element in html.document_fromstring(version.text.replace('\t','')).body.getchildren():
+                    if element.tag == 'b':
+                        print('[b]' + element.text_content() + '[/b]')
+                    elif element.tag == 'ul':
+                        for list in element.getchildren():
+                            print("[*] " + list.text_content())
+                    elif element.tag == 'p':
+                        print(element.text_content())
+            else:
+                print(version.get('app_ver'))
+                # parse content into a html object and iterate of all elements in html body
+                for element in html.document_fromstring(version.text.replace('\t','')).body.getchildren():
+                    if element.tag == 'b':
+                        print(element.text_content())
+                    elif element.tag == 'ul':
+                        for list in element.getchildren():
+                            print("- " + list.text_content())
+                    elif element.tag == 'p':
+                        print(element.text_content())
     elif args.link:
         if args.all:
             for package in update_xml.iter('package'):
