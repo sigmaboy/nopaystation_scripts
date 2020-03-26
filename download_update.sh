@@ -28,7 +28,7 @@ my_usage(){
     echo "${0} \"PCSE00986\""
 }
 
-MY_BINARIES="pkg2zip sed pyNPU.py"
+MY_BINARIES="pkg2zip sed python3 pyNPU.py"
 sha256_choose; downloader_choose
 
 check_binaries "${MY_BINARIES}"
