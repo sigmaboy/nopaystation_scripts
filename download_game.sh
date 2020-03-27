@@ -104,8 +104,8 @@ else
         compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
 
         # get file name and modify it
-        pkg2zip -l "${TITLE_ID}.pkg" > "${TITLE_ID}.txt"
-        MY_FILE_NAME="$(cat "${TITLE_ID}.txt" | sed 's/\.zip//g')"
+        pkg2zip -l "${TITLE_ID}.pkg" | sed 's/.zip//g' > "${TITLE_ID}.txt"
+        MY_FILE_NAME="$(cat "${TITLE_ID}.txt")"
         MY_FILE_NAME="$(region_rename "${MY_FILE_NAME}")"
         test -d "app/" && rm -rf "app/"
         pkg2zip -x "${TITLE_ID}.pkg" "${KEY}"

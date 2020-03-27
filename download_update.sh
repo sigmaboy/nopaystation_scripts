@@ -106,8 +106,8 @@ do
     else
         my_download_file "${i}" "${TITLE_ID}_update.pkg"
 
-        pkg2zip -l "${TITLE_ID}_update.pkg" > "${TITLE_ID}_update.txt"
-        MY_FILE_NAME="$(cat "${TITLE_ID}_update.txt" | sed 's/\.zip//g')"
+        pkg2zip -l "${TITLE_ID}_update.pkg" | sed 's/\.zip//g' > "${TITLE_ID}_update.txt"
+        MY_FILE_NAME="$(cat "${TITLE_ID}_update.txt")"
         MY_FILE_NAME="$(region_rename "${MY_FILE_NAME}")"
 
         # extract files and compress them with t7z

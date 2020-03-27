@@ -105,8 +105,8 @@ then
 fi
 
 ### Get name of the zip file from generated txt created via download_game.sh
-ZIP_FILENAME="$(cat "${TITLE_ID}.txt")"
-GAME_NAME="$(echo "${ZIP_FILENAME}" | sed 's/.zip//g')"
+GAME_NAME="$(cat "${TITLE_ID}.txt")"
+ZIP_FILENAME="${GAME_NAME}.zip"
 
 ### Download available updates. With parameter -a all updates
 if [ "${ALL}" -eq 1 ]

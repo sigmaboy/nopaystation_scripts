@@ -109,8 +109,8 @@ do
             compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
 
             # get file name and modify it
-            pkg2zip -l "${GAME_ID}_dlc.pkg" > "${GAME_ID}_dlc.txt"
-            MY_FILE_NAME="$(cat "${GAME_ID}_dlc.txt" | sed 's/\.zip//g')"
+            pkg2zip -l "${GAME_ID}_dlc.pkg" | sed 's/\.zip//g' > "${GAME_ID}_dlc.txt"
+            MY_FILE_NAME="$(cat "${GAME_ID}_dlc.txt")"
             MY_FILE_NAME="$(region_rename "${MY_FILE_NAME}")"
 
             # extract files and compress them with t7z
