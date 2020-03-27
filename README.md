@@ -145,4 +145,3 @@ Just use the "-h" parameter to get all parameters and examples.
 # ToDos
 * create a script to download PSM games
 * add command line parameters to control the behaviour of the download scripts (downloading/compressing only)
-* download\_region.sh: test for 7z matching title ID before downloading anything
