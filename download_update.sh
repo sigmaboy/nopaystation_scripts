@@ -83,11 +83,30 @@ pyNPU.py --changelog --title-id "${TITLE_ID}" > "${MY_PATH}/${DESTDIR}_update/ch
 for i in ${LIST}
 do
     cd "${MY_PATH}/${DESTDIR}_update"
-    my_download_file "${i}" "${TITLE_ID}_update.pkg"
-#    FIXME add support for checksums again.
-#    FILE_SHA256="$(my_sha256 "${TITLE_ID}_update.pkg")"
-#    compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
-    pkg2zip "${TITLE_ID}_update.pkg"
-    rm "${TITLE_ID}_update.pkg"
-    cd "${MY_PATH}"
+
+    if find . -depth 1 -type f -name "*[${TITLE_ID}]*.7z" | grep -E "\[${TITLE_ID}\].*\.7z"
+    then
+        COUNT=0
+        for FOUND_FILE in $(find . -depth 1 -type f -name "*[${TITLE_ID}]*[PATCH]*.7z" | grep -E "\[${TITLE_ID}\].*\[PATCH\].*\.7z" | sed 's@./@@g')
+        if [ "$(file -b --mime-type "${FOUND_FILE}")" = "application/x-7z-compressed" ]
+        then
+            COUNT=$((${COUNT} + 1))
+            # print this to stderr
+            >&2 echo "File \"${FOUND_FILE}\" already exists."
+        else
+            COUNT=$((${COUNT} + 1))
+            # print this to stderr
+            >&2 echo "File \"${FOUND_FILE}.7z\" already exists."
+            >&2 echo "But it doesn't seem to be a valid 7z file"
+        fi
+        >&2 echo ""
+        >&2 echo "${COUNT} updates already present"
+        cd "${MY_PATH}"
+        exit 5
+    else
+        my_download_file "${i}" "${TITLE_ID}_update.pkg"
+        pkg2zip "${TITLE_ID}_update.pkg"
+        rm "${TITLE_ID}_update.pkg"
+        cd "${MY_PATH}"
+    fi
 done

@@ -84,10 +84,26 @@ then
     echo "\"${GANE_ID}\" is only available via cartridge"
     exit 3
 else
-    my_download_file "${LINK}" "${TITLE_ID}.pkg"
-    FILE_SHA256="$(my_sha256 "${TITLE_ID}.pkg")"
-    compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
-    pkg2zip -l "${TITLE_ID}.pkg" > "${TITLE_ID}.txt"
-    pkg2zip "${TITLE_ID}.pkg" "${KEY}"
-    rm "${TITLE_ID}.pkg"
+    if find . -depth 1 -type f -name "*[${TITLE_ID}]*.7z" | grep -E "\[${TITLE_ID}\].*\.7z"
+    then
+        FOUND_FILE=$(find . -depth 1 -type f -name "*[${TITLE_ID}]*.7z" | grep -E "\[${TITLE_ID}\].*\.7z" | sed 's@./@@g')
+        if [ "$(file -b --mime-type "${FOUND_FILE}")" = "application/x-7z-compressed" ]
+        then
+            # print this to stderr
+            >&2 echo "File \"${FOUND_FILE}\" already exists."
+            exit 5
+        else
+            # print this to stderr
+            >&2 echo "File \"${FOUND_FILE}.7z\" already exists."
+            >&2 echo "But it doesn't seem to be a valid 7z file"
+            exit 5
+        fi
+    else
+        my_download_file "${LINK}" "${TITLE_ID}.pkg"
+        FILE_SHA256="$(my_sha256 "${TITLE_ID}.pkg")"
+        compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
+        pkg2zip -l "${TITLE_ID}.pkg" > "${TITLE_ID}.txt"
+        pkg2zip "${TITLE_ID}.pkg" "${KEY}"
+        rm "${TITLE_ID}.pkg"
+    fi
 fi

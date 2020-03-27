@@ -83,12 +83,33 @@ do
             mkdir "${MY_PATH}/${DESTDIR}_dlc"
         fi
         cd "${MY_PATH}/${DESTDIR}_dlc"
-        my_download_file "${LINK}" "${GAME_ID}_dlc.pkg"
-        FILE_SHA256="$(my_sha256 "${GAME_ID}_dlc.pkg")"
 
-        compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
-        pkg2zip "${GAME_ID}_dlc.pkg" "${KEY}"
-        rm "${GAME_ID}_dlc.pkg"
-        cd "${MY_PATH}"
+        if find . -depth 1 -type f -name "*[${TITLE_ID}]*[DLC*.7z" | grep -E "\[${TITLE_ID}\].*\[DLC.*\.7z"
+        then
+            COUNT=0
+            for FOUND_FILE in $(find . -depth 1 -type f -name "*[${TITLE_ID}]*[DLC*.7z" | grep -E "\[${TITLE_ID}\].*\[DLC.*\.7z" | sed 's@./@@g')
+            if [ "$(file -b --mime-type "${FOUND_FILE}")" = "application/x-7z-compressed" ]
+            then
+                COUNT=$((${COUNT} + 1))
+                # print this to stderr
+                >&2 echo "File \"${FOUND_FILE}\" already exists."
+            else
+                COUNT=$((${COUNT} + 1))
+                # print this to stderr
+                >&2 echo "File \"${FOUND_FILE}.7z\" already exists."
+                >&2 echo "But it doesn't seem to be a valid 7z file"
+            fi
+            >&2 echo "${COUNT} DLC(s) already present"
+            cd "${MY_PATH}"
+            exit 5
+        else
+            my_download_file "${LINK}" "${GAME_ID}_dlc.pkg"
+            FILE_SHA256="$(my_sha256 "${GAME_ID}_dlc.pkg")"
+    
+            compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
+            pkg2zip "${GAME_ID}_dlc.pkg" "${KEY}"
+            rm "${GAME_ID}_dlc.pkg"
+            cd "${MY_PATH}"
+        fi
     fi
 done
