@@ -52,7 +52,7 @@ MY_PATH="$(pwd)"
 pyNPU.py --link --title-id ${TITLE_ID} > /dev/null
 if [ "${?}" -eq 2 ]
 then
-    echo "No updates available for this game."
+    >&2 echo "No updates available for title ID \"${TITLE_ID}\"."
     exit 2
 fi
 
