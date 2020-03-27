@@ -85,10 +85,10 @@ do
         fi
         cd "${MY_PATH}/${DESTDIR}_dlc"
 
-        if find . -depth 1 -type f -name "*[${TITLE_ID}]*[DLC*.${ext}" | grep -E "\[${TITLE_ID}\].*\[DLC.*\.${ext}"
+        if find . -depth 1 -type f -name "*[${TITLE_ID}]*[DLC*.${ext}" | grep -E "\[${TITLE_ID}\].*\[DLC.*\.${ext}" > /dev/null 2>&1
         then
             EXISTING_COUNT=0
-            for FOUND_FILE in $(find . -depth 1 -type f -name "*[${TITLE_ID}]*[DLC*.${ext}" | grep -E "\[${TITLE_ID}\].*\[DLC.*\.${ext}" | sed 's@./@@g')
+            for FOUND_FILE in "$(find . -depth 1 -type f -name "*[${TITLE_ID}]*[DLC*.${ext}" | grep -E "\[${TITLE_ID}\].*\[DLC.*\.${ext}" | sed 's@\./@@g')"
             do
                 if [ "$(file -b --mime-type "${FOUND_FILE}")" = "${mime_type}" ]
                 then
