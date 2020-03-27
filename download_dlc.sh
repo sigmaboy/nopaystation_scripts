@@ -25,9 +25,6 @@ sha256_choose; downloader_choose
 
 check_binaries "${MY_BINARIES}"
 
-ext="zip"
-mime_type="application/zip"
-
 # Get variables from script parameters
 TSV_FILE="${1}"
 GAME_ID="${2}"

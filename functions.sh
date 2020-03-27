@@ -1,5 +1,8 @@
 #!/bin/bash
 
+ext="zip"
+mime_type="application/zip"
+
 sha256_choose() {
     if which sha256 > /dev/null 2>&1
     then
