@@ -5,6 +5,7 @@
 # return codes:
 # 1 user errors
 # 2 no updates available
+# 5 game archives already exist
 
 # get directory where the scripts are located
 SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
