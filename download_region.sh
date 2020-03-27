@@ -58,7 +58,7 @@ check_return_code() {
         2)
         echo ""
         echo -e "${LIGHT_GREEN}INFO${RESET}:"
-        if [ "${TYPE}" == "update" ]
+        if [ "${TYPE}" == "update" ] || [ "${TYPE}" == "changelog" ]
         then
             echo "No Update available for \"${TITLE_ID}\"."
         else
