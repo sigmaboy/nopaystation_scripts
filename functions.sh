@@ -1,5 +1,8 @@
 #!/bin/bash
 
+ext="7z"
+mime_type="application/x-7z-compressed"
+
 sha256_choose() {
     if which sha256 > /dev/null 2>&1
     then

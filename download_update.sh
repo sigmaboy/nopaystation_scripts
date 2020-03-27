@@ -33,9 +33,6 @@ sha256_choose; downloader_choose
 
 check_binaries "${MY_BINARIES}"
 
-ext="7z"
-mime_type="application/x-7z-compressed"
-
 # Get variables from script parameters
 TITLE_ID="${1}"
 

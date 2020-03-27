@@ -25,9 +25,6 @@ sha256_choose; downloader_choose
 
 check_binaries "${MY_BINARIES}"
 
-ext="7z"
-mime_type="application/x-7z-compressed"
-
 # Get variables from script parameters
 TSV_FILE="${1}"
 TITLE_ID="${2}"
