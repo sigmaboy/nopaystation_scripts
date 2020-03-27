@@ -5,7 +5,8 @@
 
 # return codes:
 # 1 user errors
-# 2 link or key missing.
+# 2 no DLC available
+# 4 no key or link available
 # 5 game archive already exists
 
 # get directory where the scripts are located
@@ -51,6 +52,11 @@ then
     DESTDIR="${GAME_ID}"
 fi
 
+if ! grep -q "^${GAME_ID}" "${TSV_FILE}"
+then
+    exit 2
+fi
+
 LIST=$(grep "^${GAME_ID}" "${TSV_FILE}" | cut -f"4,5,9" | tr '\t' '%' | tr -d '\r')
 # '\r' bytes interfere with string comparison later on, so we remove them
 
@@ -63,12 +69,15 @@ do
     if [ "${LINK}" = "MISSING" ] && [ "${KEY}" = "MISSING" ]
     then
         echo "Download link and zRIF key are missing."
+        exit 4
     elif [ "${LINK}" = "MISSING" ]
     then
         echo "Download link is missing."
+        exit 4
     elif [ "${KEY}" = "MISSING" ]
     then
         echo "zRIF key is missing."
+        exit 4
     else
         if [ ! -d "${MY_PATH}/${DESTDIR}_dlc" ]
         then
