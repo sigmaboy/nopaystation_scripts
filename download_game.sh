@@ -84,25 +84,29 @@ then
     echo "\"${GANE_ID}\" is only available via cartridge"
     exit 3
 else
-    my_download_file "${LINK}" "${TITLE_ID}.pkg"
-    FILE_SHA256="$(my_sha256 "${TITLE_ID}.pkg")"
-    compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
-
-    # get file name and modify it
-    pkg2zip -l "${TITLE_ID}.pkg" > "${TITLE_ID}.txt"
-    MY_FILE_NAME="$(cat "${TITLE_ID}.txt" | sed 's/\.zip//g')"
-    MY_FILE_NAME="$(region_rename "${MY_FILE_NAME}")"
-    if [ -f "${MY_FILE_NAME}.7z" ]
+    if find . -depth 1 -type f -name "*[${TITLE_ID}]*.7z" | grep -E "\[${TITLE_ID}\].*\.7z"
     then
-        if [ "$(file -b --mime-type "${MY_FILE_NAME}.7z")" = "application/x-7z-compressed" ]
+        FOUND_FILE=$(find . -depth 1 -type f -name "*[${TITLE_ID}]*.7z" | grep -E "\[${TITLE_ID}\].*\.7z" | sed 's@./@@g')
+        if [ "$(file -b --mime-type "${FOUND_FILE}")" = "application/x-7z-compressed" ]
         then
             # print this to stderr
-            >&2 echo "File \"${MY_FILE_NAME}.7z\" already exists."
-            >&2 echo "Skip compression and remove ${TITLE_ID}.pkg file"
-            rm "${TITLE_ID}.pkg"
+            >&2 echo "File \"${FOUND_FILE}\" already exists."
+            exit 5
+        else
+            # print this to stderr
+            >&2 echo "File \"${FOUND_FILE}.7z\" already exists."
+            >&2 echo "But it doesn't seem to be a valid 7z file"
             exit 5
         fi
     else
+        my_download_file "${LINK}" "${TITLE_ID}.pkg"
+        FILE_SHA256="$(my_sha256 "${TITLE_ID}.pkg")"
+        compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
+
+        # get file name and modify it
+        pkg2zip -l "${TITLE_ID}.pkg" > "${TITLE_ID}.txt"
+        MY_FILE_NAME="$(cat "${TITLE_ID}.txt" | sed 's/\.zip//g')"
+        MY_FILE_NAME="$(region_rename "${MY_FILE_NAME}")"
         test -d "app/" && rm -rf "app/"
         pkg2zip -x "${TITLE_ID}.pkg" "${KEY}"
         t7z a "${MY_FILE_NAME}.7z" "app/"
