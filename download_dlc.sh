@@ -100,7 +100,7 @@ do
             else
                 EXISTING_COUNT=$((${EXISTING_COUNT} + 1))
                 # print this to stderr
-                >&2 echo "File \"${FOUND_FILE}.${ext}\" already exists."
+                >&2 echo "File \"${FOUND_FILE}\" already exists."
                 >&2 echo "But it doesn't seem to be a valid ${ext} file"
             fi
             >&2 echo "${EXISTING_COUNT} DLC(s) already present"
