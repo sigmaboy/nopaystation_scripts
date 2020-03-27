@@ -66,18 +66,18 @@ region_rename() {
 
     if echo "${NAME}" | grep -q "\[USA\]"
     then
-        local NEW_NAME="$(echo "${NAME}" | sed 's/USA/NTSC/g')"
+        local NAME="$(echo "${NAME}" | sed 's/USA/NTSC/g')"
     elif echo "${NAME}" | grep -q "\[JPN\]"
     then
-        NEW_NAME="$(echo "${NAME}" | sed 's/JPN/NTSC-J/g')"
+        NAME="$(echo "${NAME}" | sed 's/JPN/NTSC-J/g')"
     elif echo "${NAME}" | grep -q "\[EUR\]"
     then
-        NEW_NAME="$(echo "${NAME}" | sed 's/EUR/PAL/g')"
+        NAME="$(echo "${NAME}" | sed 's/EUR/PAL/g')"
     elif echo "${NAME}" | grep -q "\[ASA\]"
     then
-        NEW_NAME="$(echo "${NAME}" | sed 's/ASA/NTSC-C/g')"
+        NAME="$(echo "${NAME}" | sed 's/ASA/NTSC-C/g')"
     fi
-    echo ${NEW_NAME}
+    echo ${NAME}
 }
 
 check_valid_psv_id() {
