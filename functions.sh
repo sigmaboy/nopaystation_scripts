@@ -76,9 +76,6 @@ region_rename() {
     elif echo "${NAME}" | grep -q "\[ASA\]"
     then
         NEW_NAME="$(echo "${NAME}" | sed 's/ASA/NTSC-C/g')"
-    else
-        NEW_NAME="${NAME}"
-        exit 1
     fi
     echo ${NEW_NAME}
 }
