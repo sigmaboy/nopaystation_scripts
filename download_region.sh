@@ -297,7 +297,7 @@ do
     then
         download_game.sh "${NPS_ABSOLUTE_PATH}/PSV_GAMES.tsv" "${TITLE_ID}"
         check_return_code ${?} "game"
-        GAME_NAME="$(cat "${TITLE_ID}.txt" | sed 's/.zip//g')"
+        GAME_NAME="$(cat "${TITLE_ID}.txt")"
         GAME_NAME="$(region_rename "${GAME_NAME}")"
         if [ ${UPDATE_ALL} -eq 1 ]
         then
