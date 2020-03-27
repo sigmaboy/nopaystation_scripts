@@ -25,6 +25,9 @@ sha256_choose; downloader_choose
 
 check_binaries "${MY_BINARIES}"
 
+ext="7z"
+mime_type="application/x-7z-compressed"
+
 # Get variables from script parameters
 TSV_FILE="${1}"
 GAME_ID="${2}"
@@ -85,11 +88,11 @@ do
         fi
         cd "${MY_PATH}/${DESTDIR}_dlc"
 
-        if find . -depth 1 -type f -name "*[${TITLE_ID}]*[DLC*.7z" | grep -E "\[${TITLE_ID}\].*\[DLC.*\.7z"
+        if find . -depth 1 -type f -name "*[${TITLE_ID}]*[DLC*.${ext}" | grep -E "\[${TITLE_ID}\].*\[DLC.*\.${ext}"
         then
             EXISTING_COUNT=0
-            for FOUND_FILE in $(find . -depth 1 -type f -name "*[${TITLE_ID}]*[DLC*.7z" | grep -E "\[${TITLE_ID}\].*\[DLC.*\.7z" | sed 's@./@@g')
-            if [ "$(file -b --mime-type "${FOUND_FILE}")" = "application/x-7z-compressed" ]
+            for FOUND_FILE in $(find . -depth 1 -type f -name "*[${TITLE_ID}]*[DLC*.${ext}" | grep -E "\[${TITLE_ID}\].*\[DLC.*\.${ext}" | sed 's@./@@g')
+            if [ "$(file -b --mime-type "${FOUND_FILE}")" = "${mime_type}" ]
             then
                 EXISTING_COUNT=$((${EXISTING_COUNT} + 1))
                 # print this to stderr
@@ -97,8 +100,8 @@ do
             else
                 EXISTING_COUNT=$((${EXISTING_COUNT} + 1))
                 # print this to stderr
-                >&2 echo "File \"${FOUND_FILE}.7z\" already exists."
-                >&2 echo "But it doesn't seem to be a valid 7z file"
+                >&2 echo "File \"${FOUND_FILE}.${ext}\" already exists."
+                >&2 echo "But it doesn't seem to be a valid ${ext} file"
             fi
             >&2 echo "${EXISTING_COUNT} DLC(s) already present"
             cd "${MY_PATH}"

@@ -25,6 +25,9 @@ sha256_choose; downloader_choose
 
 check_binaries "${MY_BINARIES}"
 
+ext="7z"
+mime_type="application/x-7z-compressed"
+
 # Get variables from script parameters
 TSV_FILE="${1}"
 TITLE_ID="${2}"
@@ -84,22 +87,22 @@ then
     echo "\"${GANE_ID}\" is only available via cartridge"
     exit 3
 else
-    if find . -depth 1 -type f -name "*[${TITLE_ID}]*.7z" | grep -E "\[${TITLE_ID}\].*\.7z"
+    if find . -depth 1 -type f -name "*[${TITLE_ID}]*.${ext}" | grep -E "\[${TITLE_ID}\].*\.${ext}"
     then
-        FOUND_FILE=$(find . -depth 1 -type f -name "*[${TITLE_ID}]*.7z" | grep -E "\[${TITLE_ID}\].*\.7z" | sed 's@./@@g')
+        FOUND_FILE=$(find . -depth 1 -type f -name "*[${TITLE_ID}]*.${ext}" | grep -E "\[${TITLE_ID}\].*\.${ext}" | sed 's@./@@g')
         # write package name into txt file for depending steps like downloading dlc and update
-        echo "${FOUND_FILE}" | sed 's/\.7z//g' > "${TITLE_ID}.txt"
+        echo "${FOUND_FILE}" | sed "s/\.${ext}//g" > "${TITLE_ID}.txt"
 
-        # test if archive is a 7z file
-        if [ "$(file -b --mime-type "${FOUND_FILE}")" = "application/x-7z-compressed" ]
+        # test if archive is a ${ext} file
+        if [ "$(file -b --mime-type "${FOUND_FILE}")" = "${mime_type}" ]
         then
             # print this to stderr
-            >&2 echo "File \"${FOUND_FILE}\" already exists."
+            >&2 echo "File \"${FOUND_FILE}.${ext}\" already exists."
             exit 5
         else
             # print this to stderr
-            >&2 echo "File \"${FOUND_FILE}.7z\" already exists."
-            >&2 echo "But it doesn't seem to be a valid 7z file"
+            >&2 echo "File \"${FOUND_FILE}.${ext}\" already exists."
+            >&2 echo "But it doesn't seem to be a valid ${ext} file"
             exit 5
         fi
     else
@@ -113,7 +116,7 @@ else
         MY_FILE_NAME="$(region_rename "${MY_FILE_NAME}")"
         test -d "app/" && rm -rf "app/"
         pkg2zip -x "${TITLE_ID}.pkg" "${KEY}"
-        t7z a "${MY_FILE_NAME}.7z" "app/"
+        t7z a "${MY_FILE_NAME}.${ext}" "app/"
         rm -rf "app/"
         rm "${TITLE_ID}.pkg"
     fi

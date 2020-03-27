@@ -33,6 +33,9 @@ sha256_choose; downloader_choose
 
 check_binaries "${MY_BINARIES}"
 
+ext="7z"
+mime_type="application/x-7z-compressed"
+
 # Get variables from script parameters
 TITLE_ID="${1}"
 
@@ -84,11 +87,11 @@ pyNPU.py --changelog --title-id "${TITLE_ID}" > "${MY_PATH}/${DESTDIR}_update/ch
 for i in ${LIST}
 do
     cd "${MY_PATH}/${DESTDIR}_update"
-    if find . -depth 1 -type f -name "*[${TITLE_ID}]*.7z" | grep -E "\[${TITLE_ID}\].*\.7z"
+    if find . -depth 1 -type f -name "*[${TITLE_ID}]*.${ext}" | grep -E "\[${TITLE_ID}\].*\.${ext}"
     then
         COUNT=0
-        for FOUND_FILE in $(find . -depth 1 -type f -name "*[${TITLE_ID}]*[PATCH]*.7z" | grep -E "\[${TITLE_ID}\].*\[PATCH\].*\.7z" | sed 's@./@@g')
-        if [ "$(file -b --mime-type "${FOUND_FILE}")" = "application/x-7z-compressed" ]
+        for FOUND_FILE in $(find . -depth 1 -type f -name "*[${TITLE_ID}]*[PATCH]*.${ext}" | grep -E "\[${TITLE_ID}\].*\[PATCH\].*\.${ext}" | sed 's@./@@g')
+        if [ "$(file -b --mime-type "${FOUND_FILE}")" = "${mime_type}" ]
         then
             COUNT=$((${COUNT} + 1))
             # print this to stderr
@@ -96,8 +99,8 @@ do
         else
             COUNT=$((${COUNT} + 1))
             # print this to stderr
-            >&2 echo "File \"${FOUND_FILE}.7z\" already exists."
-            >&2 echo "But it doesn't seem to be a valid 7z file"
+            >&2 echo "File \"${FOUND_FILE}.${ext}\" already exists."
+            >&2 echo "But it doesn't seem to be a valid ${ext} file"
         fi
         >&2 echo ""
         >&2 echo "${COUNT} updates already present"
@@ -113,7 +116,7 @@ do
         # extract files and compress them with t7z
         test -d "patch/" && rm -rf "patch/"
         pkg2zip -x "${TITLE_ID}_update.pkg"
-        t7z a "${MY_FILE_NAME}.7z" "patch/"
+        t7z a "${MY_FILE_NAME}.${ext}" "patch/"
         rm -rf "patch/"
         rm "${TITLE_ID}_update.pkg"
         rm "${TITLE_ID}_update.txt"
