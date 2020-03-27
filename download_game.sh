@@ -84,7 +84,7 @@ then
     echo "\"${GANE_ID}\" is only available via cartridge"
     exit 3
 else
-    if find . -depth 1 -type f -name "*[${TITLE_ID}]*.${ext}" | grep -E "\[${TITLE_ID}\].*\.${ext}" > /dev/null 2>&1
+    if find . -depth 1 -type f -name "*[${TITLE_ID}]*.${ext}" | grep -q -E "\[${TITLE_ID}\].*\.${ext}"
     then
         FOUND_FILE=$(find . -depth 1 -type f -name "*[${TITLE_ID}]*.${ext}" | grep -E "\[${TITLE_ID}\].*\.${ext}" | sed 's@\./@@g')
         # write package name into txt file for depending steps like downloading dlc and update
