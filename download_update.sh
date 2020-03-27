@@ -84,7 +84,7 @@ pyNPU.py --changelog --title-id "${TITLE_ID}" > "${MY_PATH}/${DESTDIR}_update/ch
 for i in ${LIST}
 do
     cd "${MY_PATH}/${DESTDIR}_update"
-    if find . -depth 1 -type f -name "*[${TITLE_ID}]*.${ext}" | grep -E "\[${TITLE_ID}\].*\.${ext}" > /dev/null 2>&1
+    if find . -depth 1 -type f -name "*[${TITLE_ID}]*.${ext}" | grep -q -E "\[${TITLE_ID}\].*\.${ext}"
     then
         COUNT=0
         for FOUND_FILE in "$(find . -depth 1 -type f -name "*[${TITLE_ID}]*[PATCH]*.${ext}" | grep -E "\[${TITLE_ID}\].*\[PATCH\].*\.${ext}" | sed 's@\./@@g')"
