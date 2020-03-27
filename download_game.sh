@@ -97,11 +97,11 @@ else
         if [ "$(file -b --mime-type "${FOUND_FILE}")" = "${mime_type}" ]
         then
             # print this to stderr
-            >&2 echo "File \"${FOUND_FILE}.${ext}\" already exists."
+            >&2 echo "File \"${FOUND_FILE}\" already exists."
             exit 5
         else
             # print this to stderr
-            >&2 echo "File \"${FOUND_FILE}.${ext}\" already exists."
+            >&2 echo "File \"${FOUND_FILE}\" already exists."
             >&2 echo "But it doesn't seem to be a valid ${ext} file"
             exit 5
         fi
