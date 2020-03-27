@@ -87,6 +87,10 @@ else
     if find . -depth 1 -type f -name "*[${TITLE_ID}]*.7z" | grep -E "\[${TITLE_ID}\].*\.7z"
     then
         FOUND_FILE=$(find . -depth 1 -type f -name "*[${TITLE_ID}]*.7z" | grep -E "\[${TITLE_ID}\].*\.7z" | sed 's@./@@g')
+        # write package name into txt file for depending steps like downloading dlc and update
+        echo "${FOUND_FILE}" | sed 's/\.7z//g' > "${TITLE_ID}.txt"
+
+        # test if archive is a 7z file
         if [ "$(file -b --mime-type "${FOUND_FILE}")" = "application/x-7z-compressed" ]
         then
             # print this to stderr
