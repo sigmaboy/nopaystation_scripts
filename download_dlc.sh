@@ -89,17 +89,20 @@ do
         then
             EXISTING_COUNT=0
             for FOUND_FILE in $(find . -depth 1 -type f -name "*[${TITLE_ID}]*[DLC*.${ext}" | grep -E "\[${TITLE_ID}\].*\[DLC.*\.${ext}" | sed 's@./@@g')
-            if [ "$(file -b --mime-type "${FOUND_FILE}")" = "${mime_type}" ]
-            then
-                EXISTING_COUNT=$((${EXISTING_COUNT} + 1))
-                # print this to stderr
-                >&2 echo "File \"${FOUND_FILE}\" already exists."
-            else
-                EXISTING_COUNT=$((${EXISTING_COUNT} + 1))
-                # print this to stderr
-                >&2 echo "File \"${FOUND_FILE}\" already exists."
-                >&2 echo "But it doesn't seem to be a valid ${ext} file"
-            fi
+            do
+                if [ "$(file -b --mime-type "${FOUND_FILE}")" = "${mime_type}" ]
+                then
+                    EXISTING_COUNT=$((${EXISTING_COUNT} + 1))
+                    # print this to stderr
+                    >&2 echo "File \"${FOUND_FILE}\" already exists."
+                else
+                    EXISTING_COUNT=$((${EXISTING_COUNT} + 1))
+                    # print this to stderr
+                    >&2 echo "File \"${FOUND_FILE}\" already exists."
+                    >&2 echo "But it doesn't seem to be a valid ${ext} file"
+                fi
+            done
+            >&2 echo ""
             >&2 echo "${EXISTING_COUNT} DLC(s) already present"
             cd "${MY_PATH}"
             exit 5
