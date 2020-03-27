@@ -1,7 +1,6 @@
 #!/bin/sh
 
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
-# Version 0.5
 
 # get directory where the scripts are located
 SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
@@ -63,7 +62,7 @@ check_return_code() {
         then
             echo "No Update available for \"${TITLE_ID}\"."
         else
-            echo "Key or link not available for \"${TITLE_ID}\"' ${TYPE}."
+            echo "No DLCs available for \"${TITLE_ID}\"."
         fi
         echo "Proceed to next download."
         echo ""
@@ -73,6 +72,11 @@ check_return_code() {
         echo -e "${LIGHT_GREEN}INFO${RESET}:"
         echo "Game \"${TITLE_ID}\" is physical only."
         echo "Proceed to next download."
+        ;;
+        4)
+        echo ""
+        echo -e "${YELLOW}Warning${RESET}:"
+        echo "Key or link not available for \"${TITLE_ID}\"'s ${TYPE}."
         ;;
         5)
         echo ""
