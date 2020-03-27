@@ -102,7 +102,8 @@ else
         my_download_file "${LINK}" "${TITLE_ID}.pkg"
         FILE_SHA256="$(my_sha256 "${TITLE_ID}.pkg")"
         compare_checksum "${LIST_SHA256}" "${FILE_SHA256}"
-        pkg2zip -l "${TITLE_ID}.pkg" > "${TITLE_ID}.txt"
+        # get file name and modify it
+        pkg2zip -l "${TITLE_ID}.pkg" | sed 's/.zip//g' > "${TITLE_ID}.txt"
         pkg2zip "${TITLE_ID}.pkg" "${KEY}"
         rm "${TITLE_ID}.pkg"
     fi
