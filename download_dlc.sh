@@ -5,7 +5,7 @@
 # return codes:
 # 1 user errors
 # 2 no DLC available
-# 4 no key or link available
+# 4 not all keys or links available
 # 5 game archive already exists
 
 # get directory where the scripts are located
@@ -65,18 +65,19 @@ do
     KEY=$(echo "${i}" | cut -d"%" -f2)
     LIST_SHA256=$(echo "${i}" | xargs | cut -d"%" -f3)
 
+    MISSING_COUNT=0
     if [ "${LINK}" = "MISSING" ] && [ "${KEY}" = "MISSING" ]
     then
-        echo "Download link and zRIF key are missing."
-        exit 4
+        >&2 echo "Download link and zRIF key are missing."
+        MISSING_COUNT=$((${MISSING_COUNT} + 1))
     elif [ "${LINK}" = "MISSING" ]
     then
-        echo "Download link is missing."
-        exit 4
+        >&2 echo "Download link is missing."
+        MISSING_COUNT=$((${MISSING_COUNT} + 1))
     elif [ "${KEY}" = "MISSING" ]
     then
-        echo "zRIF key is missing."
-        exit 4
+        >&2 echo "zRIF key is missing."
+        MISSING_COUNT=$((${MISSING_COUNT} + 1))
     else
         if [ ! -d "${MY_PATH}/${DESTDIR}_dlc" ]
         then
@@ -86,20 +87,20 @@ do
 
         if find . -depth 1 -type f -name "*[${TITLE_ID}]*[DLC*.7z" | grep -E "\[${TITLE_ID}\].*\[DLC.*\.7z"
         then
-            COUNT=0
+            EXISTING_COUNT=0
             for FOUND_FILE in $(find . -depth 1 -type f -name "*[${TITLE_ID}]*[DLC*.7z" | grep -E "\[${TITLE_ID}\].*\[DLC.*\.7z" | sed 's@./@@g')
             if [ "$(file -b --mime-type "${FOUND_FILE}")" = "application/x-7z-compressed" ]
             then
-                COUNT=$((${COUNT} + 1))
+                EXISTING_COUNT=$((${EXISTING_COUNT} + 1))
                 # print this to stderr
                 >&2 echo "File \"${FOUND_FILE}\" already exists."
             else
-                COUNT=$((${COUNT} + 1))
+                EXISTING_COUNT=$((${EXISTING_COUNT} + 1))
                 # print this to stderr
                 >&2 echo "File \"${FOUND_FILE}.7z\" already exists."
                 >&2 echo "But it doesn't seem to be a valid 7z file"
             fi
-            >&2 echo "${COUNT} DLC(s) already present"
+            >&2 echo "${EXISTING_COUNT} DLC(s) already present"
             cd "${MY_PATH}"
             exit 5
         else
@@ -123,3 +124,9 @@ do
         fi
     fi
 done
+if [ ${MISSING_COUNT} -gt 0 ]
+then
+    exit 4
+else
+    exit 0
+fi
