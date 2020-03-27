@@ -5,8 +5,8 @@
 
 # return codes:
 # 1 user errors
-# 2 link or key missing.
 # 3 game is only available physically
+# 4 link or key missing.
 # 5 game archive already exists
 
 # get directory where the scripts are located
@@ -69,17 +69,17 @@ if [ "${LINK}" = "MISSING" ] && [ "${KEY}" = "MISSING" ]
 then
     echo "Download link and zRIF key of \"${TITLE_ID}\" are missing."
     echo "Cannot proceed."
-    exit 2
+    exit 4
 elif [ "${LINK}" = "MISSING" ]
 then
     echo "Download link of \"${TITLE_ID}\" is missing."
     echo "Cannot proceed."
-    exit 2
+    exit 4
 elif [ "${KEY}" = "MISSING" ]
 then
     echo "zrif key of \"${TITLE_ID}\" is missing."
     echo "Cannot proceed."
-    exit 2
+    exit 4
 elif [ "${LINK}" = "CART ONLY" ]
 then
     echo "\"${GANE_ID}\" is only available via cartridge"
