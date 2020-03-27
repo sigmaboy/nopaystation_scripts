@@ -1,12 +1,11 @@
 #!/bin/sh
 
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
-# Version 0.5
 
 # return codes:
 # 1 user errors
-# 2 link or key missing.
 # 3 game is only available physically
+# 4 link or key missing.
 
 # get directory where the scripts are located
 SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
@@ -67,7 +66,7 @@ RAP=$(echo "${LIST}" | cut -f2)
 if [ "${LINK}" = "MISSING" ]
 then
     echo "Link of \"${GAME_ID}\" missing. Cannot proceed."
-    exit 2
+    exit 4
 elif [ "${LINK}" = "CART ONLY" ]
 then
     echo "\"${GANE_ID}\" is only available via cartridge"

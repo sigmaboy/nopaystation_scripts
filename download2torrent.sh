@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
-# Version 0.5
 
 if [ "${1}" == "-a" ]
 then
