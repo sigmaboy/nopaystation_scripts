@@ -28,6 +28,7 @@ parser = argparse.ArgumentParser(prog='pyNPU', usage='%(prog)s [options]')
 parser.add_argument('--changelog', '-c', action='store_true', help="Print changelog to stdout")
 parser.add_argument('--bbcode', '-b', action='store_true', help="Change changelog to format to BB Code")
 parser.add_argument('--link', '-l', action='store_true', help="Print download link of the latest update")
+parser.add_argument('--name', '-n', action='store_true', help="Print the name of the game (same as in the sfo)")
 parser.add_argument('--all', '-a', action='store_true', help="Print all updates available")
 parser.add_argument('--title-id', '-t', nargs=1, help="specify the Title ID of game")
 parser.add_argument('--version', '-v', action='version', version='%(prog)s v0.0.1')
@@ -50,9 +51,6 @@ r = requests.get(update_url, verify=False)
 if r.status_code == 404:
     print("No update for this game available")
     sys.exit(2)
-#elif not r.content:
-#    print("No update for this game available")
-#    sys.exit(2)
 r.close()
 
 try:
@@ -66,16 +64,19 @@ update_xml = xml.fromstring(r.content)
 
 # make sure several arguments cannot be combined
 if args.changelog and args.link:
-    print('Cannot combine parameter "changelog" and "link"')
+    print('Error: Cannot combine parameter "changelog" and "link"')
     sys.exit(1)
 elif args.changelog and args.all:
-    print('Cannot combine parameter "changelog" and "all"')
+    print('Error: Cannot combine parameter "changelog" and "all"')
     sys.exit(1)
 elif args.bbcode and args.link:
-    print('Cannot combine parameter "bbcode" and "link"')
+    print('Error: Cannot combine parameter "bbcode" and "link"')
+    sys.exit(1)
+elif args.name and (args.link or args.changelog or args.bbcode or args.all):
+    print('Error: Cannot combine parameter "name" with others except "title-id"')
     sys.exit(1)
 elif args.bbcode and not args.changelog:
-    print('Cannot use parameter "bbcode" without "changelog"')
+    print('Error: Cannot use parameter "bbcode" without "changelog"')
     sys.exit(1)
 
 # not sure if the if the check is really needed
@@ -145,3 +146,6 @@ if update_xml.get('status') == "alive":
                                 print(subpackage.get('url'))
                     else:
                         print(package.get('url'))
+    elif args.name:
+        for name in update_xml.iter('title'):
+            print(name.text)
