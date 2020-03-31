@@ -87,7 +87,7 @@ do
     if find . -depth 1 -type f -name "*[${TITLE_ID}]*.${ext}" | grep -q -E "\[${TITLE_ID}\].*\.${ext}"
     then
         COUNT=0
-        for FOUND_FILE in "$(find . -depth 1 -type f -name "*[${TITLE_ID}]*[PATCH]*.${ext}" | grep -E "\[${TITLE_ID}\].*\[PATCH\].*\.${ext}" | sed 's@\./@@g')"
+        for FOUND_FILE in "$(find . -maxdepth 1 -type f -name "*[${TITLE_ID}]*[PATCH]*.${ext}" | grep -E "\[${TITLE_ID}\].*\[PATCH\].*\.${ext}" | sed 's@\./@@g')"
         do
             if [ "$(file -b --mime-type "${FOUND_FILE}")" = "${mime_type}" ]
             then
