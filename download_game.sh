@@ -86,7 +86,7 @@ then
 else
     if find . -maxdepth 1 -type f -name "*[${TITLE_ID}]*.${ext}" | grep -q -E "\[${TITLE_ID}\].*\.${ext}"
     then
-        FOUND_FILE=$(find . -depth 1 -type f -name "*[${TITLE_ID}]*.${ext}" | grep -E "\[${TITLE_ID}\].*\.${ext}" | sed 's@\./@@g')
+        FOUND_FILE=$(find . -maxdepth 1 -type f -name "*[${TITLE_ID}]*.${ext}" | grep -E "\[${TITLE_ID}\].*\.${ext}" | sed 's@\./@@g')
         # write package name into txt file for depending steps like downloading dlc and update
         echo "${FOUND_FILE}" | sed "s/\.${ext}//g" > "${TITLE_ID}.txt"
 
