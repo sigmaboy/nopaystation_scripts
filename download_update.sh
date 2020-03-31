@@ -57,6 +57,8 @@ then
     exit 2
 fi
 
+GAME_NAME="$(pyNPU.py --name --title-id "${TITLE_ID}")"
+
 # make DESTDIR overridable
 if [ -z "${DESTDIR}" ]
 then
@@ -112,3 +114,5 @@ do
         cd "${MY_PATH}"
     fi
 done
+REGION_NAME="$(basename "$(find "${MY_PATH}/${DESTDIR}_update" -type f -name "*.${ext}" | head -n 1)" | sed "s/.*\[${TITLE_ID}\] \[//g" | sed 's/\] \[PATCH.*//')"
+mv "${MY_PATH}/${DESTDIR}_update" "${MY_PATH}/${GAME_NAME} [${TITLE_ID}] [${REGION_NAME}]_update"
