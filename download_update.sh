@@ -62,7 +62,10 @@ GAME_NAME="$(pyNPU.py --name --title-id "${TITLE_ID}")"
 # make DESTDIR overridable
 if [ -z "${DESTDIR}" ]
 then
+    RENAME=1
     DESTDIR="${TITLE_ID}"
+else
+    RENAME=0
 fi
 
 # create download dir if updates for this game are available
@@ -124,5 +127,10 @@ do
         cd "${MY_PATH}"
     fi
 done
-REGION_NAME="$(basename "$(find "${MY_PATH}/${DESTDIR}_update" -type f -name "*.${ext}" | head -n 1)" | sed "s/.*\[${TITLE_ID}\] \[//g" | sed 's/\] \[PATCH.*//')"
-mv "${MY_PATH}/${DESTDIR}_update" "${MY_PATH}/${GAME_NAME} [${TITLE_ID}] [${REGION_NAME}]_update"
+
+if [ ${RENAME} -eq 1 ]
+then
+    # this code is pretty ugly. It's just to make sure the directory naming scheme behaves like when overriding $DESTDIR with the game name
+    REGION_NAME="$(basename "$(find "${MY_PATH}/${DESTDIR}_update" -type f -name "*.${ext}" | head -n 1)" | sed "s/.*\[${TITLE_ID}\] \[//g" | sed 's/\] \[PATCH.*//')"
+    mv "${MY_PATH}/${DESTDIR}_update" "${MY_PATH}/${GAME_NAME} [${TITLE_ID}] [${REGION_NAME}]_update"
+fi
