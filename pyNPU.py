@@ -104,6 +104,8 @@ if update_xml.get('status') == "alive":
                     elif element.tag == 'ul':
                         for list in element.getchildren():
                             print("[*] " + list.text_content())
+                    elif element.tag == 'li':
+                        print("[*] " + element.text_content())
                     elif element.tag == 'p':
                         print(element.text_content())
             else:
@@ -115,6 +117,8 @@ if update_xml.get('status') == "alive":
                     elif element.tag == 'ul':
                         for list in element.getchildren():
                             print("- " + list.text_content())
+                    elif element.tag == 'li':
+                        print("- " + element.text_content())
                     elif element.tag == 'p':
                         print(element.text_content())
     elif args.link:
