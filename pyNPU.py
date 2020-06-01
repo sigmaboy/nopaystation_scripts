@@ -75,6 +75,9 @@ elif args.bbcode and args.link:
 elif args.name and (args.link or args.changelog or args.bbcode or args.all):
     print('Error: Cannot combine parameter "name" with others except "title-id"')
     sys.exit(1)
+elif args.title_id and not (args.link or args.changelog or args.name):
+    print('Error: Cannot use parameter "title-id" without "changelog, "link" or "name"')
+    sys.exit(1)
 elif args.bbcode and not args.changelog:
     print('Error: Cannot use parameter "bbcode" without "changelog"')
     sys.exit(1)
