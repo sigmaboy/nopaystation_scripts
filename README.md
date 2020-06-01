@@ -145,3 +145,4 @@ Just use the "-h" parameter to get all parameters and examples.
 # ToDos
 * create a script to download PSM games
 * add command line parameters to control the behaviour of the download scripts (downloading/compressing only)
+* compare the whole download + compression process of pkg2zip vs. pkg2zip without zipping + torrent7z compressing
