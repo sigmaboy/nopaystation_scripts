@@ -42,7 +42,7 @@ install -Dm 0755 bin/t7z "${HOME}/bin"
 ```bash
 git clone -b t7z https://github.com/sigmaboy/nopaystation_scripts.git && cd nopaystation_scripts
 chmod +x download*.sh pyNPU.py
-test -d "${HOME}/bin" && ln -s "$(pwd)"/download*.sh $(pwd)"/pyNPU.py "${HOME}/bin"
+test -d "${HOME}/bin" && ln -s "$(pwd)"/download*.sh "$(pwd)"/pyNPU.py "${HOME}/bin"
 ```
 
 If you don't have *${HOME}/bin* in your *${PATH}*, try the following.
