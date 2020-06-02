@@ -150,6 +150,7 @@ fi
 
 ### Get name of the zip file from generated txt created via nps_game.sh
 GAME_NAME="$(cat "${TITLE_ID}.txt")"
+GAME_NAME="$(region_rename "${GAME_NAME}")"
 ZIP_FILENAME="${GAME_NAME}.${ext}"
 
 ### Download available updates. With parameter -a all updates
