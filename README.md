@@ -10,28 +10,36 @@ Be sure to checkout out the [t7z branch](https://github.com/sigmaboy/nopaystatio
 * posix shell (bash, ksh, zsh, sh)
 * curl or wget
 * [*pkg2zip*](https://github.com/mmozeiko/pkg2zip)
-* latest [*mktorrent*](https://github.com/Rudde/mktorrent)
 * python3 + python3-lxml (install it via package manager or pip)
+* (Optional) latest [*mktorrent*](https://github.com/Rudde/mktorrent)
 
-(Optional) To compile+install mktorrent v1.1 (needed for source flag).
-Check the version installed on your system.
+## Compiling dependencies from source
+This section assumes that "${HOME}/bin" is in your shells "${PATH}".
+If you don't want to install the generating programs in $HOME. Just
+change it in the howto below to something like "/usr/local/bin" etc.
+
+### mktorrent
+If your package manager doesn't already have v1.1 you can compile it by yourself.
+mktorrent v1.1 is only needed for source flag. If you don't need it you also can use v1.0.
+You also need some sort of compiler (e.g. gcc) and "make" is needed.
 ```bash
-$ mktorrent -v
 $ git clone https://github.com/Rudde/mktorrent.git
 $ cd mktorrent/ && PREFIX=$HOME make
-$ PREFIX=$HOME make install
+$ PREFIX="${HOME}" make install
 $ rm -rf ~/mktorrent
 ```
-Make sure that executable bit is set on the scripts.
 
-## Installation
+## nopaystation\_scripts Installation
 ```bash
-$ git clone https://github.com/sigmaboy/nopaystation_scripts.git && cd nopaystation_scripts
-$ chmod +x download*.sh
-$ test -d "${HOME}/bin" && ln -s "$(pwd)"/download*.sh "${HOME}/bin"
-$ test -d "${HOME}/bin" && ln -s "$(pwd)"/pyNPU.py "${HOME}/bin"
+$ git clone -b t7z https://github.com/sigmaboy/nopaystation_scripts.git && cd nopaystation_scripts
+$ chmod +x download*.sh pyNPU.py
+$ test -d "${HOME}/bin" && ln -s "$(pwd)"/download*.sh $(pwd)"/pyNPU.py "${HOME}/bin"
 ```
 
+If you don't have *${HOME}/bin* in your *${PATH}*, try the following.
+```bash
+$ test -d "/usr/local/bin" && sudo ln -s "$(pwd)"/download*.sh $(pwd)"/pyNPU.py "/usr/local/bin/"
+```
 
 ## Script examples
 
@@ -41,7 +49,7 @@ It downloads every \*.tsv file from NoPayStation.com and creates a tar archive w
 $ ./download_tsv.sh /path/to/the/output_directory
 ```
 If you don't add the output directory as the first parameter, it uses the current working directory.
-You need the \*.tsv file(s) for every other script in this toolset.
+You need the \*.tsv file(s) for mostly every other script in this toolset.
 
 ### download\_game.sh
 With this script you can download a PS Vita game.
@@ -55,8 +63,8 @@ I can recommend [this](http://renascene.com/psv/) site for searching title IDs.
 
 ### download\_update.sh
 With this script you can download the latest or all available PS Vita game updates.
-There is a  first parameter optional parameter "-a" and the second is the game's title ID.
-It places the files in a created directory from the current working directory named $TITLE\_ID\_update.
+There is a optional first parameter "-a" and the second is the game's title ID.
+It places the files in a created directory from the current working directory named <\TITLE\_ID\_update>.
 For example:
 ```bash
 $ ./download_update.sh [-a] PCSE00986
@@ -64,12 +72,12 @@ $ ./download_update.sh [-a] PCSE00986
 
 ### download\_dlc.sh
 This script downloads every DLC found for a specific title ID with available zRIF key.
-It places the files in a created directory from the current working directory named $TITLE\ID\_dlc.
+Every update is placed in a created directory from the current working directory named <\TITLE\_ID\_update>.
 For example:
 ```bash
 $ ./download_dlc.sh /home/tux/Downloads/DLC.tsv PCSE00986
 ```
-Every DLC is placed in a created directory named like the title id relative to the current directory.
+Every DLC is placed in a created directory from the current working directory named <\TITLE\_ID\_dlc>.
 
 ### download\_psp.sh
 With this script you can download a PSP game.
