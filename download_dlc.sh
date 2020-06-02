@@ -20,7 +20,7 @@ my_usage(){
     echo "${0} \"/path/to/DLC.tsv\" \"PCSE00986\""
 }
 
-MY_BINARIES="pkg2zip sed"
+MY_BINARIES="pkg2zip sed grep t7z file"
 sha256_choose; downloader_choose
 
 check_binaries "${MY_BINARIES}"
@@ -119,7 +119,8 @@ do
             # extract files and compress them with t7z
             test -d "addcont/" && rm -rf "addcont/"
             pkg2zip -x "${GAME_ID}_dlc.pkg" "${KEY}"
-            t7z a "${MY_FILE_NAME}.7z" "addcont/"
+            # add the -rs parameter until a bug on the t7z port for FreeBSD is fixed
+            t7z -ba -rs a "${MY_FILE_NAME}.7z" "addcont/"
             rm -rf "addcont/"
             rm "${GAME_ID}_dlc.pkg"
             rm "${GAME_ID}_dlc.txt"

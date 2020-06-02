@@ -20,7 +20,7 @@ my_usage() {
     echo "${0} \"/path/to/GAME.tsv\" \"PCSE00986\""
 }
 
-MY_BINARIES="pkg2zip sed t7z wine file"
+MY_BINARIES="pkg2zip sed grep file t7z"
 sha256_choose; downloader_choose
 
 check_binaries "${MY_BINARIES}"
@@ -113,7 +113,8 @@ else
         MY_FILE_NAME="$(region_rename "${MY_FILE_NAME}")"
         test -d "app/" && rm -rf "app/"
         pkg2zip -x "${TITLE_ID}.pkg" "${KEY}"
-        t7z a "${MY_FILE_NAME}.${ext}" "app/"
+        # add the -rs parameter until a bug on the t7z port for FreeBSD is fixed
+        t7z -ba -rs a "${MY_FILE_NAME}.${ext}" "app/"
         rm -rf "app/"
         rm "${TITLE_ID}.pkg"
     fi

@@ -28,7 +28,7 @@ my_usage(){
     echo "${0} \"PCSE00986\""
 }
 
-MY_BINARIES="pkg2zip sed python3 pyNPU.py"
+MY_BINARIES="pkg2zip sed grep file python3 pyNPU.py t7z"
 sha256_choose; downloader_choose
 
 check_binaries "${MY_BINARIES}"
@@ -120,7 +120,8 @@ do
         # extract files and compress them with t7z
         test -d "patch/" && rm -rf "patch/"
         pkg2zip -x "${TITLE_ID}_update.pkg"
-        t7z a "${MY_FILE_NAME}.${ext}" "patch/"
+        # add the -rs parameter until a bug on the t7z port for FreeBSD is fixed
+        t7z  -ba -rs a "${MY_FILE_NAME}.${ext}" "patch/"
         rm -rf "patch/"
         rm "${TITLE_ID}_update.pkg"
         rm "${TITLE_ID}_update.txt"
