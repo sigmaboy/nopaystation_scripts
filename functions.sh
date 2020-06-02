@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 ext="7z"
 mime_type="application/x-7z-compressed"
