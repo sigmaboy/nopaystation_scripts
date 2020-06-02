@@ -164,20 +164,23 @@ fi
 DESTDIR="${GAME_NAME}" download_dlc.sh "${NPS_DIR}/PSV_DLCS.tsv" "${TITLE_ID}"
 
 ### Creating the torrent files
-rm -f "${ZIP_FILENAME}.torrent"
-echo "Creating torrent file for \"${GAME_NAME}.${ext}\""
-my_mktorrent "${ZIP_FILENAME}"
-if [ -d "${GAME_NAME}_update" ]
+if [ ${CREATE_TORRENT} -eq 1 ]
 then
-    test -e "${GAME_NAME}_update.torrent" && rm -f "${GAME_NAME}_update.torrent"
-    echo "Creating torrent file for directory \"${GAME_NAME}_update\""
-    my_mktorrent "${GAME_NAME}_update"
-fi
-if [ -d "${GAME_NAME}_dlc" ]
-then
-    test -e "${GAME_NAME}_dlc.torrent" && rm -f "${GAME_NAME}_dlc.torrent"
-    echo "Creating torrent file for directory \"${GAME_NAME}_dlc\""
-    my_mktorrent "${GAME_NAME}_dlc"
+    rm -f "${ZIP_FILENAME}.torrent"
+    echo "Creating torrent file for \"${GAME_NAME}.${ext}\""
+    my_mktorrent "${ZIP_FILENAME}"
+    if [ -d "${GAME_NAME}_update" ]
+    then
+        test -e "${GAME_NAME}_update.torrent" && rm -f "${GAME_NAME}_update.torrent"
+        echo "Creating torrent file for directory \"${GAME_NAME}_update\""
+        my_mktorrent "${GAME_NAME}_update"
+    fi
+    if [ -d "${GAME_NAME}_dlc" ]
+    then
+        test -e "${GAME_NAME}_dlc.torrent" && rm -f "${GAME_NAME}_dlc.torrent"
+        echo "Creating torrent file for directory \"${GAME_NAME}_dlc\""
+        my_mktorrent "${GAME_NAME}_dlc"
+    fi
 fi
 
 ### remove temporary game name file
