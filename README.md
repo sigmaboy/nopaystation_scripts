@@ -1,7 +1,13 @@
 # nopaystation\_scripts
 
 A shell script collection which downloads nopaystation PS Vita stuff.
-There are several scripts. One to download all \*.tsv files of NoPayStation. The other are for downloading games, updates or all DLC of a PS Vita game.
+There are several scripts. One to download all \*.tsv files of NoPayStation. The other are for downloading games, updates
+or all DLC of a PS Vita game.
+
+## Supported Operating Systems
+* GNU/Linux
+* FreeBSD
+* Windows 10 with WSL should also work but it's untested
 
 ## Requirements
 * a working internet connection
