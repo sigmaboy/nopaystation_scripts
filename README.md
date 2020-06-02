@@ -47,78 +47,78 @@ install -Dm 0755 bin/t7z "${HOME}/bin"
 ## nopaystation\_scripts Installation
 ```bash
 git clone -b t7z https://github.com/sigmaboy/nopaystation_scripts.git && cd nopaystation_scripts
-chmod +x download*.sh pyNPU.py
-test -d "${HOME}/bin" && ln -s "$(pwd)"/download*.sh "$(pwd)"/pyNPU.py "${HOME}/bin"
+chmod +x nps_*.sh pyNPU.py
+test -d "${HOME}/bin" && ln -s "$(pwd)"/nps_*.sh "$(pwd)"/pyNPU.py "${HOME}/bin"
 ```
 
 If you don't have *${HOME}/bin* in your *${PATH}*, try the following.
 ```bash
-test -d "/usr/local/bin" && sudo ln -s "$(pwd)"/download*.sh $(pwd)"/pyNPU.py "/usr/local/bin/"
+test -d "/usr/local/bin" && sudo ln -s "$(pwd)"/nps_*.sh $(pwd)"/pyNPU.py "/usr/local/bin/"
 ```
 
 ## Script examples
 
-### download\_tsv.sh
+### nps\_tsv.sh
 It downloads every \*.tsv file from NoPayStation.com and creates a tar archive with the current date for it.
 ```bash
-./download_tsv.sh /path/to/the/output_directory
+./nps_tsv.sh /path/to/the/output_directory
 ```
 If you don't add the output directory as the first parameter, it uses the current working directory.
 You need the \*.tsv file(s) for mostly every other script in this toolset.
 
-### download\_game.sh
+### nps\_game.sh
 With this script you can download a PS Vita game.
 The first parameter is the path to your \*.tsv file and the second is the game's title ID.
 It places the \*.7z (torrent7z) file in the current directory.
 It also changes the region name into TV format (NTSC, PAL, ...)
 For example:
 ```bash
-./download_game.sh /home/tux/Downloads/GAME.tsv PCSE00986
+./nps_game.sh /home/tux/Downloads/GAME.tsv PCSE00986
 ```
 I can recommend [this](http://renascene.com/psv/) site for searching title IDs.
 
-### download\_update.sh
+### nps\_update.sh
 With this script you can download the latest or all available PS Vita game updates.
 There is a optional first parameter "-a" and the second is the game's title ID.
 It places the files in a created directory from the current working directory named <\TITLE\_ID\_update>.
 For example:
 ```bash
-./download_update.sh [-a] PCSE00986
+./nps_update.sh [-a] PCSE00986
 ```
 
-### download\_dlc.sh
+### nps\_dlc.sh
 This script downloads every DLC found for a specific title ID with available zRIF key.
 Every update is placed in a created directory from the current working directory named <\TITLE\_ID\_update>.
 For example:
 ```bash
-./download_dlc.sh /home/tux/Downloads/DLC.tsv PCSE00986
+./nps_dlc.sh /home/tux/Downloads/DLC.tsv PCSE00986
 ```
 Every DLC is placed in a created directory from the current working directory named <\TITLE\_ID\_dlc>.
 
-### download\_psp.sh
+### nps\_psp.sh
 With this script you can download a PSP game.
 The first parameter is the path to your \*.tsv file and the second is the game's title ID.
 It places the \*.iso file in the current directory.
 For example:
 ```bash
-./download_psp.sh /home/tux/Downloads/PSP_GAMES.tsv NPUZ00001
+./nps_psp.sh /home/tux/Downloads/PSP_GAMES.tsv NPUZ00001
 ```
 I can recommend [this](http://renascene.com/psp/) site for searching title IDs.
 
-### download\_bundle.sh
+### nps\_bundle.sh
 Requirements:
 * pkg2zip and the optionally mktorrent If you want to use the source flag, you need mktorrent >= 1.1
 
 This script downloads the game, every update and dlc found for a specific title ID with available zRIF key.
 It puts the DLC and the Updates in a dedicated folder named like the generated zip and optionally creates a torrent for the game,
 updates and dlc folders. In fact it uses the three scripts from above, combines them and download everything available for a game.
-You need to have download\_game.sh, download\_update.sh, download\_dlc.sh in your $PATH variable to get it working.
+You need to have nps\_game.sh, nps\_update.sh, nps\_dlc.sh in your $PATH variable to get it working.
 
 You need to symlink them to **${HOME}/bin/**, **/usr/local/bin** or **/usr/bin/**.
 This is explained in the *Installation* Section above
 
-If you want to do some additional steps after running *download_bundle.sh*, you can add a post script named *download_bundle_post.sh* to the directory where you run *download_bundle.sh* from the command line.
-It has to be executable to run. *download_bundle.sh* runs the post script with the game name as the first parameter.
+If you want to do some additional steps after running *nps_bundle.sh*, you can add a post script named *nps_bundle_post.sh* to the directory where you run *nps_bundle.sh* from the command line.
+It has to be executable to run. *nps_bundle.sh* runs the post script with the game name as the first parameter.
 Your script can handle the parameter with the variable **$1** in your (shell) script.
 You can use this to automate your upload process with an script which adds the torrent to your client or move it and
 set the correct permissions to the file.
@@ -138,18 +138,18 @@ when creating torrent files with to use with private trackers.
 To use this feature you need to have mktorrent installed in version 1.1+!
 For example:
 ```bash
-./download_bundle.sh [-a] -t PCSE00986 -c "http://announce.url" -d "/path/to/directory/containing/the/tsv/files" [-c] [<SOURCE FLAG>]
+./nps_bundle.sh [-a] -t PCSE00986 -c "http://announce.url" -d "/path/to/directory/containing/the/tsv/files" [-c] [<SOURCE FLAG>]
 ```
 
-## download\_region.sh
+## nps\_region.sh
 This works pretty much the same as **download2torrent.sh** but downloads all base games of a specific region.
 It creates a subdirectory in your current working directory for the region you mentioned. Valid regions are *US* *JP* *EU* *ASIA*.
-There is also a post hook implemented with the file name *./download_region_post.sh*
+There is also a post hook implemented with the file name *./nps_region_post.sh*
 For more informations and help about the script just call it with the *--help* parameter.
 
 Example:
 ```bash
-$ ./download_region.sh -r ASIA -t game -d /path/to/directory/containing/the/tsv/files [-c http://announce.url] [-s <SOURCE>] [-a]
+$ ./nps_region.sh -r ASIA -t game -d /path/to/directory/containing/the/tsv/files [-c http://announce.url] [-s <SOURCE>] [-a]
 ```
 
 ### pyNPU.py
