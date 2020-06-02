@@ -42,9 +42,9 @@ my_download_file() {
 
     case "${DOWNLOADER}" in
         "wget")
-        wget -O "${destination}" "${url}" ;;
+        wget --no-verbose --show-progress -O "${destination}" "${url}" ;;
         "curl")
-        curl -o "${destination}" "${url}" ;;
+        curl --progress-bar -o "${destination}" "${url}" ;;
     esac
 }
 
