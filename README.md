@@ -142,10 +142,11 @@ For example:
 ```
 
 ## nps\_region.sh
-This works pretty much the same as **download2torrent.sh** but downloads all base games of a specific region.
+This works pretty much the same as **nps_bundle.sh** but downloads all base games of a specific region.
 It creates a subdirectory in your current working directory for the region you mentioned. Valid regions are *US* *JP* *EU* *ASIA*.
-There is also a post hook implemented with the file name *./nps_region_post.sh*
-For more informations and help about the script just call it with the *--help* parameter.
+There is also a post hook implemented with the file name *./nps_region_post.sh* like *nps\_bundle*. The name of the collection directory
+is overgiven to the post script as the first parameter.
+For more informations and help about the script just call it with the *--help* parameter or look at the code.
 
 Example:
 ```bash
