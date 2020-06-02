@@ -330,5 +330,5 @@ fi
 ### Run post scripts
 if [ -x ./nps_region_post.sh ]
 then
-    ./nps_region_post.sh
+    ./nps_region_post.sh "${COLLECTION_NAME}"
 fi
