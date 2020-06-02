@@ -140,7 +140,7 @@ do
 done
 
 ### Download the chosen game
-download_game.sh "${NPS_DIR}/PSV_GAMES.tsv" "${TITLE_ID}"
+nps_game.sh "${NPS_DIR}/PSV_GAMES.tsv" "${TITLE_ID}"
 if [ ${?} -ne 0 ]
 then
     echo ""
@@ -148,20 +148,20 @@ then
     exit 1
 fi
 
-### Get name of the zip file from generated txt created via download_game.sh
+### Get name of the zip file from generated txt created via nps_game.sh
 GAME_NAME="$(cat "${TITLE_ID}.txt")"
 ZIP_FILENAME="${GAME_NAME}.${ext}"
 
 ### Download available updates. With parameter -a all updates
 if [ "${UPDATE_ALL}" -eq 1 ]
 then
-    DESTDIR="${GAME_NAME}" download_update.sh -a "${TITLE_ID}"
+    DESTDIR="${GAME_NAME}" nps_update.sh -a "${TITLE_ID}"
 else
-    DESTDIR="${GAME_NAME}" download_update.sh "${TITLE_ID}"
+    DESTDIR="${GAME_NAME}" nps_update.sh "${TITLE_ID}"
 fi
 
 ### Download available DLC
-DESTDIR="${GAME_NAME}" download_dlc.sh "${NPS_DIR}/PSV_DLCS.tsv" "${TITLE_ID}"
+DESTDIR="${GAME_NAME}" nps_dlc.sh "${NPS_DIR}/PSV_DLCS.tsv" "${TITLE_ID}"
 
 ### Creating the torrent files
 if [ ${CREATE_TORRENT} -eq 1 ]
@@ -187,7 +187,7 @@ fi
 rm "${TITLE_ID}.txt"
 
 ### Run post scripts
-if [ -x ./download_bundle_post.sh ]
+if [ -x ./nps_bundle_post.sh ]
 then
-    ./download_bundle_post.sh "${GAME_NAME}"
+    ./nps_bundle_post.sh "${GAME_NAME}"
 fi

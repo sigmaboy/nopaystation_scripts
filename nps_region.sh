@@ -222,30 +222,30 @@ case "${TYPE}" in
     "game")
         tsv_file="PSV_GAMES.tsv"
         PARAMS="${NPS_ABSOLUTE_PATH}/${tsv_file}"
-        download_script="download_game.sh"
+        download_script="nps_game.sh"
         ;;
     "update")
         if [ ${UPDATE_ALL} -eq 1 ]
         then
             PARAMS="-a"
         fi
-        download_script="download_update.sh"
+        download_script="nps_update.sh"
         ;;
     "dlc")
         tsv_file="PSV_DLCS.tsv"
         PARAMS="${NPS_ABSOLUTE_PATH}/${tsv_file}"
-        download_script="download_dlc.sh"
+        download_script="nps_dlc.sh"
         ;;
     "changelog")
         tsv_file="PSV_GAMES.tsv"
         PARAMS=""
-        download_script="download_changelog.sh"
+        download_script="nps_changelog.sh"
         ;;
     "all")
         DOWNLOAD_ALL=1
 #        tsv_file="PSV_GAMES.tsv"
 #        PARAMS=""
-#        download_script="download_changelog.sh"
+#        download_script="nps_changelog.sh"
         ;;
 esac
 
@@ -296,18 +296,18 @@ do
     echo "Downloading and packing \"${TITLE_ID}\"..."
     if [ ${DOWNLOAD_ALL} -eq 1 ]
     then
-        download_game.sh "${NPS_ABSOLUTE_PATH}/PSV_GAMES.tsv" "${TITLE_ID}"
+        nps_game.sh "${NPS_ABSOLUTE_PATH}/PSV_GAMES.tsv" "${TITLE_ID}"
         check_return_code ${?} "game"
         GAME_NAME="$(cat "${TITLE_ID}.txt")"
         GAME_NAME="$(region_rename "${GAME_NAME}")"
         if [ ${UPDATE_ALL} -eq 1 ]
         then
-            DESTDIR="${GAME_NAME}" download_update.sh -a "${TITLE_ID}"
+            DESTDIR="${GAME_NAME}" nps_update.sh -a "${TITLE_ID}"
         else
-            DESTDIR="${GAME_NAME}" download_update.sh "${TITLE_ID}"
+            DESTDIR="${GAME_NAME}" nps_update.sh "${TITLE_ID}"
         fi
         check_return_code ${?} "update"
-        DESTDIR="${GAME_NAME}" download_dlc.sh "${NPS_ABSOLUTE_PATH}/PSV_DLCS.tsv" "${TITLE_ID}"
+        DESTDIR="${GAME_NAME}" nps_dlc.sh "${NPS_ABSOLUTE_PATH}/PSV_DLCS.tsv" "${TITLE_ID}"
         check_return_code ${?} "dlc"
     else
         "${download_script}" ${PARAMS} "${TITLE_ID}"
@@ -328,7 +328,7 @@ fi
 
 
 ### Run post scripts
-if [ -x ./download_region_post.sh ]
+if [ -x ./nps_region_post.sh ]
 then
-    ./download_region_post.sh
+    ./nps_region_post.sh
 fi
