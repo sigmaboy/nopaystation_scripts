@@ -23,10 +23,10 @@ If your package manager doesn't already have v1.1 you can compile it by yourself
 mktorrent v1.1 is only needed for source flag. If you don't need it you also can use v1.0.
 You also need some sort of compiler (e.g. gcc) and "make" is needed.
 ```bash
-$ git clone https://github.com/Rudde/mktorrent.git
-$ cd mktorrent/ && PREFIX=$HOME make
-$ PREFIX="${HOME}" make install
-$ rm -rf ~/mktorrent
+git clone https://github.com/Rudde/mktorrent.git
+cd mktorrent/ && PREFIX=$HOME make
+PREFIX="${HOME}" make install
+rm -rf ~/mktorrent
 ```
 
 ### t7z
@@ -40,14 +40,14 @@ install -Dm 0755 bin/t7z "${HOME}/bin"
 
 ## nopaystation\_scripts Installation
 ```bash
-$ git clone -b t7z https://github.com/sigmaboy/nopaystation_scripts.git && cd nopaystation_scripts
-$ chmod +x download*.sh pyNPU.py
-$ test -d "${HOME}/bin" && ln -s "$(pwd)"/download*.sh $(pwd)"/pyNPU.py "${HOME}/bin"
+git clone -b t7z https://github.com/sigmaboy/nopaystation_scripts.git && cd nopaystation_scripts
+chmod +x download*.sh pyNPU.py
+test -d "${HOME}/bin" && ln -s "$(pwd)"/download*.sh $(pwd)"/pyNPU.py "${HOME}/bin"
 ```
 
 If you don't have *${HOME}/bin* in your *${PATH}*, try the following.
 ```bash
-$ test -d "/usr/local/bin" && sudo ln -s "$(pwd)"/download*.sh $(pwd)"/pyNPU.py "/usr/local/bin/"
+test -d "/usr/local/bin" && sudo ln -s "$(pwd)"/download*.sh $(pwd)"/pyNPU.py "/usr/local/bin/"
 ```
 
 ## Script examples
@@ -55,7 +55,7 @@ $ test -d "/usr/local/bin" && sudo ln -s "$(pwd)"/download*.sh $(pwd)"/pyNPU.py 
 ### download\_tsv.sh
 It downloads every \*.tsv file from NoPayStation.com and creates a tar archive with the current date for it.
 ```bash
-$ ./download_tsv.sh /path/to/the/output_directory
+./download_tsv.sh /path/to/the/output_directory
 ```
 If you don't add the output directory as the first parameter, it uses the current working directory.
 You need the \*.tsv file(s) for mostly every other script in this toolset.
@@ -67,7 +67,7 @@ It places the \*.7z (torrent7z) file in the current directory.
 It also changes the region name into TV format (NTSC, PAL, ...)
 For example:
 ```bash
-$ ./download_game.sh /home/tux/Downloads/GAME.tsv PCSE00986
+./download_game.sh /home/tux/Downloads/GAME.tsv PCSE00986
 ```
 I can recommend [this](http://renascene.com/psv/) site for searching title IDs.
 
@@ -77,7 +77,7 @@ There is a optional first parameter "-a" and the second is the game's title ID.
 It places the files in a created directory from the current working directory named <\TITLE\_ID\_update>.
 For example:
 ```bash
-$ ./download_update.sh [-a] PCSE00986
+./download_update.sh [-a] PCSE00986
 ```
 
 ### download\_dlc.sh
@@ -85,7 +85,7 @@ This script downloads every DLC found for a specific title ID with available zRI
 Every update is placed in a created directory from the current working directory named <\TITLE\_ID\_update>.
 For example:
 ```bash
-$ ./download_dlc.sh /home/tux/Downloads/DLC.tsv PCSE00986
+./download_dlc.sh /home/tux/Downloads/DLC.tsv PCSE00986
 ```
 Every DLC is placed in a created directory from the current working directory named <\TITLE\_ID\_dlc>.
 
@@ -95,24 +95,24 @@ The first parameter is the path to your \*.tsv file and the second is the game's
 It places the \*.iso file in the current directory.
 For example:
 ```bash
-$ ./download_psp.sh /home/tux/Downloads/PSP_GAMES.tsv NPUZ00001
+./download_psp.sh /home/tux/Downloads/PSP_GAMES.tsv NPUZ00001
 ```
 I can recommend [this](http://renascene.com/psp/) site for searching title IDs.
 
-### download2torrent.sh
+### download\_bundle.sh
 Requirements:
-* pkg2zip and the latest mktorrent 1.1
-  (1.0 is not working since it doesn't know the source option)
+* pkg2zip and the optionally mktorrent If you want to use the source flag, you need mktorrent >= 1.1
 
 This script downloads the game, every update and dlc found for a specific title ID with available zRIF key.
-It puts the DLC and the Updates in a dedicated folder named like the generated zip and creates a torrent for the game, updates and dlc folders.
-In fact it uses the three scripts from above, combines them to share them easily via BitTorrent. You need to have download\_game.sh, download\_update.sh, download\_dlc.sh in your $PATH variable to get it working.
+It puts the DLC and the Updates in a dedicated folder named like the generated zip and optionally creates a torrent for the game,
+updates and dlc folders. In fact it uses the three scripts from above, combines them and download everything available for a game.
+You need to have download\_game.sh, download\_update.sh, download\_dlc.sh in your $PATH variable to get it working.
 
 You need to symlink them to **${HOME}/bin/**, **/usr/local/bin** or **/usr/bin/**.
 This is explained in the *Installation* Section above
 
-If you want to do some additional steps after running *download2torrent.sh*, you can add a post script named *download2torrent_post.sh* to the directory where you run *download2torrent.sh* from the command line.
-It has to be executable to run. *download2torrent.sh* runs the post script with the game name as the first parameter.
+If you want to do some additional steps after running *download_bundle.sh*, you can add a post script named *download_bundle_post.sh* to the directory where you run *download_bundle.sh* from the command line.
+It has to be executable to run. *download_bundle.sh* runs the post script with the game name as the first parameter.
 Your script can handle the parameter with the variable **$1** in your (shell) script.
 You can use this to automate your upload process with an script which adds the torrent to your client or move it and
 set the correct permissions to the file.
@@ -126,11 +126,13 @@ or the torrent files
 * ${1}_update.torrent
 * ${1}_dlc.torrent
 
-If you call the script with "-a" as the first parameter, it will download all updates instead of the latest only. Additionally you can set the source tag as the end last command line parameter. The <SOURCE> parameter is also optional.
+If you call the script with "-a", it will download all updates instead of the latest only. Additionally you can set the parameter [-c]
+to enable torrent creating. If you use this you can add source flag after it.
+when creating torrent files with to use with private trackers.
 To use this feature you need to have mktorrent installed in version 1.1+!
 For example:
 ```bash
-$ ./download2torrent.sh [-a] PCSE00986 http://announce.url /path/to/directory/containing/the/tsv/files <SOURCE>
+./download_bundle.sh [-a] -t PCSE00986 -c "http://announce.url" -d "/path/to/directory/containing/the/tsv/files" [-c] [<SOURCE FLAG>]
 ```
 
 ## download\_region.sh
@@ -146,7 +148,7 @@ $ ./download_region.sh -r ASIA -t game -d /path/to/directory/containing/the/tsv/
 
 ### pyNPU.py
 This little python program helps you downloading updates and generating changelogs for your games.
-Just use the "-h" parameter to get all parameters and examples.
+Just use the "-h" parameter to get all parameters and examples. It's useful for checking changelogs and generating download links.
 
 # ToDos
 * create a script to download PSM games
