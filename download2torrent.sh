@@ -2,14 +2,6 @@
 
 # AUTHOR sigmaboy <j.sigmaboy@gmail.com>
 
-if [ "${1}" == "-a" ]
-then
-    ALL=1
-    shift
-else
-    ALL=0
-fi
-
 # get directory where the scripts are located
 SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 
@@ -20,14 +12,17 @@ SCRIPT_DIR="$(dirname "$(readlink -f "$(which "${0}")")")"
 my_usage(){
     echo ""
     echo "Parameters:"
-    echo "${0} \"TITLE_ID\" \"http://announce.url\" \"/path/to/nps/directory\" \"SOURCE_TAG\""
+    echo "--nps-dir|-d <DIR>               path to the directory containing the tsv files"
+    echo "--torrent|-c <ANNOUNCE URL>      Enables torrent creation. Needs announce url"
+    echo "--source|-s <SOURCE TAG>         Enables source flag. Needs source tag as argument"
+    echo "--all|-a                         Download all update instead of only latest"
     echo ""
-    echo "The SOURCE_TAG parameter is optional. All other parameters are required."
-    echo "So if you don't want to set the source tag, just leave it off."
-    echo "This is required for private torrent trackers only"
+    echo "The \"--source\" and \"--torrent\" parameter are optional. All other"
+    echo "parameters are required. The source parameter"
+    echo "is required for private torrent trackers only"
     echo ""
     echo "Usage:"
-    echo "${0} \"PCSE00986\" \"http://announce.url\" \"/home/Downloads/nps\" \"GGn\""
+    echo "${0} --nps-dir </path/to/nps/directory> [--torrent \"http://announce.url\"] [--source <SOURCE_TAG>]"
 }
 
 my_mktorrent(){
@@ -40,37 +35,88 @@ my_mktorrent(){
     fi
 }
 
+### check if nps tsv file directory exists
+test_nps_dir() {
+    local NPS_DIR="${1}"
+    if [ ! -d "${NPS_DIR}" ]
+    then
+        echo "Directory containing *.tsv files missing (\"${NPS_DIR}\"). Check your path parameter."
+        my_usage
+        exit 1
+    fi
+}
+
+SOURCE_ENABLE=0
+CREATE_TORRENT=0
+UPDATE_ALL=0
+
+while [ ${#} -ge 1 ]
+do
+    opt=${1}
+    shift
+    case ${opt} in
+        -t|--title-id)
+            test -n "${1}"
+            exit_if_fail "\"-t\" used without <TITLE ID>"
+            check_valid_psv_id "${1}"
+            TITLE_ID="${1}"
+            shift
+            ;;
+        -c|--torrent)
+            test -n "${1}"
+            exit_if_fail "\"-c\" used without torrent announce URL"
+            check_announce_url "${1}"
+            ANNOUNCE_URL="${1}"
+            CREATE_TORRENT=1
+            shift
+            ;;
+        -s|--source)
+            test -n "${1}"
+            exit_if_fail "\"-s\" used without source flag argument used"
+            SOURCE_TAG="${1}"
+            SOURCE_ENABLE=1
+            shift
+            ;;
+        -d|--nps-dir)
+            test -n "${1}"
+            exit_if_fail "\"-d\" used without directory path argument used"
+            test_nps_dir "${1}"
+            NPS_DIR="${1}"
+            shift
+            ;;
+        -a|--all)
+            UPDATE_ALL=1
+            shift
+            ;;
+        *)
+            echo "Invalid parameter used."
+            my_usage
+            echo ""
+            exit 1
+            ;;
+    esac
+done
+
 # check if necessary binaries are available
-MY_BINARIES="pkg2zip mktorrent sed"
+MY_BINARIES="pkg2zip sed"
+if [ ${CREATE_TORRENT} -eq 1 ]
+then
+    MY_BINARIES="${MY_BINARIES} mktorrent"
+fi
 check_binaries "${MY_BINARIES}"
 
-TITLE_ID="${1}"
-ANNOUNCE_URL="${2}"
-NPS_DIR="${3}"
-if [ -z "${4}" ]
-then
-    SOURCE_ENABLE=0
-else
-    SOURCE_TAG="${4}"
-    SOURCE_ENABLE=1
-fi
 
-if ! echo "${TITLE_ID}" | grep -E -i 'PCS[ABCDEFGH][0-9]{5}' > /dev/null
+if [ -z "${TITLE_ID}" ]
 then
-    echo ""
-    echo "Error"
-    echo "Media ID is not valid."
-    echo "It should be the following format:"
-    echo "PCSA01234"
-    echo "Check your first parameter."
+    echo "ERROR:"
+    echo "<TITLE ID> is missing."
+    echo 'Use "-t <TITLE ID>" parameter'
     exit 1
-fi
-
-### check if every parameter is set
-if [ -z "${TITLE_ID}" ] || [ -z "${ANNOUNCE_URL}" ] || [ -z "${NPS_DIR}" ]
+elif [ -z "${NPS_DIR}" ]
 then
-    echo "ERROR: Not every necessary option specified."
-    my_usage
+    echo "ERROR:"
+    echo "<NPS DIR> is missing."
+    echo 'Use "-d <NPS DIR>" parameter'
     exit 1
 fi
 
@@ -93,11 +139,9 @@ do
     fi
 done
 
-check_announce_url "${ANNOUNCE_URL}"
-
 ### Download the chosen game
 download_game.sh "${NPS_DIR}/PSV_GAMES.tsv" "${TITLE_ID}"
-if [ $? -ne 0 ]
+if [ ${?} -ne 0 ]
 then
     echo ""
     echo "Game cannot be downloaded. Skipping further steps."
@@ -106,10 +150,10 @@ fi
 
 ### Get name of the zip file from generated txt created via download_game.sh
 GAME_NAME="$(cat "${TITLE_ID}.txt")"
-ZIP_FILENAME="${GAME_NAME}.zip"
+ZIP_FILENAME="${GAME_NAME}.${ext}"
 
 ### Download available updates. With parameter -a all updates
-if [ "${ALL}" -eq 1 ]
+if [ "${UPDATE_ALL}" -eq 1 ]
 then
     DESTDIR="${GAME_NAME}" download_update.sh -a "${TITLE_ID}"
 else
@@ -121,7 +165,7 @@ DESTDIR="${GAME_NAME}" download_dlc.sh "${NPS_DIR}/PSV_DLCS.tsv" "${TITLE_ID}"
 
 ### Creating the torrent files
 rm -f "${ZIP_FILENAME}.torrent"
-echo "Creating torrent file for \"${GAME_NAME}.zip\""
+echo "Creating torrent file for \"${GAME_NAME}.${ext}\""
 my_mktorrent "${ZIP_FILENAME}"
 if [ -d "${GAME_NAME}_update" ]
 then
