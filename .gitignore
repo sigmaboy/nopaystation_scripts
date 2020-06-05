@@ -3,10 +3,15 @@
 *.zip
 *.txt
 *.7z
-download2torrent_post.sh
-download_region_post.sh
+
+nps_bundle_post.sh
+nps_region_post.sh
+
+PCS*
+Sony*
+
+# contents of extraced *.pkg files
 app/
 addcont/
 patch/
-PCS*
-Sony*
+psm/
