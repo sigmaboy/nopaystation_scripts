@@ -67,10 +67,24 @@ check_valid_psv_id() {
     then
         echo ""
         echo "Error"
-        echo "Media ID is not valid."
+        echo "Title ID is not valid."
         echo "It should be the following format:"
         echo "PCSA01234"
-        echo "Check your first parameter."
+        echo "Check your title id parameter."
+        exit 1
+    fi
+}
+
+check_valid_psm_id() {
+    local TITLE_ID="${1}"
+    if ! echo "${TITLE_ID}" | grep -q -E -i 'NP[NPOQ]A[0-9]{5}'
+    then
+        echo ""
+        echo "Error"
+        echo "Title ID is not valid."
+        echo "It should be the following format:"
+        echo "NPNA01234"
+        echo "Check your title id parameter."
         exit 1
     fi
 }
@@ -81,10 +95,10 @@ check_valid_psp_id() {
     then
         echo ""
         echo "Error"
-        echo "Media ID is not valid."
+        echo "Title ID is not valid."
         echo "It should be the following format:"
         echo "NPUF00001"
-        echo "Check your first parameter."
+        echo "Check your title id parameter."
         exit 1
     fi
 }
