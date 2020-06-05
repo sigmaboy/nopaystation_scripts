@@ -9,7 +9,7 @@ Be sure to checkout out the [t7z branch](https://github.com/sigmaboy/nopaystatio
 * a working internet connection
 * posix shell (bash, ksh, zsh, sh)
 * curl or wget
-* [*pkg2zip*](https://github.com/mmozeiko/pkg2zip)
+* [*pkg2zip*](https://github.com/lusid1/pkg2zip) (please migrate to lusid1's fork as mmozeiko abandoned his project)
 * python3 + python3-lxml (install it via package manager or pip)
 * (Optional) latest [*mktorrent*](https://github.com/Rudde/mktorrent)
 
