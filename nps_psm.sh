@@ -111,11 +111,11 @@ else
         pkg2zip -l "${TITLE_ID}.pkg" | sed 's/.zip//g' > "${TITLE_ID}.txt"
         MY_FILE_NAME="$(cat "${TITLE_ID}.txt")"
         MY_FILE_NAME="$(region_rename "${MY_FILE_NAME}")"
-        test -d "app/" && rm -rf "app/"
+        test -d "psm/" && rm -rf "psm/"
         pkg2zip -x "${TITLE_ID}.pkg" "${KEY}"
         # add the -rs parameter until a bug on the t7z port for FreeBSD is fixed
         t7z -ba -rs a "${MY_FILE_NAME}.${ext}" "psm/"
-        rm -rf "app/"
+        rm -rf "psm/"
         rm "${TITLE_ID}.pkg"
     fi
 fi
