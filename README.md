@@ -13,7 +13,7 @@ or all DLC of a PS Vita game.
 * a working internet connection
 * posix shell (bash, ksh, zsh, sh)
 * curl or wget
-* [*pkg2zip*](https://github.com/mmozeiko/pkg2zip)
+* [*pkg2zip*](https://github.com/lusid1/pkg2zip) (please migrate to lusid1's fork as mmozeiko abandoned his project)
 * latest [*torrent7z*](https://github.com/BubblesInTheTub/torrent7z)
 * python3 + python3-lxml (install it via package manager or pip)
 * (Optional) latest [*mktorrent*](https://github.com/Rudde/mktorrent)
