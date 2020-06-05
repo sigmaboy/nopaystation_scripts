@@ -1,9 +1,15 @@
 # nopaystation\_scripts
 
-A linux shell script collection which downloads nopaystation PS Vita stuff.
-There are five scripts. One to download all \*.tsv files of NoPayStation. The other four are for downloading games, updates or all DLC of a PS Vita game.
+A shell script collection which downloads nopaystation PS Vita stuff.
+There are several scripts. One to download all \*.tsv files of NoPayStation. The other are for downloading games, updates
+or all DLC of a PS Vita game, PSM or PSP games.
 
 Be sure to checkout out the [t7z branch](https://github.com/sigmaboy/nopaystation_scripts/tree/t7z) to create reproducable archives and to download a whole region at once
+
+## Supported Operating Systems
+* GNU/Linux
+* FreeBSD
+* Windows 10 with WSL should also work but it's untested
 
 ## Requirements
 * a working internet connection
@@ -78,6 +84,16 @@ For example:
 ./nps_dlc.sh /home/tux/Downloads/DLC.tsv PCSE00986
 ```
 Every DLC is placed in a created directory from the current working directory named <\TITLE\_ID\_dlc>.
+
+### nps\_game.sh
+With this script you can download a PSM game.
+The first parameter is the path to your \*.tsv file and the second is the game's title ID.
+It places the \*.7z (torrent7z) file in the current directory.
+It also changes the region name into TV format (NTSC, PAL, ...)
+For example:
+```bash
+./nps_game.sh /home/tux/Downloads/PSM.tsv NPSA00115
+```
 
 ### nps\_psp.sh
 With this script you can download a PSP game.
