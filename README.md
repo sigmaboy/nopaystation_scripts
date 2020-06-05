@@ -2,7 +2,7 @@
 
 A shell script collection which downloads nopaystation PS Vita stuff.
 There are several scripts. One to download all \*.tsv files of NoPayStation. The other are for downloading games, updates
-or all DLC of a PS Vita game.
+or all DLC of a PS Vita game, PSM or PSP games.
 
 ## Supported Operating Systems
 * GNU/Linux
@@ -95,6 +95,16 @@ For example:
 ```
 Every DLC is placed in a created directory from the current working directory named <\TITLE\_ID\_dlc>.
 
+### nps\_game.sh
+With this script you can download a PSM game.
+The first parameter is the path to your \*.tsv file and the second is the game's title ID.
+It places the \*.7z (torrent7z) file in the current directory.
+It also changes the region name into TV format (NTSC, PAL, ...)
+For example:
+```bash
+./nps_game.sh /home/tux/Downloads/PSM.tsv NPSA00115
+```
+
 ### nps\_psp.sh
 With this script you can download a PSP game.
 The first parameter is the path to your \*.tsv file and the second is the game's title ID.
@@ -158,6 +168,5 @@ This little python program helps you downloading updates and generating changelo
 Just use the "-h" parameter to get all parameters and examples. It's useful for checking changelogs and generating download links.
 
 # ToDos
-* create a script to download PSM games
 * add command line parameters to control the behaviour of the download scripts (downloading/compressing only)
 * compare the whole download + compression process of pkg2zip vs. pkg2zip without zipping + torrent7z compressing
