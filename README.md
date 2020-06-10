@@ -95,14 +95,14 @@ For example:
 ```
 Every DLC is placed in a created directory from the current working directory named <\TITLE\_ID\_dlc>.
 
-### nps\_game.sh
+### nps\_psm.sh
 With this script you can download a PSM game.
 The first parameter is the path to your \*.tsv file and the second is the game's title ID.
-It places the \*.7z (torrent7z) file in the current directory.
+It places the the \*.7z (torrent7z) file in the current directory.
 It also changes the region name into TV format (NTSC, PAL, ...)
 For example:
 ```bash
-./nps_game.sh /home/tux/Downloads/PSM.tsv NPSA00115
+./nps_psm.sh /home/tux/Downloads/PSM.tsv NPSA00115
 ```
 
 ### nps\_psp.sh
