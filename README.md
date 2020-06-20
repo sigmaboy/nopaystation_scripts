@@ -53,7 +53,7 @@ test -d "${HOME}/bin" && ln -s "$(pwd)"/nps_*.sh "$(pwd)"/pyNPU.py "${HOME}/bin"
 
 If you don't have *${HOME}/bin* in your *${PATH}*, try the following.
 ```bash
-test -d "/usr/local/bin" && sudo ln -s "$(pwd)"/nps_*.sh $(pwd)"/pyNPU.py "/usr/local/bin/"
+test -d "/usr/local/bin" && sudo ln -s "$(pwd)"/nps_*.sh "$(pwd)"/pyNPU.py "/usr/local/bin/"
 ```
 
 ## Script examples
