@@ -46,7 +46,7 @@ install -Dm 0755 bin/t7z "${HOME}/bin"
 
 ## nopaystation\_scripts Installation
 ```bash
-git clone -b t7z https://github.com/sigmaboy/nopaystation_scripts.git && cd nopaystation_scripts
+git clone https://github.com/sigmaboy/nopaystation_scripts.git && cd nopaystation_scripts
 chmod +x nps_*.sh pyNPU.py
 test -d "${HOME}/bin" && ln -s "$(pwd)"/nps_*.sh "$(pwd)"/pyNPU.py "${HOME}/bin"
 ```
