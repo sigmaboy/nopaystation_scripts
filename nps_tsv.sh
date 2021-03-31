@@ -25,7 +25,7 @@ then
 else
     DEST="${1}"
 fi
-MY_DATE="$(date "+%Y_%m_%d")"
+MY_DATE="$(date -u "+%Y_%m_%d")"
 if [ -f "${DEST}/${MY_NAME}_${MY_DATE}.tar.gz" ]
 then
     echo "Backup of the current day already exists. Skipping"
